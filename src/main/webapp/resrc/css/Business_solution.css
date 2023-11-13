@@ -1,0 +1,83 @@
+/*무인정산시스템*/
+  #manless h4 {
+    width:100%;
+    font-size:20px;
+    font-weight: bold;
+    line-height: 150%;
+    padding-bottom:20px;
+  }
+  #manless #title {
+    font-size:20px;
+    font-weight: bold;
+  }
+  #manless #memo {
+    font-size:18px;
+    line-height: 150%;
+  }
+/*육질진단시스템*/
+  #fleshiness h4 {
+    width:100%;
+    font-size:20px;
+    font-weight: bold;
+    line-height: 150%;
+    padding-bottom:20px;
+  }
+  #fleshiness #title {
+    font-size:20px;
+    font-weight: bold;
+  }
+  #fleshiness #memo {
+    font-size:18px;
+    line-height: 150%;
+  }
+/*pos*/
+  #pos h4 {
+    width:100%;
+    font-size:20px;
+    font-weight: bold;
+    line-height: 150%;
+    padding-bottom:20px;
+  }
+  #pos #title {
+    font-size:20px;
+    font-weight: bold;
+  }
+  #pos #memo {
+    font-size:18px;
+    line-height: 150%;
+  }
+  #pos table {
+    width:100%;
+  }
+  #pos th {
+    border-collapse: collapse;
+    border-top:1px solid #d4d4d4;
+    border-bottom:1px solid #d4d4d4;
+    border-right:1px solid #d4d4d4;
+    background-color:#f8f8f8;
+    text-align: center;
+    font-weight: bold;
+    color:#ff7d59;
+    padding:10px;
+  }
+  #pos td {
+    border-collapse: collapse;
+    border-top:1px solid #d4d4d4;
+    border-bottom:1px solid #d4d4d4;
+    border-right:1px solid #d4d4d4;
+    text-align: center;
+    font-weight: bold;
+    color:#4e4e4e;
+    padding:10px;
+  }
+  #pos .td1 {
+    border-collapse: collapse;
+    border-top:1px solid #d4d4d4;
+    border-bottom:1px solid #d4d4d4;
+    border-right:1px solid #d4d4d4;
+    text-align: left;
+    font-weight: bold;
+    color:#4e4e4e;
+    padding:10px;
+    padding-left:30px;
+  }

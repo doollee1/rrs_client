@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+       "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+ 
+<tiles-definitions>
+ 
+    <!-- (1) 레이아웃을 적용하지않는화면-->     
+    <!-- <definition name=".apps" template="/WEB-INF/jsp/common/appsLayout.jsp">
+        <put-attribute name="header" value="" /> 
+        <put-attribute name="footer" value="/WEB-INF/jsp/common/Footer.jsp" />
+    </definition> -->
+ 
+    <!-- (2) 레이아웃을 적용하는화면-->
+    <!-- <definition name=".web" template="/WEB-INF/jsp/common/webLayout.jsp">
+        <put-attribute name="title" value="" />
+        <put-attribute name="header" value="/WEB-INF/jsp/common/Header.jsp" />   
+        <put-attribute name="footer" value="/WEB-INF/jsp/common/Footer.jsp" />
+    </definition> -->
+    
+    <!-- (1) -->    
+    <!-- <definition name="/login/*" extends=".apps">
+      <put-attribute name="body" value="/WEB-INF/jsp/login/{1}.jsp" />
+    </definition> -->
+ 
+    <!-- (2) -->
+    <!-- <definition name="/*/*" extends=".web">      
+      <put-attribute name="body" value="/WEB-INF/jsp/{1}/{2}.jsp" />
+    </definition> -->
+    
+    <!-- TEST LAYOUT -->    
+    <definition name="*.view1" template="/WEB-INF/jsp/common/view1Layout.jsp">      
+        <put-attribute name="header" value="/WEB-INF/jsp/common/comHeader.jsp"  />
+        <put-attribute name="navi"   value="/WEB-INF/jsp/common/Navigation.jsp" />  
+        <put-attribute name="body"   value="/WEB-INF/jsp/{1}.jsp"               />
+        <put-attribute name="footer" value="/WEB-INF/jsp/common/Footer.jsp"     />
+    </definition>
+    
+    <definition name="*.view2" template="/WEB-INF/jsp/common/view2Layout.jsp">      
+        <put-attribute name="header" value="/WEB-INF/jsp/common/comHeader.jsp"  />
+        <put-attribute name="navi"   value="/WEB-INF/jsp/common/Navigation.jsp" />  
+        <put-attribute name="body"   value="/WEB-INF/jsp/{1}.jsp"               />
+    </definition>
+    
+    <definition name="*.popup" template="/WEB-INF/jsp/common/popupLayout.jsp">    
+        <put-attribute name="header" value="/WEB-INF/jsp/common/comHeader.jsp"  />  
+        <put-attribute name="body"   value="/WEB-INF/jsp/{1}.jsp"               />
+    </definition>
+    
+    <definition name="*.normal" template="/WEB-INF/jsp/common/normalLayout.jsp">      
+        <put-attribute name="body"   value="/WEB-INF/jsp/{1}.jsp"               />
+    </definition>
+    <!-- /TEST LAYOUT -->
+    
+</tiles-definitions>

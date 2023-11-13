@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.doollee.service.impl.DlMapper">
+	<select id="selectProdRepair" parameterType="hashMap" resultType="hashMap">
+	    SELECT prod_no        /* 장비번호           */ 
+	    	 , A.SEQ 	      /* 일련번호           */
+             , B.simp_cnm     /* 수리구분           */
+             , A.repair_comp  /* 수리처              */
+             , DATE_FORMAT(A.repair_st_dt , '%Y-%m-%d')  AS repair_st_dt             
+             , DATE_FORMAT(A.repair_ed_dt , '%Y-%m-%d')  AS repair_ed_dt
+           <!--    , CONCAT(SUBSTR(A.repair_st_dt,1,4),"-",SUBSTR(A.repair_st_dt,5,2),"-",SUBSTR(A.repair_st_dt,7,2)) repair_st_dt /* 수리시작일자     */ -->
+           <!--  , CONCAT(SUBSTR(A.repair_ed_dt,1,4),"-",SUBSTR(A.repair_ed_dt,5,2),"-",SUBSTR(A.repair_ed_dt,7,2)) repair_ed_dt /* 수리종료일자     */ --> 
+             , A.repair_fee	  /* 수리비용           */  
+             , A.repair_expl  /* 수리내용           */
+             , A.remark		  /* 비고                 */
+        FROM doollee_prod_repair A, doollee_simpc B
+        WHERE A.repair_gbn = B.simp_c
+         	AND B.simp_tpc = "repair_gbn" 
+         	AND A.del_yn = "N"
+        <if test='!"".equals(prod_no)'>
+            AND prod_no = #{prod_no}
+        </if>  
+	</select>
+	
+	<insert id="insertProdRepair" parameterType="hashMap">
+		<selectKey resultType="string" keyProperty="prod_seq" order="BEFORE">
+	       SELECT IFNULL(MAX(SEQ)+1,1) 
+	         FROM DOOLLEE_PROD_REPAIR
+	         WHERE PROD_NO = #{prod_no}
+	    </selectKey>
+	    INSERT INTO doollee_prod_repair (prod_no, SEQ , repair_gbn, repair_st_dt, repair_ed_dt, repair_comp, repair_expl, repair_fee, remark, del_yn, reg_dtm, upd_dtm)
+	   	VALUES
+	   	(
+	   	    #{prod_no}	        /* 장비번호           */
+	   	    , #{prod_seq}       /* 일련번호           */
+	   	    , #{repair_gbn} 	/* 수리구분           */
+	           , replace(#{repair_st_dt},'-','')	/* 수리시작일자      */
+	           , replace(#{repair_ed_dt},'-','')   /* 수리종료일자      */
+	           , #{repair_comp}    /* 수리처               */
+	           , #{repair_expl}    /* 수리내용            */
+	           <if test='"".equals(repair_fee)'>,0</if>     /* 수리비용            */
+	           <if test='!"".equals(repair_fee)'>, #{repair_fee}</if>     /* 수리비용            */
+	           , #{remark}         /* 비고                  */
+	           ,"N"                /* 삭제여부            */
+	           , NOW()       	    /* 최초등록일시      */
+	           , NOW()	            /* 최종수정일시      */
+	    )
+	</insert>
+	
+	<update id="updateProdRepair" parameterType="hashMap">
+	    UPDATE doollee_prod_repair
+	       SET repair_gbn   = #{repair_gbn}       /* 수리구분       */
+             , repair_st_dt   = replace(#{repair_st_dt},'-','')  /* 수리요청일자 */
+             , repair_ed_dt   = replace(#{repair_ed_dt},'-','')   /* 수리완료일자 */
+             , repair_comp   = #{repair_comp}     /* 수리처          */
+             , repair_expl    = #{repair_expl}	  /* 수리내용       */
+             , repair_fee     = #{repair_fee}     /* 수리비용       */
+             , remark    = #{remark}	   	      /* 비고             */
+             , upd_dtm = NOW()
+	     WHERE prod_no     = #{prod_no}	   /* 장비번호      */
+	     	AND SEQ = CONVERT(#{SEQ}, signed integer)
+	</update>
+	
+	<update id="updateYnProdRepair" parameterType="hashMap">
+		UPDATE doollee_prod_repair
+			SET del_yn = #{del_yn}
+			WHERE prod_no = #{prod_no}
+				AND SEQ = CONVERT(#{SEQ}, signed integer)
+	</update>
+	
+	<update id="updateProdSts" parameterType="hashMap">
+		UPDATE doollee_prod_m
+		<choose>
+			<when test='repair_gbn=="1"'>
+				SET prod_sts = 6
+			</when>
+			<when test='repair_gbn=="2"'>
+				SET prod_sts = 1
+			</when>
+			<when test='repair_gbn=="3"'>
+				SET prod_sts = 5
+			</when>
+		</choose>
+		WHERE prod_no = #{prod_no}
+	</update>
+</mapper>

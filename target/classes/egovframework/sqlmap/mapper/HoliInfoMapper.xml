@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.doollee.service.impl.DlMapper">
+	<select id="selectHoliRegInfo" parameterType="hashMap" resultType="hashMap">
+	    SELECT T1.holi_seq                           AS holi_seq      /* "휴가신청순"  */
+             , T1.approver_id                        AS approver_id   /* "휴가승인ID" */
+             , (SELECT mb_name FROM DOOLLEE.DOOLLEE_MEMBERS WHERE mb_id = T1.approver_id)
+                                                     AS approver_nm   /* "휴가승인자명" */
+             , T1.requestor_id	                     AS requestor_id  /* "휴가신청자ID" */
+             , (SELECT mb_name FROM DOOLLEE.DOOLLEE_MEMBERS WHERE mb_id = T1.requestor_id)
+                                                     AS requestor_nm  /* "휴가신청자명" */
+             , T1.holi_tp                            AS holi_tp       /* "휴가종류(01:반차 02:연차 03:경조사 04:소집 05:무급 06:대체 07:하계휴가 08:REFRSH휴가" */
+             , (SELECT simp_cnm FROM DOOLLEE.DOOLLEE_SIMPC WHERE SIMP_C = T1.holi_tp AND SIMP_TPC = 'VACA_GBN')
+                                                     AS holi_tp_nm    /* "휴가종류명" */
+             , DATE_FORMAT(T1.holi_st_dt,'%Y-%m-%d') AS holi_st_dt    /* "휴가시작일자" */
+             , DATE_FORMAT(T1.holi_ed_dt,'%Y-%m-%d') AS holi_ed_dt    /* "휴가종료일자" */
+             , DOOLLEE.noWeekDayCnt(T1.holi_st_dt, T1.holi_ed_dt)
+                                                     AS holi_dayNum   /* "휴가일수" */
+             , T1.holi_rsn	                         AS holi_rsn      /* "휴가신청사유" */
+             , T1.appr_gbn	                         AS appr_gbn      /* "휴가승인구분(01:요청 02:승인 09반려)" */
+             , (SELECT simp_cnm FROM DOOLLEE.DOOLLEE_SIMPC WHERE SIMP_C = T1.appr_gbn AND SIMP_TPC = 'REQ_GBN')
+                                                     AS appr_gbn_nm   /* "휴가승인구분명" */
+             , T1.return_rsn                         AS return_rsn    /* "휴가반려사유" */
+             , date_format(T1.appr_dt   ,'%Y-%m-%d') AS appr_dt       /* "휴가승인일자" */
+             , date_format(T1.request_dt,'%Y-%m-%d') AS request_dt    /* "휴가신청일자" */
+             , T1.request_dtm                        AS request_dtm   /* "휴가요청일시" */
+             , T1.appr_dtm                           AS appr_dtm      /* "휴가승인일시" */
+             , T1.fst_reg_dtm                        AS fst_reg_dtm   /* "최초등록일시" */
+             , T1.lst_upt_dtm                        AS lst_upt_dtm   /* "최종수정일시" */
+          FROM DOOLLEE.HOLI_REG T1
+         WHERE ( T1.requestor_id = #{mb_id} OR T1.approver_id = #{mb_id} OR #{masterYn} = '1' ) /* 휴가신청자 or 휴가승인자로 등록되어있는 경우 */
+        <if test='holi_seq!=null and !"".equals(holi_seq)'>
+           AND T1.holi_seq    = #{holi_seq}         /* 휴가신청순번(PK) */
+        </if>
+	    <if test='request_dt!=null and !"".equals(request_dt)'>
+           AND T1.request_dt  BETWEEN DATE_FORMAT(DATE_ADD(#{request_dt}, INTERVAL ${dayNum} ${dayType}), '%Y%m%d')
+                                  AND #{request_dt} /* 휴가등록일자 */
+        </if>
+	    <if test='holi_tp!=null and !"".equals(holi_tp)'>
+           AND T1.holi_tp     = #{holi_tp}          /* 휴가구분(01:반차,02:연차,03:경조사,04:소집,05:무급,06:대체,07:하계휴가,08:REFRESH휴가) */
+        </if>
+        <if test='appr_gbn!=null and !"".equals(appr_gbn)'>
+           AND T1.appr_gbn    = #{appr_gbn}         /* 승인구분(01:요청,02:승인,03:반려) */
+        </if>
+           AND T1.del_yn     != '1'                 /* 삭제여부 0:사용 1:삭제  (삭제되지 않은 건만 조회) */
+         ORDER BY T1.request_dt DESC
+    </select>
+    
+	<select id="selectApporoverMasterYn" parameterType="hashMap" resultType="string">
+	    SELECT IFNULL(MAX(attr_1), '0') AS master_yn
+	      FROM DOOLLEE.DOOLLEE_SIMPC
+	     WHERE simp_tpc = 'APPOROVER'
+	       AND use_yn   = '1'
+	       AND attr_1   = '1'
+	       AND simp_c   = #{mb_id}
+	</select>
+
+	<insert id="insertHoliRegInfo" parameterType="hashMap">
+		INSERT INTO HOLI_REG 										
+		(	   APPROVER_ID										
+		     , REQUESTOR_ID 	
+		     , HOLI_TP									
+		     , HOLI_ST_DT										
+		     , HOLI_ED_DT										
+		     , HOLI_RSN										
+		     , APPR_GBN																			
+		     , REQUEST_DT										
+		     , REQUEST_DTM
+		     , RETURN_RSN
+		     , APPR_DT
+		     , APPR_DTM																			
+		     , FST_REG_DTM
+		     , LST_UPT_DTM
+		)										
+		VALUES										
+		(	   #{approver_id}							/* 휴가승인ID */
+		     , #{requestor_id}							/* 휴가신청자ID */
+		     , #{holi_tp}								/* 휴가종류(01:반차 02:연차 03:경조사 04:소집 05:무급 06:대체 07:하계휴가 08:REFRSH휴 */
+		     , replace(#{holi_st_dt},'-','')			/* 휴가시작일자 */
+		     , replace(#{holi_ed_dt},'-','')			/* 휴가종료일자 */
+		     , #{holi_rsn}								/* 휴가신청사유 */
+		     , IF(IFNULL(#{appr_gbn}, '')='', '01', #{appr_gbn}) /* 휴가승인구분(01:요청 02:승인 09반려) */
+		     , DATE_FORMAT(now(), "%Y%m%d")				/* 휴가신청일자 */
+		     , now() 									/* 휴가요청일시 */
+		     , #{RETURN_RSN}                            /* 휴가승인사유 */
+		     , #{APPR_DT}                               /* 휴가승인일자 */
+		     , #{APPR_DTM}                              /* 휴가승인일시 */
+		     , now()  									/* 최초등록일시 */
+		     , now()  									/* 최종수정일시 */
+		)
+	</insert>
+
+	<update id="updateHoliRegInfo" parameterType="hashMap">
+	    UPDATE HOLI_REG
+		   SET LST_UPT_DTM  = NOW()
+	         , REQUEST_DT   = DATE_FORMAT(now(), "%Y%m%d")
+	         , REQUEST_DTM  = NOW()
+	         , APPROVER_ID  = #{approver_id}
+	         , REQUESTOR_ID = #{requestor_id}
+	         , HOLI_TP      = #{holi_tp}
+	         , HOLI_ST_DT   = replace(#{holi_st_dt},'-','')
+	         , HOLI_ED_DT   = replace(#{holi_ed_dt},'-','')
+	         , HOLI_RSN     = #{holi_rsn}
+	         , APPR_GBN     = #{appr_gbn}
+	         <if test='"09".equals(appr_gbn)'>
+	         , RETURN_RSN   = #{return_rsn}
+	         </if>
+	         <if test='!"09".equals(appr_gbn)'>
+	         , RETURN_RSN   = ''
+	         </if>
+	         <if test='"02".equals(appr_gbn)'>
+	         , RETURN_RSN   = ''
+	         , APPR_DT      = DATE_FORMAT(now(), "%Y%m%d")
+	         , APPR_DTM     = NOW()
+	         </if>
+	         <if test='!"02".equals(appr_gbn)'>
+	         , APPR_DT      = ''
+	         , APPR_DTM     = NULL
+	         </if>
+		 WHERE HOLI_SEQ = #{holi_seq}
+	</update>
+	
+	<update id="deleteHoliRegInfo" parameterType="hashMap">
+	    UPDATE HOLI_REG
+		   SET DEL_YN      = '1'
+		     , LST_UPT_DTM = NOW()
+		 WHERE HOLI_SEQ    = #{holi_seq}
+	</update>
+	
+	<select id="selectDeviceRegList" parameterType="hashMap" resultType="hashMap">
+	    SELECT mb_id
+	    	 , device_id
+	    	 , push_token
+	    	 , device_os
+	    	 , device_model
+	    	 , fst_reg_dtm
+	    	 , lst_upt_dtm
+          FROM DOOLLEE.DEVICE_REG T1
+         WHERE mb_id = #{mb_id}
+        order by T1.lst_upt_dtm DESC LIMIT 1
+         
+    </select>
+    
+    <select id="selectLocalFoodConfirm" parameterType="java.lang.String" resultType="java.lang.String">
+    SELECT IFNULL(MAX(SIMP_CNM), 'N') AS rtnCode
+      FROM doollee.DOOLLEE_SIMPC
+     WHERE SIMP_TPC     = 'LOCAL_FOOD'  
+        AND SIMP_TPCNM = #{strCode}
+    </select>
+
+</mapper>

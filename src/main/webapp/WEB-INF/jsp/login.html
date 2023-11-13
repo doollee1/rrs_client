@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <title>(주)둘리정보통신</title>
+  <!-- Bootstrap CSS -->
+  <link href="../../resrc/vendor/bootstrap/css/bootstrap.css" rel="stylesheet">
+  <!-- Custom styles for this template -->
+  <!--css-->
+  <link href="../../resrc/css/common.css" rel="stylesheet">
+  <link href="../../resrc/css/Login.css" rel="stylesheet">
+  <!--script-->
+  <script src="../../resrc/js/includeHTML.js"></script>  
+  <script src="../../resrc/vendor/jquery/jquery.js"></script>
+  <script src="../../resrc/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+ 
+</head>
+<body>
+  <!--navigation-->
+
+  <!--header-->
+  
+  <!--container-->
+  <div class="container sticky-footer login">
+    <div class="card align-middle">
+      <div class="card-title" style="margin-top:30px;">
+        <h2 class="card-title text-center"><img src="../../resrc/image/logo_white.png" style="width:50%;"></h2>
+      </div>
+      <div class="card-body">
+        <form class="form-signin" id="login_form" method="POST" action="login.do">
+          <label for="inputEmail" class="sr-only">Enter ID</label>
+          <input type="text" id="in_id" name="in_id" class="form-control" placeholder="아이디" required autofocus><BR>
+          <label for="inputPassword" class="sr-only">Enter Password</label>
+          <input type="password" id="in_pw" name="in_pw" class="form-control" placeholder="비밀번호" required><br>
+        </form>
+          <button id="btn-Yes" class="btn btn-dark btn-block" onclick="loginChk()" >로그인</button>
+      </div>
+    </div>
+  </div>
+  
+  <!--/container-->
+  <script>includeHTML();</script>
+</body>
+</html>

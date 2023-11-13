@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.doollee.service.impl.DlMapper">
+	<select id="listContact" resultType="com.doollee.service.vo.MainContactVO">
+		SELECT qna_sqno
+		, name
+		, tpdsc
+		, qna_title
+		, qna_cntn
+		, qna_pw
+		, rg_dtm
+		, re_yn
+		, re_name
+		, re_cntn
+		, re_rg_dtm
+		FROM GUEST_QNA
+		ORDER BY qna_sqno DESC
+	</select>
+	
+	<select id="listContactSelect" resultType="com.doollee.service.vo.MainContactVO">
+		SELECT qna_sqno
+		, name
+		, tpdsc
+		, qna_title
+		, qna_cntn
+		, qna_pw
+		, rg_dtm
+		, re_yn
+		, re_name
+		, re_cntn
+		, re_rg_dtm
+		FROM GUEST_QNA
+		WHERE qna_sqno = #{qna_sqno}
+		<if test=' !"".equals(qna_pw) and loginYn == null '>
+		  AND qna_pw = #{qna_pw}
+		</if> 
+
+	</select>
+	
+	 <insert id="Contact_insert">
+      <selectKey resultType="integer" keyProperty="qna_sqno" order="BEFORE">
+          SELECT IFNULL(MAX(qna_sqno), 0)+1  FROM GUEST_QNA
+      </selectKey>
+       INSERT INTO GUEST_QNA
+           (
+             qna_sqno
+           , name
+           , tpdsc
+           , qna_title 
+           , qna_cntn
+           , rg_dtm
+           , qna_pw
+           , re_yn
+           )
+      VALUES
+           (
+             #{qna_sqno}
+           , #{name}
+           , #{tpdsc}
+           , #{qna_title}
+           , #{qna_cntn}
+           , NOW()
+           , #{qna_pw}
+           , '0'
+           ) 
+  </insert>
+	<update id="updateContact" parameterType="com.doollee.service.vo.MainContactVO">
+	    UPDATE GUEST_QNA
+	       SET re_yn = '1'
+	         , re_name = #{re_name}
+	         , re_cntn = #{re_cntn}
+	         , re_rg_dtm = now()
+	    WHERE qna_sqno = #{qna_sqno}
+	</update>
+</mapper>

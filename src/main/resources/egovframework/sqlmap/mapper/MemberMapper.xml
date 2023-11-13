@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.doollee.service.impl.DlMapper">
+
+    <!-- 회원조회 -->
+    <select id="member_selCnt" parameterType="hashMap" resultType="int">
+        SELECT count(*) AS cnt
+          FROM doollee_members
+         WHERE 1 = 1
+           AND mb_level != 0
+      <if test='"0".equals(searchSel)'>
+           AND mb_level       = #{mb_level}  
+	     <if test='"0".equals(searchType)'>
+           AND mb_id          = #{mb_id}
+	     </if>
+	     <if test='"1".equals(searchType)'>
+           AND mb_name        = #{mb_name}
+	     </if>
+      </if>
+      
+    </select>
+    
+    <!-- 회원조회 -->
+    <select id="member_sel" parameterType="hashMap" resultType="com.doollee.comm.service.vo.LoginVO">
+        SELECT mb_id 
+			 , mb_name
+			 , mb_email
+			 , IF(mb_retire_date is not null,'재직','퇴직') AS mb_level_str
+			 , mb_level
+			 , mb_birth
+			 , mb_zip
+			 , mb_addr1
+			 , mb_addr2
+			 , IF(concat(mb_hp1,'-',mb_hp2,'-',mb_hp3)='--', '', concat(mb_hp1,'-',mb_hp2,'-',mb_hp3))
+			                                             AS mb_hp
+			 , mb_hp1
+			 , mb_hp2
+			 , mb_hp3
+			 , mb_join_date
+			 , mb_retire_date
+			 , mb_pw_chk
+          FROM doollee_members
+         WHERE 1 = 1
+      <if test='"0".equals(searchSel)'>
+           AND mb_level       = #{mb_level} 
+	     <if test='"0".equals(searchType)'>
+           AND mb_id          LIKE '%'|| #{searchParam} || '%'
+	     </if>
+	     <if test='"1".equals(searchType)'>
+           AND mb_name        LIKE '%'|| #{searchParam} || '%'
+	     </if>
+      </if>
+      <if test='sortUserSet==null or "".equals(sortUserSet)'>
+         ORDER BY mb_id DESC
+      </if>
+      <if test='sortUserSet!=null and !"".equals(sortUserSet)'>
+         ORDER BY ${sortUserSet}
+      </if>
+      <if test='page!=null and !"".equals(page)'>
+         LIMIT #{page},10
+      </if>
+    </select>
+    
+    
+    <!-- 회원상세조회 -->
+    <select id="member_detailSel" parameterType="hashMap" resultType="com.doollee.comm.service.vo.LoginVO">
+        SELECT mb_id
+			 , mb_name
+			 , mb_email
+			 , mb_level
+			 , mb_birth
+			 , mb_zip
+			 , mb_addr1
+			 , mb_addr2
+			 , concat(mb_hp1,'-',mb_hp2,'-',mb_hp3) as mb_hp
+			 , mb_hp1
+			 , mb_hp2
+			 , mb_hp3
+			 , mb_join_date
+			 , mb_retire_date
+			 , mb_pw_chk
+          FROM doollee_members
+         WHERE 1 = 1
+           AND mb_id          = #{mb_id}
+    </select>
+    
+    <!-- 관리자 - 회원정보 등록 -->
+    <insert id="member_ins" parameterType="com.doollee.comm.service.vo.LoginVO">
+        INSERT INTO doollee_members(
+               mb_id
+              ,mb_password
+              ,mb_name
+              ,mb_email
+              ,mb_level
+              ,mb_birth
+              ,mb_zip
+              ,mb_addr1
+              ,mb_addr2
+			 , mb_hp1
+			 , mb_hp2
+			 , mb_hp3
+              ,mb_join_date
+            ) VALUES (
+               #{mb_id}
+              ,PASSWORD('doollee') 
+              ,#{mb_name}  
+              ,#{mb_email}
+              ,'1'
+              ,#{mb_birth}
+              ,#{mb_zip}
+              ,#{mb_addr1}
+              ,#{mb_addr2}
+              ,#{mb_hp1}
+              ,#{mb_hp2}
+              ,#{mb_hp3}
+              ,#{mb_join_date}
+            )
+    </insert>
+    
+    
+    <!-- 사용자 - 비밀번호 체크 -->
+    <select id="member_pass_chk" parameterType="com.doollee.comm.service.vo.LoginVO" resultType="int">
+        SELECT COUNT(*) cnt
+          FROM doollee_members
+         WHERE mb_id = #{mb_id}
+           AND mb_password = password(#{mb_password})
+    </select>
+    
+    
+    <!-- 사용자 - 회원정보 수정 -->
+    <update id="member_user_upd" parameterType="com.doollee.comm.service.vo.LoginVO">
+        UPDATE doollee_members
+           SET mb_zip     = #{mb_zip}
+              <if test="!''.equals(mb_password)">
+              ,mb_password = PASSWORD(#{mb_password})
+              ,mb_pw_chk   = '1'
+              </if>
+              ,mb_email   = #{mb_email}
+              ,mb_birth   = #{mb_birth}
+              ,mb_addr1   = #{mb_addr1}
+              ,mb_addr2   = #{mb_addr2}
+              ,mb_hp1      = #{mb_hp1}
+              ,mb_hp2      = #{mb_hp2}
+              ,mb_hp3      = #{mb_hp3}
+              ,mb_join_date = #{mb_join_date}
+         WHERE mb_id = #{mb_id}
+    </update> 
+    
+    <!-- 관리자 - 비밀번호 초기화 -->
+    <update id="member_password_init" parameterType="com.doollee.comm.service.vo.LoginVO">
+        UPDATE doollee_members
+           SET mb_password = PASSWORD('doollee')
+             , mb_pw_chk   = '0'
+         WHERE mb_id = #{mb_id}
+    </update>
+    
+    <!-- 관리자 - 회원정보 수정 -->
+    <update id="member_admin_upd" parameterType="com.doollee.comm.service.vo.LoginVO">
+        UPDATE doollee_members
+           SET mb_join_date   = #{mb_join_date}
+             , mb_level       = #{mb_level}
+             , mb_retire_date = #{mb_retire_date}
+         WHERE mb_id = #{mb_id}
+    </update>
+    
+
+</mapper>

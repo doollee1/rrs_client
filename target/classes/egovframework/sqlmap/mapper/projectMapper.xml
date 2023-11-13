@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.doollee.service.impl.DlMapper">
+    <select id="projectList" resultType="com.doollee.service.vo.ProjectVO">
+	      SELECT * 
+	        FROM business
+	       WHERE gubun=2 
+	       ORDER BY from_dt desc
+	</select>
+	
+	<insert id="projectSave">
+		INSERT INTO business( gubun
+		                     ,company
+		                     ,main_work
+		                     ,utill
+		                     ,from_dt
+		                     ,to_dt
+		                     ,project_pl
+		                    )
+		             VALUES( #{gubun}
+		                    ,#{company}
+		                    ,#{main_work}
+		                    ,#{utill}
+		                    ,#{from_dt}
+		                    ,#{to_dt}
+		                    ,#{project_pl}
+		                    )
+	</insert>
+	
+	<select id="projectView" parameterType="int" resultType="com.doollee.service.vo.ProjectVO">
+		select no
+		     ,gubun
+		     ,company
+		     ,main_work
+		     ,utill
+		     ,from_dt
+		     ,to_dt
+		 from business
+		 where no = #{no}
+	</select>
+	
+	<update id="projectUpdate" parameterType="com.doollee.service.vo.ProjectVO">
+		update business set
+			 gubun = #{gubun}
+			,company = #{company}
+			,main_work = #{main_work}
+			,utill = #{utill}
+			,from_dt = #{from_dt}
+			,to_dt = #{to_dt}
+			,project_pl= #{project_pl}
+		where no = #{no}
+	</update>
+	
+	<delete id="projectDelete" parameterType="com.doollee.service.vo.ProjectVO">
+		delete from business
+		where no = #{no}
+	</delete>
+	<select id="public_sector" resultType="com.doollee.service.vo.ProjectVO">
+       SELECT company
+	        , main_work
+	        , utill
+	        , from_dt
+	        , to_dt
+	     FROM BUSINESS
+	    WHERE gubun = 1
+	    ORDER BY from_dt desc
+	</select>
+		<select id="listTotal" resultType="com.doollee.service.vo.ProjectVO">
+	    SELECT no
+	    	 , gubun
+	    	 , company
+	    	 , main_work
+	    	 , utill
+	    	 , from_dt
+	    	 , to_dt
+	      FROM BUSINESS
+	     WHERE gubun != 4
+	     ORDER BY gubun ASC, from_dt desc
+	</select>
+	<select id="listMainten" resultType="com.doollee.service.vo.ProjectVO">
+	    SELECT no
+	    	 , gubun
+	    	 , company
+	    	 , main_work
+	    	 , utill
+	    	 , from_dt
+	    	 , to_dt
+	      FROM BUSINESS
+	     WHERE gubun=3
+	     ORDER BY from_dt desc
+	</select>
+	<select id="listGeneral" resultType="com.doollee.service.vo.ProjectVO">
+	      SELECT * 
+	        FROM business
+	       WHERE gubun=2 
+	       ORDER BY from_dt desc
+	</select>
+	<select id="selectProject" resultType="com.doollee.service.vo.ProjectVO">
+          SELECT no
+               , main_work 
+               , case when length(from_dt) = 6 then DATE_FORMAT( concat(from_dt, '01'), '%Y.%m.%d')
+                      else DATE_FORMAT( from_dt, '%Y.%m.%d') END from_dt
+               , case when length(to_dt) = 6 then DATE_FORMAT( concat(to_dt, '01'), '%Y.%m.%d')
+                      else DATE_FORMAT( to_dt, '%Y.%m.%d') END to_dt
+<!--                , concat(concat(case when length(from_dt) = 6 then DATE_FORMAT( concat(from_dt, '01'), '%Y.%m.%d') -->
+<!--                                     else DATE_FORMAT( from_dt, '%Y.%m.%d') END ,'~'), -->
+<!--                                case when length(to_dt) = 6 then DATE_FORMAT( concat(to_dt, '01'), '%Y.%m.%d') -->
+<!--                                     else DATE_FORMAT( to_dt, '%Y.%m.%d') END) gigan -->
+            FROM business
+          ORDER BY from_dt desc , to_dt desc
+    </select>	
+    
+    <select id="teamList" resultType="map">
+          SELECT A.no
+               , B.main_work
+               , A.project_team_id  userId
+               , C.mb_name          userNm
+               , A.tuip_fr_dt
+               , A.tuip_ed_dt
+            FROM doollee_project_team  A
+               , business              B
+               , doollee_members       C
+           WHERE A.no = B.no
+             AND A.project_team_id = C.mb_id
+             AND A.no = #{no} 
+    </select>
+    
+    <insert id="teamSave" parameterType="hashMap">
+        INSERT INTO DOOLLEE_PROJECT_TEAM
+        (
+            no
+           ,project_team_id
+           ,tuip_fr_dt
+           ,tuip_ed_dt
+        )
+        VALUES
+        (
+             ${no}
+            ,#{userId}
+            , replace(#{tuip_fr_dt} , "-" ,"")
+            , replace(#{tuip_ed_dt} , "-" ,"")
+        )
+        ON DUPLICATE KEY
+        UPDATE
+           tuip_fr_dt = replace(#{tuip_fr_dt} , "-" ,"")
+          ,tuip_ed_dt = replace(#{tuip_ed_dt} , "-" ,"")
+    </insert>
+    
+    <delete id="teamMemDelete" parameterType="hashMap">
+        DELETE FROM DOOLLEE_PROJECT_TEAM
+        WHERE no = #{no}
+          AND project_team_id = #{userId} 
+    </delete>
+    
+    
+</mapper>

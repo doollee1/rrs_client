@@ -1,0 +1,16 @@
+﻿/*공지사항*/
+  #job_list .search {
+    margin-top:50px;
+    text-align: right;
+  }    
+  #job_list .table-striped {
+    width:100%;
+    margin-top:30px;
+    text-align:center;
+  }
+  #job_list li{
+    display:contents;
+  }
+  .pagination {
+    text-align: center;
+  }

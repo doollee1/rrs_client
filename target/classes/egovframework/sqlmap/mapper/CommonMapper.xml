@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.doollee.service.impl.DlMapper">
+    <select id="selectCommList" resultType="HashMap" parameterType="HashMap">
+        SELECT simp_c, simp_cnm 
+          FROM doollee_simpc
+         where simp_tpc = #{simp_tpc}
+           and USE_YN = 1
+        <if test='!"".equals(attr_1)'>
+           and attr_1 = #{attr_1}
+        </if>   
+
+    </select>
+    
+    <select id="selectProjectList" resultType="HashMap" parameterType="HashMap">
+        SELECT no
+             , main_work 
+             , case when length(from_dt) = 6 then concat(from_dt , '01') else from_dt end  from_dt 
+             , case when length(to_dt) = 6 then concat(to_dt , '01') else to_dt end  to_dt 
+             , project_pl
+          FROM business
+         where (
+             case when length(from_dt) = 6 then concat(from_dt , '01') else from_dt end between replace( #{from_dt} ,'-', '') and replace( #{to_dt} ,'-', '')
+             or case when length(to_dt) = 6 then concat(to_dt , '01') else to_dt end between replace( #{from_dt} ,'-', '') and replace( #{to_dt} ,'-', '')
+            )
+         <if test='!"".equals(projectNm)'>
+           and main_work like  concat( ${projectNm} , '%')
+         </if>
+        order by no desc
+    </select>
+    
+    <select id="selectUserList" parameterType="hashMap" resultType="hashMap">
+	    <if test='"".equals(gbn)'>
+		    SELECT mb_id
+		         , mb_name
+		         , case when mb_retire_date = '' then '재직중' else '퇴사' end mb_sts
+		         , mb_birth
+		         , mb_email
+		         , mb_hp
+		         , mb_join_date
+	          FROM doollee_members A
+	         WHERE 1 = 1 
+	        <if test='!"".equals(userNm)'>
+	           AND mb_name like concat( #{userNm} , '%')
+	        </if>
+        </if>
+        <if test='!"".equals(gbn)'>
+            SELECT A.mb_id
+		         , A.mb_name
+		         , case when mb_retire_date = '' then '재직중' else '퇴사' end mb_sts
+		         , A.mb_birth
+		         , A.mb_email
+		         , A.mb_hp
+		         , A.mb_join_date       
+	          FROM doollee_members       A	             
+	         WHERE 1 = 1 
+<!-- 	           AND NOT EXISTS  -->
+<!--                ( -->
+<!--                  SELECT 'X' -->
+<!--                    FROM doollee_project_team B -->
+<!--                   WHERE A.mb_id = B.project_team_id -->
+<!--                     AND date_format(sysdate() , '%Y%m%d') BETWEEN B.tuip_fr_dt AND B.tuip_ed_dt -->
+<!--                ) -->
+	        <if test='!"".equals(userNm)'>
+	           AND A.mb_name like concat( #{userNm} , '%')
+	        </if>
+        </if>
+	</select>
+</mapper>

@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.doollee.service.impl.DlMapper">
+	<select id="selectProdTrans" parameterType="hashMap" resultType="hashMap">
+	    SELECT A.prod_no
+	         , A.SEQ
+             , (SELECT simp_cnm FROM doollee_simpc B where B.simp_c = F.prod_gbn and B.simp_tpc = 'prod_gbn') AS prod_gbn
+	         , (SELECT simp_cnm FROM doollee_simpc B where B.simp_c = A.trans_gbn and B.simp_tpc = 'TRANS_GBN') AS trans_gbn
+	         , A.trans_dt
+	         , A.trans_user_id        
+	         , CASE WHEN A.trans_user_id = '0' THEN '관리자'
+	                WHEN A.trans_user_id IS NULL || A.trans_user_id = '' THEN '' 
+	                ELSE B.mb_name        
+	            END                        AS trans_user_nm
+	         , A.trans_project                 AS trans_project
+	         , CASE WHEN A.trans_project = '0' THEN '본사'
+	                WHEN A.trans_project IS NULL || A.trans_project = '' THEN '' 
+	                ELSE D.main_work        
+	            END                        AS trans_project_nm
+	         , A.take_dt
+	         , A.take_user_id  
+	         , CASE WHEN A.take_user_id = '0' THEN '관리자'
+	                WHEN A.take_user_id IS NULL || A.take_user_id = '' THEN '' 
+	                ELSE C.mb_name        
+	            END                        AS take_user_nm
+	         , A.take_project                 AS take_project
+	         , CASE WHEN A.take_project = '0' THEN '본사'
+	                WHEN A.take_project IS NULL || A.take_project = '' THEN '' 
+	                ELSE E.main_work        
+	            END                        AS take_project_nm                         
+	         , A.take_place
+	         , (SELECT simp_cnm FROM doollee_simpc B where B.simp_c = A.take_sts and B.simp_tpc = 'TAKE_STS') AS take_sts
+	         , A.remark
+	      FROM DOOLLEE_PROD_TRANS          A
+	      LEFT OUTER JOIN DOOLLEE_MEMBERS        B
+	        ON A.trans_user_id = B.mb_id
+	      LEFT OUTER JOIN DOOLLEE_MEMBERS        C
+	        ON A.take_user_id  = C.mb_id
+	      LEFT OUTER JOIN BUSINESS               D
+	        ON A.trans_project = D.no
+	      LEFT OUTER JOIN BUSINESS               E
+	        ON A.take_project  = E.no
+	      LEFT OUTER JOIN DOOLLEE_PROD_M              F
+        ON F.prod_no = A.prod_no
+	     WHERE 1 = 1
+	    <if test='!"".equals(prod_no)'>
+           AND A.prod_no = #{prod_no}
+        </if>
+        <if test='!"".equals(take_project)'>
+           AND A.TAKE_PROJECT = #{take_project}
+        </if>
+        <if test='!"".equals(take_sts)'>
+           AND A.TAKE_STS = #{take_sts}
+        </if>
+        <if test='!"".equals(prod_plc)'>
+           <if test='"1".equals(prod_plc)'>  <!-- 본사 -->
+           AND A.TRANS_GBN = '3'
+           </if>
+           <if test='"2".equals(prod_plc)'>  <!-- 프로젝트 -->
+           AND A.TRANS_GBN IN ('1' , '2')
+           </if>
+        </if>
+        <if test='!"".equals(usr_id) and !"0".equals(usr_lvl)'>
+        	AND (A.TRANS_USER_ID = #{usr_id} OR A.TAKE_USER_ID = #{usr_id})
+        </if>
+        AND A.DEL_YN = '0'
+       ORDER BY SEQ DESC
+	</select>
+	
+	<insert id="insertTransTake" parameterType="hashMap">
+		<selectKey resultType="string" keyProperty="prod_seq" order="BEFORE">
+	       SELECT IFNULL(MAX(SEQ)+1,1) 
+	         FROM DOOLLEE_PROD_TRANS
+	         WHERE PROD_NO = #{prod_no}
+	    </selectKey>   
+	
+	    INSERT INTO DOOLLEE_PROD_TRANS (prod_no, SEQ , link_seq,trans_gbn, trans_dt, trans_user_id, take_dt, take_user_id, take_sts, remark, del_yn, reg_dtm, upd_dtm, trans_project, take_project, take_place)
+	    	VALUES
+	    	(
+	    	    #{prod_no}	                    /* 장비번호            */
+	    	    , #{prod_seq}                   /* 장비번호 시퀀스  */
+	    	    , #{link_seq}                   /* 연계일련번호      */
+	    	    , #{trans_gbn}             	    /* 인수인계구분      */
+	            , replace(#{trans_dt},'-','')	/* 인계일자            */
+	            , #{trans_user_id}              /* 인계자               */
+	            , replace(#{take_dt},'-','')    /* 인수일자            */
+	            , #{take_user_id}               /* 인수자               */
+	            , #{take_sts}                   /* 인수상태            */
+	            , #{remark}                     /* 비고                  */
+	            , '0'                           /* 삭제여부            */
+	            , NOW()       	                /* 최초등록일시      */
+	            , NOW()	                        /* 최종수정일시      */
+	            , #{trans_project}              /* 인계프로젝트      */
+	            , #{take_project}               /* 인수프로젝트      */
+	            , #{take_place}                 /* 인수장소            */
+	        )
+	</insert>
+	
+	<update id="updateTransTake" parameterType="hashMap">
+	    UPDATE DOOLLEE_PROD_TRANS
+	       SET trans_gbn   = #{trans_gbn}                /* 인계구분       */
+             , trans_dt   = replace(#{trans_dt},'-','')  /* 인수일자       */
+             , take_dt   = replace(#{take_dt},'-','')    /* 인계일자       */
+             , trans_user_id   = #{trans_user_id}        /* 인계자          */
+             , take_user_id    = #{take_user_id}	     /* 인수자          */
+             , trans_project     = ${trans_project}      /* 인계프로젝트 */
+             , take_project     = ${take_project}        /* 인수프로젝트 */
+             , take_sts  = #{take_sts}                   /* 인수상태       */
+             , remark    = #{remark}	   	             /* 비고             */
+             , take_place = #{take_place}  	             /* 인수장소       */
+	     WHERE prod_no = #{prod_no}	                     /* 장비번호       */
+	     	AND SEQ = ${SEQ}                             /* 일련번호       */
+	</update>
+	
+	<update id="updateYnTransTake" parameterType="hashMap">
+		UPDATE DOOLLEE_PROD_TRANS
+			SET del_yn = #{del_yn}
+			WHERE prod_no = #{prod_no}
+				AND SEQ = ${SEQ}                          /* 일련번호       */
+	</update>
+	
+	<update id="updateLinkedDelete" parameterType="hashMap">
+		UPDATE DOOLLEE_PROD_TRANS
+			SET del_yn = #{del_yn}
+			WHERE prod_no = #{prod_no}
+				AND LINK_SEQ = #{SEQ}                     /* 연계일련번호   */
+	</update>
+	
+	<update id="updateTransProdSts" parameterType="hashMap">
+		UPDATE doollee_prod_m
+		<choose>
+			<when test='trans_gbn=="1" and take_sts=="1"'> 
+				SET prod_sts = 2
+			</when>
+			<when test='(trnas_gbn=="3" and take_sts=="2") or "Y".equals(delete)'>
+				SET prod_sts = 1
+			</when>
+			<when test='trans_gbn=="4"and take_sts=="2"'>
+				SET prod_sts = 5
+			</when>
+
+			<otherwise>
+				SET prod_sts = prod_sts
+			</otherwise>
+		</choose>
+		    <if test='"2".equals(take_sts) and !"0".equals(take_user_id) '>
+		          , owner_id = #{take_user_id}
+		    </if> 
+		    
+		    <if test='"2".equals(take_sts) and "0".equals(take_user_id) '>
+		          , owner_id = ''
+		    </if>
+		WHERE prod_no = #{prod_no}
+	</update>
+</mapper>

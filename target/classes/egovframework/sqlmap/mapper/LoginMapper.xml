@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.doollee.comm.service.impl.LoginMapper">
+
+	<!-- 로그인 체크 -->
+    <select id="login" parameterType="com.doollee.comm.service.vo.LoginVO" resultType="com.doollee.comm.service.vo.LoginVO">
+        SELECT A.*
+             , (CASE
+                   WHEN B.project_pl      IS NOT NULL THEN '1'
+                   ELSE '0'
+                   END ) AS mb_projectPlYn
+             , (CASE
+                   WHEN B.NO      IS NOT NULL THEN B.NO
+                   WHEN C.NO      IS NOT NULL THEN C.NO
+                   ELSE 0
+                   END ) AS mb_projectNo
+			 , (CASE
+                   WHEN C.NO IS NOT NULL THEN (SELECT E.main_work FROM business E WHERE E.NO = C.NO)
+                   ELSE '본사'
+                   END ) AS mb_workNm
+
+          FROM doollee_members A
+           LEFT JOIN business B
+            ON A.mb_id       = B.project_pl
+           AND B.to_dt      >=  DATE_FORMAT(sysdate(),'%Y%m%d')
+           LEFT JOIN doollee_project_team C
+            ON A.mb_id       = C.project_team_id 
+           AND C.tuip_ed_dt >=  DATE_FORMAT(sysdate(),'%Y%m%d')
+         WHERE  A.mb_id       = #{in_id}
+           AND A.mb_password = password(#{in_pw})
+           
+    </select>
+    
+    <insert id="deviceInfoIns" parameterType="hashMap">
+        INSERT INTO DOOLLEE.DEVICE_REG (
+               mb_id
+             , device_id
+             , push_token 
+             , device_os
+             , device_model
+             , fst_reg_dtm
+             , lst_upt_dtm
+	      ) VALUES (
+               #{mb_id}
+             , #{device_id}
+             , #{push_token} 
+             , #{device_os}
+             , #{device_model}
+             , now()
+             , now()
+	      )
+	      ON DUPLICATE KEY UPDATE
+               mb_id        = #{mb_id}
+             , device_id    = #{device_id}
+             , push_token   = #{push_token}
+             , device_os    = #{device_os}
+             , device_model = #{device_model}
+             , lst_upt_dtm  = now()
+    </insert>
+</mapper>

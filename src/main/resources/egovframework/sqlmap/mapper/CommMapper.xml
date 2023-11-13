@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.doollee.service.impl.DlMapper">
+	
+	
+	<select id="Comm_codeList" parameterType="hashMap" resultType="hashMap">
+	    SELECT DISTINCT SIMP_TPC AS simp_tpc
+             , SIMP_TPCNM        AS simp_tpcnm
+          FROM doollee_simpc
+	</select>
+	
+    <select id="Comm_codeDetail" parameterType="hashMap" resultType="hashMap">
+        SELECT *
+          FROM doollee_simpc
+         WHERE 1=1 
+      <if test='simp_tpc != null and !"".equals(simp_tpc) '>
+           AND simp_tpc       = #{simp_tpc}
+      </if>
+      
+    </select>
+    
+    <insert id="Comm_codeIns" parameterType="hashMap">
+        INSERT INTO doollee_simpc (
+	          simp_tpc
+	         ,simp_tpcnm
+	         ,simp_c
+	         ,simp_cnm
+	         ,use_yn
+	         ,order_num
+	         ,attr_1
+	         ,attr_2
+	         ) VALUES (
+	          #{simp_tpc}
+	         ,#{simp_tpcnm}
+	         ,#{simp_c}
+	         ,#{simp_cnm}
+	         ,#{use_yn}
+	         ,#{order_num}
+	         ,#{attr_1}
+	         ,#{attr_2}
+	   )
+	   ON
+	      DUPLICATE KEY
+	   UPDATE
+	        simp_tpcnm   = #{simp_tpcnm}
+	      , simp_cnm     = #{simp_cnm}
+	      , use_yn       = #{use_yn}
+	      , order_num    = #{order_num}
+	      , attr_1       = #{attr_1}
+	      , attr_2       = #{attr_2}
+    </insert>
+    
+    
+    <update id="Comm_codeUpd" parameterType="hashMap">
+        UPDATE doollee_simpc
+           SET simp_tpcnm   = #{simp_tpcnm}
+             , simp_cnm     = #{simp_cnm}
+             , use_yn       = #{use_yn}
+             , order_num    = #{order_num}
+             , attr_1       = #{attr_1}
+	         , attr_2       = #{attr_2}
+         WHERE simp_tpc = #{simp_tpc}
+           AND simp_c   = #{simp_c}
+    </update>
+    
+
+</mapper>

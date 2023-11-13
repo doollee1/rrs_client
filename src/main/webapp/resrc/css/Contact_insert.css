@@ -1,0 +1,54 @@
+﻿/*고객문의*/
+  h5 {
+    font-weight: bold;
+  }
+  .color {     
+    font-size:15px;
+    color:#ff8400 !important;
+  }
+  table {
+    width:100%;
+    empty-cells: show;
+  }
+  th {
+    border-collapse: collapse;
+    border-top:1px solid #d4d4d4;
+    border-bottom:1px solid #d4d4d4;
+    border-right:1px solid #d4d4d4;
+    background-color:#eeeded;
+    text-align: center;
+    font-weight: bold;
+    color:#4e4e4e;
+    vertical-align:middle;
+    text-align:left;
+  }
+  td {
+    border-collapse: collapse;
+    border-top:1px solid #d4d4d4;
+    border-bottom:1px solid #d4d4d4;
+    border-right:hidden!important;
+    font-weight: bold;
+    color:#4e4e4e;
+    padding:5px;
+  }
+  .phoneNumber {
+    width:10%!important;
+  }
+  .listBox {
+    text-align:left;
+  }
+  .list {
+    width:50%;
+    height:40px;
+  }
+  /* .control-group .form-group {
+    display: table; 
+    margin-bottom:0px;
+  }
+  .form-group {
+    margin-bottom:0px;
+  }
+  .controls {
+    display: table-cell;
+    vertical-align: middle;
+  } */

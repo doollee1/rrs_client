@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:p="http://www.springframework.org/schema/p"
+        xmlns:context="http://www.springframework.org/schema/context"
+        xmlns:mvc="http://www.springframework.org/schema/mvc"
+        xmlns:util="http://www.springframework.org/schema/util"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+                http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+                http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+                http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.0.xsd">
+
+    <context:component-scan base-package="com">
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service"/>
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Repository"/>
+    </context:component-scan>
+	 
+
+    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping">
+        <property name="interceptors">
+            <list>
+                <ref bean="localeChangeInterceptor" />
+            </list>
+        </property>
+    </bean>
+	
+    <bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver" />
+    <!-- 쿠키를 이용한 Locale 이용시 <bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver"/> -->
+    <bean id="localeChangeInterceptor" class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+        <property name="paramName" value="language" />
+    </bean>
+
+    <bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+        <property name="defaultErrorView" value="cmmn/egovError"/>
+        <property name="exceptionMappings">
+            <props>
+                <prop key="org.springframework.dao.DataAccessException">cmmn/dataAccessFailure</prop>
+                <prop key="org.springframework.transaction.TransactionException">cmmn/transactionFailure</prop>
+                <prop key="egovframework.rte.fdl.cmmn.exception.EgovBizException">cmmn/egovError</prop>
+                <prop key="org.springframework.security.AccessDeniedException">cmmn/egovError</prop>
+            </props>
+        </property>
+    </bean>
+    
+    <!-- 로그인 체크가 필요한 URL과 로그인 여부를 체크해준다 -->
+    <mvc:interceptors>
+        <mvc:interceptor>
+			<mvc:mapping path="/Member_user.do"   /> <!-- 사용자- 수정 페이지 -->
+		    <bean class="com.rrs.comm.intercepter.AuthenticInterceptor" />
+        </mvc:interceptor>
+    </mvc:interceptors>
+    
+        <!-- 로그인 체크가 필요한 URL과 로그인 여부를 체크해준다 -->
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/noticeWrite.do"/>
+            <mvc:mapping path="/noticeIns.do"/>
+            
+		    <mvc:mapping path="/Member_sel.do"/>
+		    <mvc:mapping path="/Member_upd.do"/>
+		    <mvc:mapping path="/Member_newIns.do"/>
+		    <mvc:mapping path="/Comm_code.do"/>
+		   	
+		   	<mvc:mapping path="/Doollee_holi_main.do"/>
+		   	<mvc:mapping path="/Doollee_holi_main_app.do"/>
+		   	<mvc:mapping path="/Doollee_prod_main.do"/>
+		   	<mvc:mapping path="/Doollee_prod_main_app.do"/>
+		   	<mvc:mapping path="/Doollee_repair_main.do"/>
+		   	<mvc:mapping path="/Doollee_trans_main.do"/>
+		   	
+		    <bean class="com.rrs.comm.intercepter.AuthenticInterceptor" />
+        </mvc:interceptor>
+    </mvc:interceptors>
+    
+    <bean id="tilesViewResolver" class="org.springframework.web.servlet.view.UrlBasedViewResolver"
+          p:order="1" p:viewClass="org.springframework.web.servlet.view.tiles3.TilesView" />
+
+    <bean class="org.springframework.web.servlet.view.UrlBasedViewResolver" p:order="2"
+	    p:viewClass="org.springframework.web.servlet.view.JstlView"
+	    p:prefix="/WEB-INF/jsp/" p:suffix=".jsp"/>
+	
+    
+    <!-- 컨트롤러에서 넘어온 데이터(JSON 같은)를 messageConverter로 사용할 수 있는 방법 2 -->
+    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+        <property name="messageConverters">
+            <util:list list-class="java.util.ArrayList">
+                <ref bean="mappingJackson2HttpMessageConverter"/>
+            </util:list>
+        </property>
+    </bean>
+    <bean id="mappingJackson2HttpMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+        <property name="supportedMediaTypes">
+            <list>
+                <value>text/html;charset=UTF-8</value>
+                <value>application/json;charset=UTF-8</value>
+            </list>
+        </property>
+    </bean>
+	
+	
+    <!-- For Pagination Tag -->
+    <bean id="imageRenderer" class="com.rrs.comm.util.web.EgovImgPaginationRenderer"/>
+	
+    <bean id="paginationManager" class="egovframework.rte.ptl.mvc.tags.ui.pagination.DefaultPaginationManager">
+        <property name="rendererType">
+            <map>
+                <entry key="image" value-ref="imageRenderer"/>
+            </map>
+        </property>
+    </bean>
+	<!-- /For Pagination Tag -->
+	
+    <bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles3.TilesConfigurer">
+        <property name="definitions">
+            <list>
+                <value>/WEB-INF/config/tiles-def.xml</value>
+            </list>
+        </property>
+    </bean>
+
+    <mvc:view-controller path="/cmmn/validator.do" view-name="cmmn/validator"/>
+</beans>

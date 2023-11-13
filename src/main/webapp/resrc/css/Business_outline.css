@@ -1,0 +1,21 @@
+﻿/*개요*/
+  #Business_outline #color_title {
+    text-align:center;
+    font-weight: bold;
+    line-height: 150%;
+    padding-bottom:20px;
+  }
+  #Business_outline .title1 {
+    color:rgb(36, 154, 228) !important;
+  }
+  #Business_outline .title2 {
+    color:#ff8400 !important;
+  }
+  #Business_outline #title {
+    font-size:20px;
+    font-weight: bold;
+  }
+  #Business_outline #memo {
+    font-size:18px;
+    line-height: 150%;
+  }

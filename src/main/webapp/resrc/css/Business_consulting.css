@@ -1,0 +1,16 @@
+﻿/*컨설팅*/
+  #Business_consulting h4 {
+    width:100%;
+    font-size:20px;
+    font-weight: bold;
+    line-height: 150%;
+    padding-bottom:20px;
+  }
+  #Business_consulting #title {
+    font-size:20px;
+    font-weight: bold;
+  }
+  #Business_consulting #memo {
+    font-size:18px;
+    line-height: 150%;
+  }

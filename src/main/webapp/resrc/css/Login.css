@@ -1,0 +1,12 @@
+﻿/*로그인*/
+
+html, body {background:url(../image/login_bg.png) no-repeat center;background-size:cover;}
+body {display: flex;flex-direction: column;touch-action: pan-x pan-y;}
+body:before {content:""; position:fixed;top:0;left:0;right:0;bottom:0; background-color:rgba(0, 0, 0, .5);}
+input, textarea, select { font-size: 16px !important;}
+
+
+.card {margin:90px auto 0;width:20rem;background-color:transparent;}
+.form-signin .form-control {
+	position: relative;height: auto;-webkit-box-sizing: border-box;-moz-box-sizing: border-box;
+	box-sizing: border-box;border:none;padding:5px 10px;font-size:14px;font-weight:300}

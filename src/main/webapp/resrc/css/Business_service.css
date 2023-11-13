@@ -1,0 +1,76 @@
+/*시스템통합*/
+  #System_integration h4 {
+    width:100%;
+    font-size:20px;
+    font-weight: bold;
+    line-height: 150%;
+    padding-bottom:20px;
+  }
+  #System_integration #title {
+    font-size:20px;
+    font-weight: bold;
+  }
+  #System_integration #memo {
+    font-size:18px;
+    line-height: 150%;
+  }
+/*IT 아웃소싱*/
+  #outsorucing h4 {
+    width:100%;
+    font-size:20px;
+    font-weight: bold;
+    line-height: 150%;
+    padding-bottom:20px;
+  }
+  #outsorucing #title {
+    font-size:20px;
+    font-weight: bold;
+  }
+  #outsorucing #memo {
+    font-size:18px;
+    line-height: 150%;
+  }
+/*IT 유통*/
+  #distribution h4 {
+    width:100%;
+    font-size:20px;
+    font-weight: bold;
+    line-height: 150%;
+    padding-bottom:20px;
+  }
+  #distribution table {
+    width:100%;
+  }
+  #distribution th {
+    
+    border-collapse: collapse;
+    border-top:1px solid #d4d4d4;
+    border-bottom:1px solid #d4d4d4;
+    border-right:1px solid #d4d4d4;
+    background-color:#f8f8f8;
+    text-align: center;
+    font-weight: bold;
+    color:#ff7d59;
+    padding:10px;
+  }
+  #distribution td {
+    border-collapse: collapse;
+    border-top:1px solid #d4d4d4;
+    border-bottom:1px solid #d4d4d4;
+    border-right:1px solid #d4d4d4;
+    text-align: center;
+    font-weight: bold;
+    color:#4e4e4e;
+    padding:10px;
+  }
+  #distribution .td1 {
+    border-collapse: collapse;
+    border-top:1px solid #d4d4d4;
+    border-bottom:1px solid #d4d4d4;
+    border-right:1px solid #d4d4d4;
+    text-align: left;
+    font-weight: bold;
+    color:#4e4e4e;
+    padding:10px;
+    padding-left:30px;
+  }

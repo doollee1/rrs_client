@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.doollee.service.impl.DlMapper">
+	<select id="selectProdInfo" parameterType="hashMap" resultType="hashMap">
+	    SELECT DISTINCT T1.prod_no	   /* 장비번호      */
+             , T1.prod_gbn
+             , (select simp_cnm from doollee_simpc where simp_c = T1.prod_gbn and simp_tpc = 'PROD_GBN') prod_gbn_nm 	   /* 제품구분      */
+             , T1.prod_comp            /* 제조사         */
+             , T1.model_nm	           /* 모델명         */
+             , T1.serial_no            /* 시리얼번호   */
+             , T1.size_expl            /* 크기(고유번호)  */
+             , T1.cpu_expl	           /* cpu     */  
+             , T1.hdd_exp	           /* hdd     */
+             , T1.ram_expl	           /* ram     */
+             , T1.prod_sts
+             , (select simp_cnm from doollee_simpc where simp_c = T1.prod_sts and simp_tpc = 'PROD_STS')  prod_sts_nm	   /* 장비상태      */
+             , date_format(CONCAT(T1.prod_ym,'01'), '%Y-%m'   ) AS prod_ym
+             , date_format(T1.buy_dt              , '%Y-%m-%d') AS buy_dt
+             , date_format(T1.disuse_dt           , '%Y-%m-%d') AS disuse_dt
+             , T1.del_yn        	   /* 삭제여부     */
+             , T1.disuse_expl          /* 폐기사유    */
+             , T1.qty
+             , T1.remark
+          FROM doollee_prod_m T1
+         WHERE T1.del_yn = "0"
+        <if test='prod_no!=null and !"".equals(prod_no)'>
+           AND T1.prod_no like #{prod_no} 
+        </if>
+        <if test='prod_gbn!=null and !"".equals(prod_gbn)'>
+           AND T1.prod_gbn = #{prod_gbn}
+        </if>
+        <if test='trans_gbn!=null and !"".equals(trans_gbn)'>
+        	<if test='prod_sts==null or "".equals(prod_sts)'>
+		        <choose>
+		        	<when test='trans_gbn=="1"'>
+						AND T1.prod_sts = "1"
+					</when>
+					<when test='trans_gbn=="2" or trans_gbn=="3" or trans_gbn=="4"'>
+						AND T1.prod_sts = "2"
+					</when>
+		        </choose>
+	        </if>
+	        <if test='prod_sts!=null and !"".equals(prod_sts)'>
+	        	AND T1.prod_sts = #{prod_sts}
+	        </if>
+        </if>
+        <if test='trans_gbn==null or "".equals(trans_gbn)'>
+        	<if test='prod_sts!=null and !"".equals(prod_sts)'>
+	        	AND INSTR( #{prod_sts} , T1.prod_sts ) > 0 
+	        </if>
+        </if>
+         ORDER BY T1.prod_no DESC
+	</select>
+	
+	<insert id="insertProdInfo" parameterType="hashMap">
+	    <selectKey resultType="integer" keyProperty="prod_no" order="BEFORE">
+        SELECT IFNULL(MAX(prod_no) + 1, CONCAT( SUBSTR(#{buy_dt},1,4), #{prod_gbn}, lpad(1,4,'0') ))
+          FROM doollee_prod_m
+         WHERE SUBSTR(BUY_DT,1,4) = SUBSTR(#{buy_dt},1,4) 
+           AND PROD_GBN = #{prod_gbn}
+        </selectKey>
+	    INSERT INTO doollee_prod_m (
+	           prod_no
+	         , prod_gbn
+	         , prod_comp
+	         , model_nm
+	         , serial_no
+	         , size_expl
+	         , cpu_expl
+	         , hdd_exp
+	         , ram_expl
+	         , prod_sts
+	         , prod_ym
+	         , buy_dt
+	         , disuse_dt
+	         , disuse_expl
+	         , del_yn
+	         , qty
+	         , remark
+	         , owner_id
+	         , reg_dtm
+	         , upd_dtm
+	    ) VALUES (
+	    	   #{prod_no}                    /* 장비번호          */
+             , #{prod_gbn}                   /* 제품구분          */
+             , #{prod_comp}                  /* 제조사             */
+             , #{model_nm}                   /* 모델명             */
+             , #{serial_no}                  /* 시리얼번호       */
+             , #{size_expl}                  /* 크기(고유번호)*/
+             , #{cpu_expl}                   /* cpu       */  
+             , #{hdd_exp}                    /* hdd       */
+             , #{ram_expl}	                 /* ram       */
+             , #{prod_sts}                   /* 장비상태          */
+             , replace(#{prod_ym}  ,'-','')	 /* 제조년월          */
+             , replace(#{buy_dt}   ,'-','')  /* 구입일자          */
+             , replace(#{disuse_dt},'-','')  /* 폐기일자          */
+             , #{disuse_expl}                /* 폐기사유          */
+             , '0'	                         /* 삭제여부          */
+             , ${qty}                        /* 수량                */
+             , #{remark}                     /* 비고                */
+             , #{owner_id}                   /* 장비소유자ID */
+             , NOW()                         /* 최초등록일시    */
+             , NOW()                         /* 최종수정일시    */
+        )
+	</insert>
+	
+	<update id="updateProdInfo" parameterType="hashMap">
+	    UPDATE doollee_prod_m
+	       SET prod_comp   = #{prod_comp}                  /* 제조사             */
+             , model_nm    = #{model_nm}	               /* 모델명             */
+             , serial_no   = #{serial_no}                  /* 시리얼번호       */
+             , size_expl   = #{size_expl}                  /* 크기(고유번호)  */
+             , cpu_expl    = #{cpu_expl}	               /* cpu       */
+             , hdd_exp     = #{hdd_exp}                    /* hdd       */
+             , ram_expl    = #{ram_expl}	               /* ram       */
+             , prod_sts    = #{prod_sts}	               /* 장비상태          */
+             , prod_ym     = replace(#{prod_ym}  ,'-','')  /* 제조년월          */
+             , buy_dt      = replace(#{buy_dt}   ,'-','')  /* 구입일자          */
+             , disuse_dt   = replace(#{disuse_dt},'-','')  /* 폐기일자          */
+             , disuse_expl = #{disuse_expl}                /* 폐기사유          */
+             , del_yn      = #{del_yn}                     /* 삭제여부          */
+             , qty         = ${qty}                        /* 수량                */
+             , remark      = #{remark}                     /* 비고                */
+             , owner_id    = #{owner_id}                   /* 장비소유자ID */
+             , upd_dtm     = NOW()                         /* 최종수정일시    */
+	     WHERE prod_no     = #{prod_no}	                   /* 장비번호          */
+	</update>
+</mapper>

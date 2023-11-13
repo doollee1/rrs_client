@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1088862229350",
+    "project_id": "doolleeholy-28d10",
+    "storage_bucket": "doolleeholy-28d10.appspot.com" 
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1088862229350:android:6f316988c8e1696b99eea7",
+        "android_client_info": {
+          "package_name": "com.doollee.holy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1088862229350-3s95cid6r6efvcukt4o7ccvap1189kjt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA26HybWdk9zUEA_9-IuBV8N2s9z2hJZAs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1088862229350-3s95cid6r6efvcukt4o7ccvap1189kjt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
