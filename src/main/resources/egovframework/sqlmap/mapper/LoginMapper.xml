@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.doollee.comm.service.impl.LoginMapper">
+<mapper namespace="com.rrs.comm.service.impl.LoginMapper">
 
 	<!-- 로그인 체크 -->
-    <select id="login" parameterType="com.doollee.comm.service.vo.LoginVO" resultType="com.doollee.comm.service.vo.LoginVO">
+    <select id="login" parameterType="com.rrs.comm.service.vo.LoginVO" resultType="com.rrs.comm.service.vo.LoginVO">
         SELECT A.*
              , (CASE
                    WHEN B.project_pl      IS NOT NULL THEN '1'

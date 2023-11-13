@@ -13,7 +13,7 @@
 
 	<!-- MapperConfigurer setup for MyBatis Database Layer with @Mapper("deptMapper") in DeptMapper Interface -->
  	<bean class="egovframework.rte.psl.dataaccess.mapper.MapperConfigurer">
-		<property name="basePackage" value="com.doollee" />
+		<property name="basePackage" value="com.rrs" />
 	</bean>
     
 </beans>
