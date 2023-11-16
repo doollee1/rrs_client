@@ -134,6 +134,6 @@
 	            $(this).children()[0].classList.remove("show");
 	        });
 	    });
-    </script>
+	</script>
 </body>
 </html>
