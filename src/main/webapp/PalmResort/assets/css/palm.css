@@ -71,6 +71,8 @@ a, a:hover, a:focus, a:active {text-decoration:none;color:inherit;}
 }
 
 .app-footer {position:fixed;bottom:0;background-color:var(--bs-body-bg);border-top:none;padding:0.9375rem 20px;width:100%}
+.register.register-with-news-feed .app-footer{background-color:#fff}
+
 /*page loader hidden*/
 .pace {display:none !important;}
 
@@ -88,9 +90,19 @@ a, a:hover, a:focus, a:active {text-decoration:none;color:inherit;}
 	
 /* 03. Login =================================*/
 .login.login-with-news-feed .login-header .brand .logo, .register.register-with-news-feed .login-header .brand .logo {border:none;background-color:transparent;font-size:unset;}
-.login.login-with-news-feed, .register.register-with-news-feed {min-height:unset}
+.login.login-with-news-feed, .register.register-with-news-feed.find {min-height:unset}
 .login.login-with-news-feed .login-container, .login.login-with-news-feed .register-container, .register.register-with-news-feed .login-container, .register.register-with-news-feed .register-container
 {min-height:calc(100vh - 60px);}
+.register.register-with-news-feed.find .register-container {min-height:calc(100vh - 120px);}
 .btn-links {display:flex;}
 .btn-links a:first-child {margin-right:15px}
 .btn-links .btn-join{margin-left:auto}
+.register-content .text {font-size:14px;margin-bottom:15px;color:var(--bs-app-theme);}
+.register-content .text > i {margin-right:5px}
+
+
+
+
+
+
+
