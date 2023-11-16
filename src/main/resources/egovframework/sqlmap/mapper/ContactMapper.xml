@@ -2,8 +2,8 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.rrs.service.impl.DlMapper">
-	<select id="listContact" resultType="com.rrs.service.vo.MainContactVO">
+<mapper namespace="com.rrs.web.main.service.impl.MainMapper">
+	<select id="listContact" resultType="com.rrs.web.comm.service.vo.MainContactVO">
 		SELECT qna_sqno
 		, name
 		, tpdsc
@@ -19,7 +19,7 @@
 		ORDER BY qna_sqno DESC
 	</select>
 	
-	<select id="listContactSelect" resultType="com.rrs.service.vo.MainContactVO">
+	<select id="listContactSelect" resultType="com.rrs.web.comm.service.vo.MainContactVO">
 		SELECT qna_sqno
 		, name
 		, tpdsc
@@ -66,7 +66,7 @@
            , '0'
            ) 
   </insert>
-	<update id="updateContact" parameterType="com.rrs.service.vo.MainContactVO">
+	<update id="updateContact" parameterType="com.rrs.web.comm.service.vo.MainContactVO">
 	    UPDATE GUEST_QNA
 	       SET re_yn = '1'
 	         , re_name = #{re_name}

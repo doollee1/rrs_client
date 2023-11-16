@@ -24,10 +24,10 @@
 </head>
 
 <body>
-  	<!--navigation-->
-  	<jsp:include page="common/Navigation.jsp" />
-  	<!--header-->
-  	<jsp:include page="common/Header.jsp" />
+	<!--navigation-->
+	<jsp:include page="common/Navigation.jsp" />
+	<!--header-->
+	<jsp:include page="common/Header.jsp" />
 
 
 	<!--container-->
@@ -134,6 +134,6 @@
 	            $(this).children()[0].classList.remove("show");
 	        });
 	    });
-    </script>
+	</script>
 </body>
 </html>

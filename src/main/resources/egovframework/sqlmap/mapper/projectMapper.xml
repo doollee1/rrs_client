@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.rrs.service.impl.DlMapper">
-    <select id="projectList" resultType="com.rrs.service.vo.ProjectVO">
+<mapper namespace="com.rrs.web.main.service.impl.MainMapper">
+    <select id="projectList" resultType="com.rrs.web.comm.service.vo.ProjectVO">
 	      SELECT * 
 	        FROM business
 	       WHERE gubun=2 
@@ -27,7 +27,7 @@
 		                    )
 	</insert>
 	
-	<select id="projectView" parameterType="int" resultType="com.rrs.service.vo.ProjectVO">
+	<select id="projectView" parameterType="int" resultType="com.rrs.web.comm.service.vo.ProjectVO">
 		select no
 		     ,gubun
 		     ,company
@@ -39,7 +39,7 @@
 		 where no = #{no}
 	</select>
 	
-	<update id="projectUpdate" parameterType="com.rrs.service.vo.ProjectVO">
+	<update id="projectUpdate" parameterType="com.rrs.web.comm.service.vo.ProjectVO">
 		update business set
 			 gubun = #{gubun}
 			,company = #{company}
@@ -51,11 +51,11 @@
 		where no = #{no}
 	</update>
 	
-	<delete id="projectDelete" parameterType="com.rrs.service.vo.ProjectVO">
+	<delete id="projectDelete" parameterType="com.rrs.web.comm.service.vo.ProjectVO">
 		delete from business
 		where no = #{no}
 	</delete>
-	<select id="public_sector" resultType="com.rrs.service.vo.ProjectVO">
+	<select id="public_sector" resultType="com.rrs.web.comm.service.vo.ProjectVO">
        SELECT company
 	        , main_work
 	        , utill
@@ -65,7 +65,7 @@
 	    WHERE gubun = 1
 	    ORDER BY from_dt desc
 	</select>
-		<select id="listTotal" resultType="com.rrs.service.vo.ProjectVO">
+		<select id="listTotal" resultType="com.rrs.web.comm.service.vo.ProjectVO">
 	    SELECT no
 	    	 , gubun
 	    	 , company
@@ -77,7 +77,7 @@
 	     WHERE gubun != 4
 	     ORDER BY gubun ASC, from_dt desc
 	</select>
-	<select id="listMainten" resultType="com.rrs.service.vo.ProjectVO">
+	<select id="listMainten" resultType="com.rrs.web.comm.service.vo.ProjectVO">
 	    SELECT no
 	    	 , gubun
 	    	 , company
@@ -89,13 +89,13 @@
 	     WHERE gubun=3
 	     ORDER BY from_dt desc
 	</select>
-	<select id="listGeneral" resultType="com.rrs.service.vo.ProjectVO">
+	<select id="listGeneral" resultType="com.rrs.web.comm.service.vo.ProjectVO">
 	      SELECT * 
 	        FROM business
 	       WHERE gubun=2 
 	       ORDER BY from_dt desc
 	</select>
-	<select id="selectProject" resultType="com.rrs.service.vo.ProjectVO">
+	<select id="selectProject" resultType="com.rrs.web.comm.service.vo.ProjectVO">
           SELECT no
                , main_work 
                , case when length(from_dt) = 6 then DATE_FORMAT( concat(from_dt, '01'), '%Y.%m.%d')
