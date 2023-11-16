@@ -1,0 +1,96 @@
+@charset "UTF-8";
+
+/* ========================================== 
+	00. Reset
+	01. Header & Footer
+	02. Common Layout
+	03. Login
+	==========================================*/
+
+/* 00. Reset ================================*/
+@font-face {
+  font-family: 'Noto Sans KR';
+  font-style: normal;
+  font-weight: 100;
+  src: url(../webfonts/NotoSansKR-Thin.woff2) format('woff2'),
+       url(../webfonts/NotoSansKR-Thin.woff) format('woff'),
+       url(../webfonts/NotoSansKR-Thin.otf) format('opentype');
+}
+@font-face {
+  font-family: 'Noto Sans KR';
+  font-style: normal;
+  font-weight: 300;
+  src: url(../webfonts/NotoSansKR-Light.woff2) format('woff2'),
+       url(../webfonts/NotoSansKR-Light.woff) format('woff'),
+       url(../webfonts/NotoSansKR-Light.otf) format('opentype');
+}
+@font-face {
+   font-family: 'Noto Sans KR';
+   font-style: normal;
+   font-weight: 400;
+   src: url(../webfonts/NotoSansKR-Regular.woff2) format('woff2'),
+        url(../webfonts/NotoSansKR-Regular.woff) format('woff'),
+        url(../webfonts/NotoSansKR-Regular.otf) format('opentype');
+ }
+@font-face {
+   font-family: 'Noto Sans KR';
+   font-style: normal;
+   font-weight: 500;
+   src: url(../webfonts/NotoSansKR-Medium.woff2) format('woff2'),
+        url(../webfonts/NotoSansKR-Medium.woff) format('woff'),
+        url(../webfonts/NotoSansKR-Medium.otf) format('opentype');
+ }
+@font-face {
+   font-family: 'Noto Sans KR';
+   font-style: normal;
+   font-weight: 700;
+   src: url(../webfonts/NotoSansKR-Bold.woff2) format('woff2'),
+        url(../webfonts/NotoSansKR-Bold.woff) format('woff'),
+        url(../webfonts/NotoSansKR-Bold.otf) format('opentype');
+ }
+@font-face {
+   font-family: 'Noto Sans KR';
+   font-style: normal;
+   font-weight: 900;
+   src: url(../webfonts/NotoSansKR-Black.woff2) format('woff2'),
+        url(../webfonts/NotoSansKR-Black.woff) format('woff'),
+        url(../webfonts/NotoSansKR-Black.otf) format('opentype');
+ } 
+body {font-family:"Noto Sans KR", "Sans-serif";}
+a, a:hover, a:focus, a:active {text-decoration:none;color:inherit;}
+.form-control::placeholder {font-weight:400;color:var(--bs-gray-400)}
+
+/* 01. Header & Footer ================================*/
+.app-header .navbar-header {height:60px;justify-content:space-between;}
+.app-header .navbar-header h1 {line-height:1;margin-bottom:0;}
+.app-header .navbar-header .navbar-mobile-toggler.hidden{opacity:0;cursor:default;}
+.btn-pre {font-size:1.5rem;}
+
+@media (max-width: 767.98px) {
+	.app-header-fixed {padding-top:60px} 
+}
+
+.app-footer {position:fixed;bottom:0;background-color:var(--bs-body-bg);border-top:none;padding:0.9375rem 20px;width:100%}
+/*page loader hidden*/
+.pace {display:none !important;}
+
+
+/* 02. Layout ================================*/
+@media (max-width: 767.98px) {
+	.app-content .app-content-padding {padding:20px 20px 60px}
+	}
+.app-sidebar-content {overflow-x:hidden !important;}
+.app-sidebar .menu .menu-item.logout {position:absolute;bottom:0;width:100%;border-top:1px solid #424242} 
+
+
+
+
+	
+/* 03. Login =================================*/
+.login.login-with-news-feed .login-header .brand .logo, .register.register-with-news-feed .login-header .brand .logo {border:none;background-color:transparent;font-size:unset;}
+.login.login-with-news-feed, .register.register-with-news-feed {min-height:unset}
+.login.login-with-news-feed .login-container, .login.login-with-news-feed .register-container, .register.register-with-news-feed .login-container, .register.register-with-news-feed .register-container
+{min-height:calc(100vh - 60px);}
+.btn-links {display:flex;}
+.btn-links a:first-child {margin-right:15px}
+.btn-links .btn-join{margin-left:auto}
