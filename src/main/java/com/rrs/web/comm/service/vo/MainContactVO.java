@@ -1,6 +1,6 @@
-package com.rrs.service.vo;
+package com.rrs.web.comm.service.vo;
 
-import com.rrs.service.vo.MainContactVO;
+import com.rrs.web.comm.service.vo.MainContactVO;
 
 public class MainContactVO {
   int qna_sqno;

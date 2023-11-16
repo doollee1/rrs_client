@@ -1,16 +1,16 @@
-package com.rrs.service.impl;
+package com.rrs.web.main.service.impl;
 
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
 import java.util.List;
 import java.util.Map;
 
-import com.rrs.comm.service.vo.LoginVO;
-import com.rrs.service.vo.MainContactVO;
-import com.rrs.service.vo.MainNoticeVO;
-import com.rrs.service.vo.ProjectVO;
+import com.rrs.web.comm.service.vo.MainContactVO;
+import com.rrs.web.comm.service.vo.MainNoticeVO;
+import com.rrs.web.comm.service.vo.ProjectVO;
+import com.rrs.web.login.service.vo.LoginVO;
 
-@Mapper("dlMapper")
-public interface DlMapper {
+@Mapper("mainMapper")
+public interface MainMapper {
   List<MainContactVO> listContact() throws Exception;
   
   List<MainContactVO> listContactSelect(MainContactVO paramMainContactVO) throws Exception;

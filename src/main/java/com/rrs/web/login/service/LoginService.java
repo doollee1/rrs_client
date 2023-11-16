@@ -1,8 +1,8 @@
-package com.rrs.comm.service;
+package com.rrs.web.login.service;
 
 import java.util.Map;
 
-import com.rrs.comm.service.vo.LoginVO;
+import com.rrs.web.login.service.vo.LoginVO;
 
 public interface LoginService {
 	

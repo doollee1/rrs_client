@@ -2,8 +2,8 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.rrs.service.impl.DlMapper">
-	<select id="mainnotice" resultType="com.rrs.service.vo.MainNoticeVO">
+<mapper namespace="com.rrs.web.main.service.impl.MainMapper">
+	<select id="mainnotice" resultType="com.rrs.web.comm.service.vo.MainNoticeVO">
 	    SELECT wr_id
 		     , wr_subject
 		     , SUBSTR(wr_datetime, 1, 10) AS wr_date

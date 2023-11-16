@@ -3,11 +3,11 @@
 // Decompiler options: packimports(3) 
 // Source File Name:   LoginMapper.java
 
-package com.rrs.comm.service.impl;
+package com.rrs.web.login.service.impl;
 
 import java.util.Map;
 
-import com.rrs.comm.service.vo.LoginVO;
+import com.rrs.web.login.service.vo.LoginVO;
 
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
 

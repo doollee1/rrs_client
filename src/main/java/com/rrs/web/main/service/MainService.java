@@ -1,15 +1,15 @@
-package com.rrs.service;
+package com.rrs.web.main.service;
 
 import java.util.List;
 import java.util.Map;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.rrs.comm.service.vo.LoginVO;
-import com.rrs.service.vo.MainContactVO;
-import com.rrs.service.vo.MainNoticeVO;
-import com.rrs.service.vo.ProjectVO;
+import com.rrs.web.comm.service.vo.MainContactVO;
+import com.rrs.web.comm.service.vo.MainNoticeVO;
+import com.rrs.web.comm.service.vo.ProjectVO;
+import com.rrs.web.login.service.vo.LoginVO;
 
-public interface DlService {
+public interface MainService {
   List<MainContactVO> r_Contact_001() throws Exception;
   
   List<MainContactVO> r_Contact_002(MainContactVO paramMainContactVO) throws Exception;

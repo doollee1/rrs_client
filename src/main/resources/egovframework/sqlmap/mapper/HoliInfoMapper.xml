@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.rrs.service.impl.DlMapper">
+<mapper namespace="com.rrs.web.main.service.impl.MainMapper">
 	<select id="selectHoliRegInfo" parameterType="hashMap" resultType="hashMap">
 	    SELECT T1.holi_seq                           AS holi_seq      /* "휴가신청순"  */
              , T1.approver_id                        AS approver_id   /* "휴가승인ID" */

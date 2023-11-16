@@ -1,14 +1,12 @@
-package com.rrs.web;
+package com.rrs.web.main.controller;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.rrs.comm.service.LoginService;
-import com.rrs.comm.service.vo.LoginVO;
-import com.rrs.comm.util.FcmUtil;
-import com.rrs.service.DlService;
-import com.rrs.service.vo.MainContactVO;
-import com.rrs.service.vo.ProjectVO;
-import com.rrs.web.DlController;
+import com.rrs.web.comm.service.vo.MainContactVO;
+import com.rrs.web.comm.service.vo.ProjectVO;
+import com.rrs.web.login.service.LoginService;
+import com.rrs.web.login.service.vo.LoginVO;
+import com.rrs.web.main.controller.MainController;
+import com.rrs.web.main.service.MainService;
 
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -21,8 +19,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,14 +36,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-public class DlController {
-	private static final Logger logger = LoggerFactory.getLogger(DlController.class);
-	  
-  	@Autowired
-	private Properties properties;
-  
-  	@Resource(name = "dlService")
-  	DlService dlservice;
+public class MainController {
+	private static final Logger logger = LoggerFactory.getLogger(MainController.class);
+
+  	@Resource(name = "mainService")
+  	MainService mainService;
   
   	@Resource(name = "loginService")
   	LoginService loginService;
@@ -59,7 +52,7 @@ public class DlController {
     logger.info("rcvCode==" + rcvCode);
     String rtnStr = "N";
     if (rcvCode != null && !"".equals(rcvCode)) {
-      rtnStr = this.dlservice.selectLocalFoodConfirm(rcvCode);
+      rtnStr = this.mainService.selectLocalFoodConfirm(rcvCode);
       logger.info("rtnStr==" + rtnStr);
     } 
     HttpHeaders responseHeaders = new HttpHeaders();
@@ -74,9 +67,9 @@ public class DlController {
     String qna_sqno = httpServletRequest.getParameter("qna_sqno");
     if (qna_sqno != null) {
       mainContactVo.setLoginYn(loginYn);
-      model.addAttribute("listContactSelect", this.dlservice.r_Contact_002(mainContactVo));
+      model.addAttribute("listContactSelect", this.mainService.r_Contact_002(mainContactVo));
     } 
-    model.addAttribute("listContact", this.dlservice.r_Contact_001());
+    model.addAttribute("listContact", this.mainService.r_Contact_001());
     return "Contact_select";
   }
   
@@ -90,7 +83,7 @@ public class DlController {
   @ResponseBody
   public String u_Contact_001(@ModelAttribute("mainContactVo") MainContactVO mainContactVo) throws Exception {
     logger.info("update");
-    int rs = this.dlservice.u_Contact_001(mainContactVo);
+    int rs = this.mainService.u_Contact_001(mainContactVo);
     return (rs == 0) ? "N" : "Y";
   }
   
@@ -104,7 +97,7 @@ public class DlController {
   @ResponseBody
   public String c_Contact_002(@ModelAttribute("mainContactVo") MainContactVO mainContactVo, Model model) throws Exception {
     logger.info("select");
-    int rs = this.dlservice.c_Contact_001(mainContactVo);
+    int rs = this.mainService.c_Contact_001(mainContactVo);
     return (rs == 0) ? "N" : "Y";
   }
   
@@ -112,7 +105,7 @@ public class DlController {
   @ResponseBody
   public String c_Contact_pwChk(@ModelAttribute("mainContactVo") MainContactVO mainContactVo, Model model, HttpServletRequest req) throws Exception {
     logger.info("pwChk");
-    List<MainContactVO> list = this.dlservice.r_Contact_002(mainContactVo);
+    List<MainContactVO> list = this.mainService.r_Contact_002(mainContactVo);
     HttpSession session = req.getSession();
     String rs = (list.size() == 0) ? "N" : "Y";
     return rs;
@@ -127,29 +120,29 @@ public class DlController {
   @RequestMapping(value = {"/projectSave.do"}, method = {RequestMethod.POST})
   public String c_Project_001(ProjectVO projectVO, Model model) throws Exception {
     logger.info("projectSave");
-    this.dlservice.c_Project_001(projectVO);
-    model.addAttribute("projectList", this.dlservice.r_General_001());
-    model.addAttribute("listTotal", this.dlservice.r_Project_001());
-    model.addAttribute("listMainten", this.dlservice.r_Maintenance_001());
-    model.addAttribute("public_sector", this.dlservice.r_Public_001());
+    this.mainService.c_Project_001(projectVO);
+    model.addAttribute("projectList", this.mainService.r_General_001());
+    model.addAttribute("listTotal", this.mainService.r_Project_001());
+    model.addAttribute("listMainten", this.mainService.r_Maintenance_001());
+    model.addAttribute("public_sector", this.mainService.r_Public_001());
     return "Project_actual";
   }
   
   @RequestMapping(value = {"/projectView.do"}, method = {RequestMethod.GET})
   public String e_Project_001(Model model, HttpServletRequest request, ProjectVO projectVO) throws Exception {
     logger.info("projectView");
-    model.addAttribute("read", this.dlservice.e_Project_001(projectVO.getNo()));
+    model.addAttribute("read", this.mainService.e_Project_001(projectVO.getNo()));
     return "Project_update";
   }
   
   @RequestMapping(value = {"/projectUpdate.do"}, method = {RequestMethod.POST})
   public String u_Project_001(ProjectVO projectVO, Model model) throws Exception {
     logger.info("projectUpdate");
-    this.dlservice.u_Project_001(projectVO);
-    model.addAttribute("projectList", this.dlservice.r_General_001());
-    model.addAttribute("listTotal", this.dlservice.r_Project_001());
-    model.addAttribute("listMainten", this.dlservice.r_Maintenance_001());
-    model.addAttribute("public_sector", this.dlservice.r_Public_001());
+    this.mainService.u_Project_001(projectVO);
+    model.addAttribute("projectList", this.mainService.r_General_001());
+    model.addAttribute("listTotal", this.mainService.r_Project_001());
+    model.addAttribute("listMainten", this.mainService.r_Maintenance_001());
+    model.addAttribute("public_sector", this.mainService.r_Public_001());
     return "Project_actual";
   }
   
@@ -157,15 +150,15 @@ public class DlController {
   @ResponseBody
   public String d_Project_001(ProjectVO projectVO, Model model) throws Exception {
     logger.info("projectDelete");
-    int chk = this.dlservice.d_Project_001(projectVO.getNo());
+    int chk = this.mainService.d_Project_001(projectVO.getNo());
     return (chk > 0) ? "Y" : "N";
   }
   
   @RequestMapping(value = {"/teamView.do"}, method = {RequestMethod.GET})
   public String teamInsert(ProjectVO projectVO, Model model) throws Exception {
     logger.info("teamInsert");
-    this.dlservice.u_Project_001(projectVO);
-    model.addAttribute("projectList", this.dlservice.r_General_001());
+    this.mainService.u_Project_001(projectVO);
+    model.addAttribute("projectList", this.mainService.r_General_001());
     return "Project_team";
   }
   
@@ -188,7 +181,7 @@ public class DlController {
       } 
     } 
     System.out.println(map.toString());
-    this.dlservice.teamSave(map);
+    this.mainService.teamSave(map);
     return "Y";
   }
   
@@ -196,7 +189,7 @@ public class DlController {
   @ResponseBody
   public String teamMemDelete(@RequestParam Map<String, Object> param, Model model) throws Exception {
     logger.info("teamMemDelete");
-    int chk = this.dlservice.teamMemDelete(param);
+    int chk = this.mainService.teamMemDelete(param);
     return "Y";
   }
   
@@ -204,7 +197,7 @@ public class DlController {
   @ResponseBody
   public String selectProject(ProjectVO projectVO, Map<String, Object> map) throws Exception {
     logger.info("selectProject");
-    List<ProjectVO> rs = this.dlservice.selectProject();
+    List<ProjectVO> rs = this.mainService.selectProject();
     Gson gson = new Gson();
     return gson.toJson(rs);
   }
@@ -213,7 +206,7 @@ public class DlController {
   @ResponseBody
   public String teamList(@RequestParam Map<String, Object> map) throws Exception {
     logger.info("selectProject");
-    List<ProjectVO> rs = this.dlservice.teamList(map);
+    List<ProjectVO> rs = this.mainService.teamList(map);
     System.out.println("===========================================");
     System.out.println(map.get("no"));
     System.out.println("===========================================");
@@ -224,7 +217,7 @@ public class DlController {
   @RequestMapping(value = {"/mainPage.do"}, method = {RequestMethod.GET})
   public String r_Notice_001(Model model) throws Exception {
     logger.info("list");
-    model.addAttribute("list", this.dlservice.r_Notice_001());
+    model.addAttribute("list", this.mainService.r_Notice_001());
     return "index";
   }
   
@@ -259,8 +252,8 @@ public class DlController {
       page = Integer.parseInt(strPage);
       map.put("page", Integer.valueOf(page * 10 - 10));
     } 
-    rsList = this.dlservice.noticesList(map);
-    rsListCnt = this.dlservice.noticeListCnt();
+    rsList = this.mainService.noticesList(map);
+    rsListCnt = this.mainService.noticeListCnt();
     totalCount = rsListCnt;
     totalPage = totalCount / countList;
     if (totalCount % countList > 0)
@@ -285,7 +278,7 @@ public class DlController {
   public ModelAndView noticesDetail(@RequestParam Map<String, Object> map, Model model) throws Exception {
     logger.info("noticesDetail");
     Map<String, Object> rsMap = new HashMap<>();
-    rsMap = this.dlservice.noticeDetail(map);
+    rsMap = this.mainService.noticeDetail(map);
     ModelAndView mav = new ModelAndView();
     mav.addObject("rsMap", rsMap);
     mav.setViewName("notice_detail");
@@ -299,7 +292,7 @@ public class DlController {
     String check = "";
     if (map.containsKey("check")) {
       check = "UPDATE";
-      rsMap = this.dlservice.noticeDetail(map);
+      rsMap = this.mainService.noticeDetail(map);
     } else {
       check = "INSERT";
     } 
@@ -318,7 +311,7 @@ public class DlController {
     LoginVO loginVo = (LoginVO)session.getAttribute("login");
     map.put("sessionId", loginVo.getIn_id());
     map.put("sessionName", loginVo.getMb_name());
-    int rs = this.dlservice.noticeIns(map);
+    int rs = this.mainService.noticeIns(map);
     return (rs != 0) ? "Y" : "N";
   }
   
@@ -349,10 +342,10 @@ public class DlController {
   @RequestMapping(value = {"/Project_actual.do"}, method = {RequestMethod.GET})
   public String r_Project_001(Model model) throws Exception {
     logger.info("Project_actual");
-    model.addAttribute("projectList", this.dlservice.r_General_001());
-    model.addAttribute("listTotal", this.dlservice.r_Project_001());
-    model.addAttribute("listMainten", this.dlservice.r_Maintenance_001());
-    model.addAttribute("public_sector", this.dlservice.r_Public_001());
+    model.addAttribute("projectList", this.mainService.r_General_001());
+    model.addAttribute("listTotal", this.mainService.r_Project_001());
+    model.addAttribute("listMainten", this.mainService.r_Maintenance_001());
+    model.addAttribute("public_sector", this.mainService.r_Public_001());
     return "Project_actual";
   }
   
@@ -386,8 +379,8 @@ public class DlController {
       page = Integer.parseInt(strPage);
       map.put("page", Integer.valueOf(page * 10 - 10));
     } 
-    rsList = this.dlservice.member_sel(map);
-    rsListCnt = this.dlservice.member_selCnt(map);
+    rsList = this.mainService.member_sel(map);
+    rsListCnt = this.mainService.member_selCnt(map);
     totalCount = rsListCnt;
     totalPage = totalCount / countList;
     if (totalCount % countList > 0)
@@ -418,7 +411,7 @@ public class DlController {
   public String Member_upd(@RequestParam Map<String, Object> map, Model model) throws Exception {
     logger.info("Member_upd");
     LoginVO loginVo = null;
-    loginVo = this.dlservice.member_detailSel(map);
+    loginVo = this.mainService.member_detailSel(map);
     model.addAttribute("map", loginVo);
     return "Member_upd";
   }
@@ -431,7 +424,7 @@ public class DlController {
     HttpSession session = req.getSession();
     usrid = (String)session.getAttribute("usrid");
     map.put("mb_id", usrid);
-    loginVo = this.dlservice.member_detailSel(map);
+    loginVo = this.mainService.member_detailSel(map);
     session.setAttribute("pw_chk", loginVo.getMb_pw_chk());
     model.addAttribute("map", loginVo);
     return "Member_user";
@@ -442,7 +435,7 @@ public class DlController {
   public String Member_save(@ModelAttribute("loginVo") LoginVO loginVo, HttpServletRequest req) throws Exception {
     logger.info("Member_save");
     String rs = "";
-    rs = this.dlservice.member_save(loginVo);
+    rs = this.mainService.member_save(loginVo);
     HttpSession session = null;
     if ("2".equals(loginVo.getGubun()) && "Y".equals(rs) && !"".equals(loginVo.getMb_password())) {
       loginVo.setIn_id(loginVo.getMb_id());
@@ -464,7 +457,7 @@ public class DlController {
   @ResponseBody
   public String Member_pwdInit(@ModelAttribute("loginVo") LoginVO loginVo) throws Exception {
     logger.info("Member_reSetPwd");
-    int rs = this.dlservice.member_password_init(loginVo);
+    int rs = this.mainService.member_password_init(loginVo);
     return (rs == 0) ? "N" : "Y";
   }
   
@@ -478,14 +471,14 @@ public class DlController {
   @ResponseBody
   public List<Map<String, Object>> Comm_codeList(@RequestParam Map<String, Object> map) throws Exception {
     logger.info("Comm_codeList");
-    return this.dlservice.Comm_codeList(map);
+    return this.mainService.Comm_codeList(map);
   }
   
   @RequestMapping(value = {"/Comm_codeDetail.do"}, method = {RequestMethod.POST})
   @ResponseBody
   public List<Map<String, Object>> Comm_codeDetail(@RequestParam Map<String, Object> map) throws Exception {
     logger.info("Comm_codeDetail");
-    return this.dlservice.Comm_codeDetail(map);
+    return this.mainService.Comm_codeDetail(map);
   }
   
   @RequestMapping(value = {"/Comm_codeCud.do"}, method = {RequestMethod.POST})
@@ -507,7 +500,7 @@ public class DlController {
       } 
       map.put(paramName, parameters[0]);
     } 
-    this.dlservice.Comm_codeCud(map);
+    this.mainService.Comm_codeCud(map);
     return "Y";
   }
   
@@ -519,11 +512,11 @@ public class DlController {
     List<Map<String, Object>> prod_gbn_list = new ArrayList<>();
     param.put("simp_tpc", "PROD_GBN");
     param.put("attr_1", "");
-    prod_gbn_list = this.dlservice.selectCommList(param);
+    prod_gbn_list = this.mainService.selectCommList(param);
     List<Map<String, Object>> prod_sts_list = new ArrayList<>();
     param.put("simp_tpc", "PROD_STS");
     param.put("attr_1", "");
-    prod_sts_list = this.dlservice.selectCommList(param);
+    prod_sts_list = this.mainService.selectCommList(param);
     mav.addObject("prod_gbn_list", prod_gbn_list);
     mav.addObject("prod_sts_list", prod_sts_list);
     mav.setViewName("Doollee_prod_main");
@@ -538,11 +531,11 @@ public class DlController {
     List<Map<String, Object>> prod_gbn_list = new ArrayList<>();
     param.put("simp_tpc", "PROD_GBN");
     param.put("attr_1", "");
-    prod_gbn_list = this.dlservice.selectCommList(param);
+    prod_gbn_list = this.mainService.selectCommList(param);
     List<Map<String, Object>> prod_sts_list = new ArrayList<>();
     param.put("simp_tpc", "PROD_STS");
     param.put("attr_1", "");
-    prod_sts_list = this.dlservice.selectCommList(param);
+    prod_sts_list = this.mainService.selectCommList(param);
     mav.addObject("prod_gbn_list", prod_gbn_list);
     mav.addObject("prod_sts_list", prod_sts_list);
     mav.setViewName("Doollee_prod_main_app.view2");
@@ -561,7 +554,7 @@ public class DlController {
         return mav;
     }
     
-    model.addAttribute("prodList", this.dlservice.selectProdInfo(map));
+    model.addAttribute("prodList", this.mainService.selectProdInfo(map));
     mav.setViewName("Doollee_prod_list");
     return mav;
   }
@@ -578,7 +571,7 @@ public class DlController {
         return mav;
     }
     
-    model.addAttribute("prodList", this.dlservice.selectProdInfo(map));
+    model.addAttribute("prodList", this.mainService.selectProdInfo(map));
     mav.setViewName("Doollee_prod_list_app");
     return mav;
   }
@@ -600,13 +593,13 @@ public class DlController {
     List<Map<String, Object>> prod_gbn_list = new ArrayList<>();
     param.put("simp_tpc", "PROD_GBN");
     param.put("attr_1", "");
-    prod_gbn_list = this.dlservice.selectCommList(param);
+    prod_gbn_list = this.mainService.selectCommList(param);
     
     //장비상태 selectbox 내용조회
     List<Map<String, Object>> prod_sts_list = new ArrayList<>();
     param.put("simp_tpc", "PROD_STS");
     param.put("attr_1", "");
-    prod_sts_list = this.dlservice.selectCommList(param);
+    prod_sts_list = this.mainService.selectCommList(param);
     
     mav.addObject("prod_gbn_list", prod_gbn_list);
     mav.addObject("prod_sts_list", prod_sts_list);
@@ -624,11 +617,11 @@ public class DlController {
     List<Map<String, Object>> prod_gbn_list = new ArrayList<>();
     param.put("simp_tpc", "PROD_GBN");
     param.put("attr_1", "");
-    prod_gbn_list = this.dlservice.selectCommList(param);
+    prod_gbn_list = this.mainService.selectCommList(param);
     List<Map<String, Object>> prod_sts_list = new ArrayList<>();
     param.put("simp_tpc", "PROD_STS");
     param.put("attr_1", "");
-    prod_sts_list = this.dlservice.selectCommList(param);
+    prod_sts_list = this.mainService.selectCommList(param);
     mav.addObject("prod_gbn_list", prod_gbn_list);
     mav.addObject("prod_sts_list", prod_sts_list);
     mav.setViewName("Doollee_repair_main");
@@ -639,7 +632,7 @@ public class DlController {
   public ModelAndView selectProdReapair(@RequestParam Map<String, Object> map, Model model) throws Exception {
     logger.info("selectProdRepair");
     ModelAndView mav = new ModelAndView();
-    model.addAttribute("repairList", this.dlservice.selectProdRepair(map));
+    model.addAttribute("repairList", this.mainService.selectProdRepair(map));
     mav.setViewName("Doollee_repair_list");
     return mav;
   }
@@ -652,11 +645,11 @@ public class DlController {
     List<Map<String, Object>> prod_gbn_list = new ArrayList<>();
     param.put("simp_tpc", "PROD_GBN");
     param.put("attr_1", "");
-    prod_gbn_list = this.dlservice.selectCommList(param);
+    prod_gbn_list = this.mainService.selectCommList(param);
     List<Map<String, Object>> prod_sts_list = new ArrayList<>();
     param.put("simp_tpc", "PROD_STS");
     param.put("attr_1", "");
-    prod_sts_list = this.dlservice.selectCommList(param);
+    prod_sts_list = this.mainService.selectCommList(param);
     mav.addObject("prod_gbn_list", prod_gbn_list);
     mav.addObject("prod_sts_list", prod_sts_list);
     mav.setViewName("Doollee_repair_popup");
@@ -676,8 +669,8 @@ public class DlController {
             map.put("errorTest", "sessionOut");
             return map;
         }
-        if( "insert".equals(map.get("status")) ) this.dlservice.insertProdInfo(map);
-        else                                     this.dlservice.updateProdInfo(map);
+        if( "insert".equals(map.get("status")) ) this.mainService.insertProdInfo(map);
+        else                                     this.mainService.updateProdInfo(map);
     } catch(Exception e) {
         errorTest = e.getMessage();
     }
@@ -698,11 +691,11 @@ public class DlController {
     } else {
       param.put("attr_1", "");
     } 
-    prod_gbn_list = this.dlservice.selectCommList(param);
+    prod_gbn_list = this.mainService.selectCommList(param);
     List<Map<String, Object>> prod_sts_list = new ArrayList<>();
     param.put("simp_tpc", "PROD_STS");
     param.put("attr_1", "");
-    prod_sts_list = this.dlservice.selectCommList(param);
+    prod_sts_list = this.mainService.selectCommList(param);
     mav.addObject("prod_gbn_list", prod_gbn_list);
     mav.addObject("prod_sts_list", prod_sts_list);
     Set<Map.Entry<String, Object>> entries = map.entrySet();
@@ -718,7 +711,7 @@ public class DlController {
   public ModelAndView selectProdInfoPop(@RequestParam Map<String, Object> map, Model model) throws Exception {
     logger.info("selectProdInfoPop");
     ModelAndView mav = new ModelAndView();
-    model.addAttribute("prodList", this.dlservice.selectProdInfo(map));
+    model.addAttribute("prodList", this.mainService.selectProdInfo(map));
     mav.setViewName("Doollee_prod_selPopList");
     return mav;
   }
@@ -737,7 +730,7 @@ public class DlController {
   public ModelAndView selectUserPop(@RequestParam Map<String, Object> map, Model model) throws Exception {
     logger.info("Doollee_user_listPop");
     ModelAndView mav = new ModelAndView();
-    model.addAttribute("usrList", this.dlservice.selectUserList(map));
+    model.addAttribute("usrList", this.mainService.selectUserList(map));
     mav.setViewName("Doollee_user_popList");
     return mav;
   }
@@ -760,16 +753,16 @@ public class DlController {
     List<Map<String, Object>> prod_gbn_list = new ArrayList<>();
     param.put("simp_tpc", "PROD_GBN");
     param.put("attr_1", "");
-    prod_gbn_list = this.dlservice.selectCommList(param);
+    prod_gbn_list = this.mainService.selectCommList(param);
     
     //장비상태 selectbox 내용 조회
     List<Map<String, Object>> prod_sts_list = new ArrayList<>();
     param.put("simp_tpc", "PROD_STS");
     param.put("attr_1", "");
-    prod_sts_list = this.dlservice.selectCommList(param);
+    prod_sts_list = this.mainService.selectCommList(param);
     
     //장비관리 선택 내용 조회
-    List<Map<String, Object>> prodList = this.dlservice.selectProdInfo(map);
+    List<Map<String, Object>> prodList = this.mainService.selectProdInfo(map);
     Map<String, Object>       prodMap  = prodList.get(0) ;
     
     mav.addObject("prod_gbn_list", prod_gbn_list);
@@ -791,7 +784,7 @@ public class DlController {
     List<Map<String, Object>> repair_gbn_list = new ArrayList<>();
     param.put("simp_tpc", "REPAIR_GBN");
     param.put("attr_1", "");
-    repair_gbn_list = this.dlservice.selectCommList(param);
+    repair_gbn_list = this.mainService.selectCommList(param);
     mav.addObject("repair_gbn_list", repair_gbn_list);
     mav.addObject("modal_title", "신규등록");
     mav.setViewName("Doollee_repair_regPop");
@@ -805,8 +798,8 @@ public class DlController {
     Set<Map.Entry<String, Object>> entries = map.entrySet();
     for (Map.Entry<String, Object> entry : entries)
       mav.addObject(entry.getKey(), entry.getValue()); 
-    this.dlservice.insertProdRepair(map);
-    this.dlservice.updateProdSts(map);
+    this.mainService.insertProdRepair(map);
+    this.mainService.updateProdSts(map);
     mav.setViewName("Doollee_repair_main");
     return mav;
   }
@@ -819,7 +812,7 @@ public class DlController {
     List<Map<String, Object>> repair_gbn_list = new ArrayList<>();
     param.put("simp_tpc", "REPAIR_GBN");
     param.put("attr_1", "");
-    repair_gbn_list = this.dlservice.selectCommList(param);
+    repair_gbn_list = this.mainService.selectCommList(param);
     mav.addObject("repair_gbn_list", repair_gbn_list);
     mav.addObject("modal_title", "정보수정");
     Set<Map.Entry<String, String>> entries = map.entrySet();
@@ -836,8 +829,8 @@ public class DlController {
     Set<Map.Entry<String, Object>> entries = map.entrySet();
     for (Map.Entry<String, Object> entry : entries)
       mav.addObject(entry.getKey(), entry.getValue()); 
-    this.dlservice.updateProdRepair(map);
-    this.dlservice.updateProdSts(map);
+    this.mainService.updateProdRepair(map);
+    this.mainService.updateProdSts(map);
     mav.setViewName("Doollee_repair_main");
     return mav;
   }
@@ -846,7 +839,7 @@ public class DlController {
   public ModelAndView updateYnProdRepair(@RequestParam Map<String, Object> map, Model model) throws Exception {
     logger.info("updateYnRepair");
     ModelAndView mav = new ModelAndView();
-    this.dlservice.updateYnProdRepair(map);
+    this.mainService.updateYnProdRepair(map);
     mav.setViewName("Doollee_repair_main");
     return mav;
   }
@@ -859,15 +852,15 @@ public class DlController {
     List<Map<String, Object>> trans_gbn_list = new ArrayList<>();
     param.put("simp_tpc", "TRANS_GBN");
     param.put("attr_1", "");
-    trans_gbn_list = this.dlservice.selectCommList(param);
+    trans_gbn_list = this.mainService.selectCommList(param);
     List<Map<String, Object>> take_sts_list = new ArrayList<>();
     param.put("simp_tpc", "TAKE_STS");
     param.put("attr_1", "");
-    take_sts_list = this.dlservice.selectCommList(param);
+    take_sts_list = this.mainService.selectCommList(param);
     List<Map<String, Object>> project_gbn_list = new ArrayList<>();
     param.put("simp_tpc", "PROJECT_GBN");
     param.put("attr_1", "");
-    project_gbn_list = this.dlservice.selectCommList(param);
+    project_gbn_list = this.mainService.selectCommList(param);
     mav.addObject("trans_gbn_list", trans_gbn_list);
     mav.addObject("take_sts_list", take_sts_list);
     mav.addObject("project_gbn_list", project_gbn_list);
@@ -879,7 +872,7 @@ public class DlController {
   public ModelAndView selectProdTrans(@RequestParam Map<String, Object> map, Model model) throws Exception {
     logger.info("selectProdTrans");
     ModelAndView mav = new ModelAndView();
-    mav.addObject("transList", this.dlservice.selectProdTrans(map));
+    mav.addObject("transList", this.mainService.selectProdTrans(map));
     mav.setViewName("Doollee_trans_list");
     return mav;
   }
@@ -892,15 +885,15 @@ public class DlController {
     List<Map<String, Object>> trans_gbn_list = new ArrayList<>();
     param.put("simp_tpc", "TRANS_GBN");
     param.put("attr_1", "");
-    trans_gbn_list = this.dlservice.selectCommList(param);
+    trans_gbn_list = this.mainService.selectCommList(param);
     List<Map<String, Object>> take_sts_list = new ArrayList<>();
     param.put("simp_tpc", "TAKE_STS");
     param.put("attr_1", "");
-    take_sts_list = this.dlservice.selectCommList(param);
+    take_sts_list = this.mainService.selectCommList(param);
     List<Map<String, Object>> project_gbn_list = new ArrayList<>();
     param.put("simp_tpc", "PROJECT_GBN");
     param.put("attr_1", "");
-    project_gbn_list = this.dlservice.selectCommList(param);
+    project_gbn_list = this.mainService.selectCommList(param);
     mav.addObject("trans_gbn_list", trans_gbn_list);
     mav.addObject("take_sts_list", take_sts_list);
     mav.addObject("project_gbn_list", project_gbn_list);
@@ -917,15 +910,15 @@ public class DlController {
     List<Map<String, Object>> trans_gbn_list = new ArrayList<>();
     param.put("simp_tpc", "TRANS_GBN");
     param.put("attr_1", "");
-    trans_gbn_list = this.dlservice.selectCommList(param);
+    trans_gbn_list = this.mainService.selectCommList(param);
     List<Map<String, Object>> take_sts_list = new ArrayList<>();
     param.put("simp_tpc", "TAKE_STS");
     param.put("attr_1", "");
-    take_sts_list = this.dlservice.selectCommList(param);
+    take_sts_list = this.mainService.selectCommList(param);
     List<Map<String, Object>> project_gbn_list = new ArrayList<>();
     param.put("simp_tpc", "PROJECT_GBN");
     param.put("attr_1", "");
-    project_gbn_list = this.dlservice.selectCommList(param);
+    project_gbn_list = this.mainService.selectCommList(param);
     Set<Map.Entry<String, String>> entries = map.entrySet();
     for (Map.Entry<String, String> entry : entries) {
       mav.addObject(entry.getKey(), entry.getValue());
@@ -943,7 +936,7 @@ public class DlController {
   public ModelAndView insertTransTake(@RequestParam Map<String, Object> map, Model model) throws Exception {
     logger.info("insertTransTake");
     ModelAndView mav = new ModelAndView();
-    mav = this.dlservice.insertTransTake(map);
+    mav = this.mainService.insertTransTake(map);
     mav.setViewName("Doollee_trans_main");
     return mav;
   }
@@ -957,8 +950,8 @@ public class DlController {
       mav.addObject(entry.getKey(), entry.getValue());
       System.out.println(String.valueOf(entry.getKey()) + " ::(update) " + entry.getValue());
     } 
-    this.dlservice.updateTransTake(map);
-    this.dlservice.updateTransProdSts(map);
+    this.mainService.updateTransTake(map);
+    this.mainService.updateTransProdSts(map);
     mav.setViewName("Doollee_trans_main");
     return mav;
   }
@@ -967,7 +960,7 @@ public class DlController {
   public ModelAndView updateYnTransTake(@RequestParam Map<String, Object> map, Model model) throws Exception {
     logger.info("updateYnTransTake");
     ModelAndView mav = new ModelAndView();
-    this.dlservice.updateYnTransTake(map);
+    this.mainService.updateYnTransTake(map);
     mav.setViewName("Doollee_trans_main");
     return mav;
   }
@@ -988,12 +981,12 @@ public class DlController {
     
     param.put("simp_tpc", "VACA_GBN");
     param.put("attr_1", "");
-    holi_gbn_list = this.dlservice.selectCommList(param);
+    holi_gbn_list = this.mainService.selectCommList(param);
     
     List<Map<String, Object>> holi_sts_list = new ArrayList<>();
     param.put("simp_tpc", "REQ_GBN");
     param.put("attr_1", "");
-    holi_sts_list = this.dlservice.selectCommList(param);
+    holi_sts_list = this.mainService.selectCommList(param);
 
     mav.addObject("holi_gbn_list", holi_gbn_list);
     mav.addObject("holi_sts_list", holi_sts_list);
@@ -1012,86 +1005,12 @@ public class DlController {
     else                  map.put("mb_id", loginVo.getMb_id());
     
     //마스터관리자(마스터승인자) 여부 (여:1 부:0)
-    map.put("masterYn", this.dlservice.selectApporoverMasterYn(map));
+    map.put("masterYn", this.mainService.selectApporoverMasterYn(map));
     
-    List<Map<String, Object>> selList = this.dlservice.selectHoliRegInfo(map);
+    List<Map<String, Object>> selList = this.mainService.selectHoliRegInfo(map);
     model.addAttribute("holiList", selList.size()==0 ? "" : selList);
     mav.setViewName("Doollee_holi_list");
     return mav;
-  }
-
-  @RequestMapping(value = {"/updateHoliRegInfo.do"}, method = {RequestMethod.POST})
-  @ResponseBody
-  public Map<String, Object> updateHoliRegInfo(@RequestParam Map<String, Object> map, HttpServletRequest req) {
-      logger.info("updateHoliRegInfo");
-  
-      String errorTest = "";
-      try {
-          HttpSession session = req.getSession();
-          LoginVO     loginVo = (LoginVO)session.getAttribute("login");
-
-          if(null == loginVo) {
-              errorTest = "sessionOut";
-          } else {
-  	          //휴가신청자료 신청/수정
-        	  if( "".equals(map.get("holi_seq")) ) {
-        		  this.dlservice.insertHoliRegInfo(map);
-        	  } else {
-  	              this.dlservice.updateHoliRegInfo(map);
-        	  }
-        	  
-  	          //FCM push_token 대상 ID 설정
-        	  String apprGbn     = map.get("appr_gbn").toString();
-        	  String fcmRecverId = "" ;
-              String title       = "" ;
-  	          String content     = "" ;
-  	          
-        	  if("01".equals(apprGbn)) {
-                  title       = "휴가 신청이 "+ ("".equals(map.get("holi_seq")) ? "등록" : "수정") +"되었습니다.";
-      	          content     = map.get("requestor_nm").toString() + "님께서 휴가 신청을 "+ ("".equals(map.get("holi_seq")) ? "등록" : "수정") +" 하셨습니다.";
-      	          fcmRecverId = map.get("approver_id").toString() ;
-        	  } else {
-        		  if("02".equals(apprGbn)) {
-          	          title = "휴가 신청이 승인되었습니다.";
-          	          content = map.get("approver_nm").toString() + "님께서 휴가 신청을 승인 하셨습니다.";
-          	          fcmRecverId = map.get("requestor_id").toString() ;
-        		  }
-        		  if("09".equals(apprGbn)) {
-          	          title = "휴가 신청이 반려되었습니다.";
-          	          content = map.get("approver_nm").toString() + "님께서 휴가 신청을 반려 하셨습니다.";
-          	          fcmRecverId = map.get("requestor_id").toString() ;
-        		  }
-        	  }
-  	          
-  	          FcmUtil fcmUtil = new FcmUtil();
-      	      String  fcmPath = properties.getProperty("fcm.json.path");
-      	      String  fcmFile = properties.getProperty("fcm.json.file");
-      	      
-  	          Map<String, Object> deviceParam = new HashMap<>();
-  	          deviceParam.put("mb_id", fcmRecverId);
-  	          List<Map<String, Object>> device_list = this.dlservice.selectDeviceRegList(deviceParam);
-  	          
-  	          if(null != device_list) {
-  	              for(int i=0; i<device_list.size(); i++) {
-  	                  logger.debug("push_token : {}", device_list.get(i).get("push_token").toString());
-  	                  errorTest = fcmUtil.send_FCM(fcmPath, fcmFile, device_list.get(i).get("push_token").toString(), title, content);
-  	                  if( !"".equals(errorTest) ) {
-  	        	          if("FirebaseMessagingException".equals(errorTest)) {
-  	        	              map.put("device_mb", device_list.get(i).get("mb_id")    );
-  	        	              map.put("device_id", device_list.get(i).get("device_id"));
-  	        	          }
-  	                	  break;
-  	                  }
-  	              }
-  	          }
-  	          logger.debug("=============================");
-          }
-      } catch(Exception e) {
-          errorTest = e.getMessage();
-      }
-  
-      map.put("errorTest", errorTest);
-      return map;
   }
   
   @RequestMapping(value = {"/deleteHoliRegInfo.do"}, method = {RequestMethod.POST})
@@ -1107,7 +1026,7 @@ public class DlController {
           if(null == loginVo) {
         	  errorTest = "sessionOut";
           } else {
-              this.dlservice.deleteHoliRegInfo(map);
+              this.mainService.deleteHoliRegInfo(map);
           }
       
       } catch(Exception e) {
@@ -1130,7 +1049,7 @@ public class DlController {
   public ModelAndView selectProjectList(@RequestParam Map<String, Object> map, Model model) throws Exception {
     logger.info("selectProjectList");
     ModelAndView mav = new ModelAndView();
-    model.addAttribute("projectList", this.dlservice.selectProjectList(map));
+    model.addAttribute("projectList", this.mainService.selectProjectList(map));
     mav.setViewName("Doollee_project_popList");
     return mav;
   }
@@ -1151,12 +1070,12 @@ public class DlController {
     
     param.put("simp_tpc", "VACA_GBN");
     param.put("attr_1", "");
-    holi_gbn_list = this.dlservice.selectCommList(param);
+    holi_gbn_list = this.mainService.selectCommList(param);
     
     List<Map<String, Object>> holi_sts_list = new ArrayList<>();
     param.put("simp_tpc", "REQ_GBN");
     param.put("attr_1", "");
-    holi_sts_list = this.dlservice.selectCommList(param);
+    holi_sts_list = this.mainService.selectCommList(param);
     
     mav.addObject("holi_gbn_list", holi_gbn_list);
     mav.addObject("holi_sts_list", holi_sts_list);
@@ -1178,9 +1097,9 @@ public class DlController {
     else                  map.put("mb_id", loginVo.getMb_id());
     
     //마스터관리자(마스터승인자) 여부 (여:1 부:0)
-    map.put("masterYn", this.dlservice.selectApporoverMasterYn(map));
+    map.put("masterYn", this.mainService.selectApporoverMasterYn(map));
     
-    List<Map<String, Object>> selList = this.dlservice.selectHoliRegInfo(map);
+    List<Map<String, Object>> selList = this.mainService.selectHoliRegInfo(map);
     model.addAttribute("holiList"   , selList.size()==0 ? "" : selList);
     mav.setViewName("Doollee_holi_list_app");
     
@@ -1204,31 +1123,31 @@ public class DlController {
     List<Map<String, Object>> holi_gbn_list = new ArrayList<>();
     param.put("simp_tpc", "VACA_GBN");
     param.put("attr_1", "");
-    holi_gbn_list = this.dlservice.selectCommList(param);
+    holi_gbn_list = this.mainService.selectCommList(param);
     
     //휴가상태 공통코드 조회
     List<Map<String, Object>> holi_sts_list = new ArrayList<>();
     param.put("simp_tpc", "REQ_GBN");
     param.put("attr_1", "");
-    holi_sts_list = this.dlservice.selectCommList(param);
+    holi_sts_list = this.mainService.selectCommList(param);
     
     //휴가승인자 공통코드 조회
     List<Map<String, Object>> holi_appr_list = new ArrayList<>();
     param.put("simp_tpc", "APPOROVER");
     param.put("attr_1", "");
-    holi_appr_list = this.dlservice.selectCommList(param);
+    holi_appr_list = this.mainService.selectCommList(param);
     
     //로그인 회원 ID, 회원이 마스터 승인자인지 여부 조회
     map.put("mb_id"   , loginVo.getMb_id());
-    map.put("masterYn", this.dlservice.selectApporoverMasterYn(map)); //마스터승인자여부
+    map.put("masterYn", this.mainService.selectApporoverMasterYn(map)); //마스터승인자여부
     
     //회원조회 (휴가신청자대상 목록)
     List<LoginVO> member_sel_list = new ArrayList<>();
     map.put("sortUserSet", "mb_name");
-    member_sel_list = this.dlservice.member_sel(map);
+    member_sel_list = this.mainService.member_sel(map);
        
     if( !map.containsKey("holi_seq") ) map.put("holi_seq", -1);
-    List<Map<String, Object>> selList = this.dlservice.selectHoliRegInfo(map);
+    List<Map<String, Object>> selList = this.mainService.selectHoliRegInfo(map);
     if( selList.size()==0 ) {
     	Map<String, Object> dummyMap = new HashMap<>();
     	//마스터 승인자가 아니고 조회내용이 없는경우(신규신청인 경우) 신청자ID를 로그인한 사용자ID로 초기화

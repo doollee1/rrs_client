@@ -1,6 +1,6 @@
-package com.rrs.service.vo;
+package com.rrs.web.comm.service.vo;
 
-import com.rrs.service.vo.MainNoticeVO;
+import com.rrs.web.comm.service.vo.MainNoticeVO;
 
 public class MainNoticeVO {
   private int wr_id;

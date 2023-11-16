@@ -1,8 +1,8 @@
-package com.rrs.comm.service.vo;
+package com.rrs.web.login.service.vo;
 
 import java.util.Date;
 
-import com.rrs.comm.service.vo.LoginVO;
+import com.rrs.web.login.service.vo.LoginVO;
 
 public class LoginVO {
   private String mb_id;

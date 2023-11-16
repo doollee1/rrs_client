@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.rrs.service.impl.DlMapper">
+<mapper namespace="com.rrs.web.main.service.impl.MainMapper">
 
     <!-- 회원조회 -->
     <select id="member_selCnt" parameterType="hashMap" resultType="int">
@@ -21,7 +21,7 @@
     </select>
     
     <!-- 회원조회 -->
-    <select id="member_sel" parameterType="hashMap" resultType="com.rrs.comm.service.vo.LoginVO">
+    <select id="member_sel" parameterType="hashMap" resultType="com.rrs.web.login.service.vo.LoginVO">
         SELECT mb_id 
 			 , mb_name
 			 , mb_email
@@ -63,7 +63,7 @@
     
     
     <!-- 회원상세조회 -->
-    <select id="member_detailSel" parameterType="hashMap" resultType="com.rrs.comm.service.vo.LoginVO">
+    <select id="member_detailSel" parameterType="hashMap" resultType="com.rrs.web.login.service.vo.LoginVO">
         SELECT mb_id
 			 , mb_name
 			 , mb_email
@@ -85,7 +85,7 @@
     </select>
     
     <!-- 관리자 - 회원정보 등록 -->
-    <insert id="member_ins" parameterType="com.rrs.comm.service.vo.LoginVO">
+    <insert id="member_ins" parameterType="com.rrs.web.login.service.vo.LoginVO">
         INSERT INTO doollee_members(
                mb_id
               ,mb_password
@@ -119,7 +119,7 @@
     
     
     <!-- 사용자 - 비밀번호 체크 -->
-    <select id="member_pass_chk" parameterType="com.rrs.comm.service.vo.LoginVO" resultType="int">
+    <select id="member_pass_chk" parameterType="com.rrs.web.login.service.vo.LoginVO" resultType="int">
         SELECT COUNT(*) cnt
           FROM doollee_members
          WHERE mb_id = #{mb_id}
@@ -128,7 +128,7 @@
     
     
     <!-- 사용자 - 회원정보 수정 -->
-    <update id="member_user_upd" parameterType="com.rrs.comm.service.vo.LoginVO">
+    <update id="member_user_upd" parameterType="com.rrs.web.login.service.vo.LoginVO">
         UPDATE doollee_members
            SET mb_zip     = #{mb_zip}
               <if test="!''.equals(mb_password)">
@@ -147,7 +147,7 @@
     </update> 
     
     <!-- 관리자 - 비밀번호 초기화 -->
-    <update id="member_password_init" parameterType="com.rrs.comm.service.vo.LoginVO">
+    <update id="member_password_init" parameterType="com.rrs.web.login.service.vo.LoginVO">
         UPDATE doollee_members
            SET mb_password = PASSWORD('doollee')
              , mb_pw_chk   = '0'
@@ -155,7 +155,7 @@
     </update>
     
     <!-- 관리자 - 회원정보 수정 -->
-    <update id="member_admin_upd" parameterType="com.rrs.comm.service.vo.LoginVO">
+    <update id="member_admin_upd" parameterType="com.rrs.web.login.service.vo.LoginVO">
         UPDATE doollee_members
            SET mb_join_date   = #{mb_join_date}
              , mb_level       = #{mb_level}

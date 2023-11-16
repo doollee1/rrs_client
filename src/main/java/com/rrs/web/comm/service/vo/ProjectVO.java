@@ -1,6 +1,6 @@
-package com.rrs.service.vo;
+package com.rrs.web.comm.service.vo;
 
-import com.rrs.service.vo.ProjectVO;
+import com.rrs.web.comm.service.vo.ProjectVO;
 
 public class ProjectVO {
   private int no;
