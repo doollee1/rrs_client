@@ -28,7 +28,21 @@
       <put-attribute name="body" value="/WEB-INF/jsp/{1}/{2}.jsp" />
     </definition> -->
     
-    <!-- TEST LAYOUT -->    
+    <!-- 로그인 LAYOUT -->
+    <definition name="*.view" template="/WEB-INF/jsp/common/viewLayout.jsp">      
+        <put-attribute name="header"   value="/WEB-INF/jsp/common/viewHeader.jsp"  />
+        <put-attribute name="sidebar"  value="/WEB-INF/jsp/common/viewSidebar.jsp" />  
+        <put-attribute name="content"  value="/WEB-INF/jsp/{1}.jsp"               />
+    </definition>
+
+    <!-- 비로그인 LAYOUT -->
+    <definition name="*.view1" template="/WEB-INF/jsp/common/viewLayout.jsp">      
+        <put-attribute name="header"   value="/WEB-INF/jsp/common/viewHeader.jsp"  />
+        <put-attribute name="content"  value="/WEB-INF/jsp/{1}.jsp"               />
+        <put-attribute name="sidebar"  value="" />  
+    </definition>
+
+	<!--
     <definition name="*.view1" template="/WEB-INF/jsp/common/view1Layout.jsp">      
         <put-attribute name="header" value="/WEB-INF/jsp/common/comHeader.jsp"  />
         <put-attribute name="navi"   value="/WEB-INF/jsp/common/Navigation.jsp" />  
@@ -50,6 +64,6 @@
     <definition name="*.normal" template="/WEB-INF/jsp/common/normalLayout.jsp">      
         <put-attribute name="body"   value="/WEB-INF/jsp/{1}.jsp"               />
     </definition>
+    -->
     <!-- /TEST LAYOUT -->
-    
 </tiles-definitions>
