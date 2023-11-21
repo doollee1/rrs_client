@@ -9,6 +9,6 @@
 	<ul class="btn-wrap list-unstyled">
 		<li><a href="javascript:;" class="btn btn-white btn-lg d-block">리조트&골프장</a></li>
 		<li><a href="javascript:;" class="btn btn-white btn-lg d-block">상품소개</a></li>
-		<li><a href="javascript:;" class="btn btn-white btn-lg d-block">로그인</a></li>
+		<li><a href="/signIn.do" class="btn btn-white btn-lg d-block">로그인</a></li>
 	</ul>
 </div>
