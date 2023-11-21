@@ -1,4 +1,4 @@
 <script>
-location.href='/mainPage.do';  
+location.href='/main.do';  
 </script>
 
