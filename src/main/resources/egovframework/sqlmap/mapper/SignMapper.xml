@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rrs.web.sign.service.impl.SignMapper">
+
+<!-- 로그인 -->
+<select id="signIn" parameterType="com.rrs.web.sign.service.vo.SignVO" resultType="com.rrs.web.sign.service.vo.SignVO">
+	SELECT *
+	FROM tb_member
+	WHERE user_id	= #{user_id}
+	AND passwd		= (#{passwd})
+</select>
+
+<!-- ID중복체크 -->
+<select id="idChk" parameterType="string" resultType="int">
+SELECT COUNT(*)
+FROM tb_member
+WHERE user_id = #{user_id}
+</select>
+
+<!-- 회원가입 -->
+<insert id="signUp">
+	INSERT INTO tb_member
+		(
+			user_id
+			, mem_gbn
+			, han_name
+			, eng_name
+			, tel_no
+			, email
+			, passwd
+			, ret_yn
+			, reg_dtm
+			, upd_dtm
+		)
+	VALUES
+		(
+			#{user_id}
+			, "02"
+			, #{han_name}
+			, #{eng_name}
+			, #{tel_no}
+			, #{email}
+			, #{passwd}
+			, "N"
+			, #{reg_dtm}
+			, #{upd_dtm}
+		)
+</insert>
+
+<!-- 멤버 전환 -->
+<update id="memberChk" parameterType="com.rrs.web.sign.service.vo.SignVO">
+<![CDATA[
+	UPDATE 
+		tb_member as a 
+	SET 
+		a.mem_gbn = '01'
+	WHERE 0 < 
+		(
+		SELECT 
+			COUNT(*)
+		from 
+			tb_admin_reg_member as b 
+		WHERE 
+			#{han_name}=b.han_name 
+			AND #{eng_name}=b.eng_name 
+			AND #{tel_no}=b.tel_no 
+			AND b.ret_yn='N'
+		)
+	AND a.mem_gbn='02'
+	AND #{han_name}=a.han_name 
+	AND #{eng_name}=a.eng_name 
+	AND #{tel_no}=a.tel_no 
+]]>
+</update>
+
+<!-- 아이디 찾기 -->
+<select id="findId" parameterType="com.rrs.web.sign.service.vo.SignVO" resultType="String">
+	SELECT user_id
+	FROM tb_member
+	WHERE han_name	= #{han_name}
+	AND tel_no		= #{tel_no}
+	AND email		= #{email}
+</select>
+
+<!-- 비밀번호 찾기 -->
+<select id="findPw" parameterType="com.rrs.web.sign.service.vo.SignVO" resultType="String">
+	SELECT passwd
+	FROM tb_member
+	WHERE user_id	= #{user_id}
+	AND tel_no		= #{tel_no}
+	AND email		= #{email)
+</select>
+
+</mapper>
