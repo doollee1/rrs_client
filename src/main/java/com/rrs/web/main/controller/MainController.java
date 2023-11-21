@@ -13,7 +13,6 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -21,7 +20,6 @@ import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,12 +37,36 @@ import org.springframework.web.servlet.ModelAndView;
 public class MainController {
 	private static final Logger logger = LoggerFactory.getLogger(MainController.class);
 
-  	@Resource(name = "mainService")
-  	MainService mainService;
-  
-  	@Resource(name = "loginService")
-  	LoginService loginService;
-  
+	@Resource(name = "mainService")
+	MainService mainService;
+
+	@Resource(name = "loginService")
+	LoginService loginService;
+
+	@RequestMapping(value = {"/main.do"}, method = {RequestMethod.GET})
+	public String main() throws Exception {
+		return "main.index";
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	// TODO 참고 후 제거
   @RequestMapping(value = {"/getMartData.do"}, method = {RequestMethod.POST})
   @ResponseBody
   public ResponseEntity<String> getMartData(@RequestParam Map<String, Object> map) throws Exception {
