@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="utf-8" />
+	<title>Palm Resort Reservation System</title>
+	<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+	<meta content="팜리조트 예약" name="description" />
+	<meta content="" name="author" />
+	
+	<!-- ================== BEGIN core-css ================== -->
+	<link href="../assets/css/vendor.min.css" rel="stylesheet" />
+	<link href="../assets/css/default/app.min.css" rel="stylesheet" />
+	<link href="../assets/css/palm.css" rel="stylesheet" />
+	<!-- ================== END core-css ================== -->
+	
+	<!-- ================== BEGIN page-css ================== -->
+	<link href="../assets/plugins/bootstrap-datepicker/dist/css/bootstrap-datepicker.css" rel="stylesheet" />
+	<!-- ================== END page-css ================== -->
+</head>
+<body>
+	<!-- BEGIN #app -->
+	<div id="app" class="app app-header-fixed app-sidebar-fixed app-content-full-height">
+		<!-- BEGIN #header -->
+		<div id="header" class="app-header">
+			<!-- BEGIN navbar-header -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-mobile-toggler btn-pre" >
+					<i class="fas fa-angle-left"></i>
+				</button>
+				<h1>예약요청</h1>
+				<!-- <a href="index.html" class="navbar-brand"><span class="navbar-logo"></span> <b class="me-3px">Color</b> Admin</a> -->
+				<button type="button" class="navbar-mobile-toggler" data-toggle="app-sidebar-mobile">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+			</div>
+			<!-- END navbar-header -->
+
+		</div>
+		<!-- END #header -->
+	
+		<!-- BEGIN #sidebar -->
+		<div id="sidebar" class="app-sidebar" data-bs-theme="dark">
+			<!-- BEGIN scrollbar -->
+			<div class="app-sidebar-content" data-scrollbar="true" data-height="100%">
+				<!-- BEGIN menu -->
+				<div class="menu">
+					<div class="menu-profile">
+						<div class="menu-profile-link">
+							<div class="menu-profile-cover with-shadow"></div>
+							<div class="menu-profile-info">
+								<div class="d-flex align-items-center">
+									<div class="flex-grow-1">
+										팜리조트 예약시스템
+									</div>
+								</div>
+								<small>어서오세요</small>
+							</div>
+						</div>
+					</div>
+
+					<div class="menu-header">Navigation</div>
+
+					<div class="menu-item">
+						<a href="#" class="menu-link">
+							<div class="menu-icon">
+								<i class="fas fa-calendar-check"></i>
+							</div>
+							<div class="menu-text">예약요청 </div>
+						</a>
+					</div>
+					<div class="menu-item ">
+						<a href="#" class="menu-link">
+							<div class="menu-icon">
+								<i class="fas fa-calendar-days"></i>
+							</div>
+							<div class="menu-text">예약현황</div> 
+						</a>
+					</div>
+					<div class="menu-item">
+						<a href="#" class="menu-link">
+							<div class="menu-icon">
+								<i class="fas fa-pencil-alt"></i> 
+							</div>
+							<div class="menu-text">문의사항</div>
+						</a>
+					</div>
+					<div class="menu-item">
+						<a href="#" class="menu-link">
+							<div class="menu-icon">
+								<i class="far fa-message"></i> 
+							</div>
+							<div class="menu-text">공지사항</div>
+						</a>
+					</div>
+					<div class="menu-item">
+						<a href="#" class="menu-link">
+							<div class="menu-icon">
+								<i class="fa fa-cog"></i>
+							</div>
+							<div class="menu-text">개인설정</div>
+						</a>
+					</div>
+					<div class="menu-item logout">
+						<a href="#" class="menu-link">
+							<div class="menu-icon">
+								<i class="fa-solid fa-right-from-bracket"></i>
+							</div>
+							<div class="menu-text">로그아웃</div>
+						</a>
+					</div>
+					
+					<!-- BEGIN minify-button -->
+					<div class="menu-item d-flex">
+						<a href="javascript:;" class="app-sidebar-minify-btn ms-auto d-flex align-items-center text-decoration-none" data-toggle="app-sidebar-minify"><i class="fa fa-angle-double-left"></i></a>
+					</div>
+					<!-- END minify-button -->
+				</div>
+				<!-- END menu -->
+			</div>
+			<!-- END scrollbar -->
+		</div>
+		<div class="app-sidebar-bg" data-bs-theme="dark"></div>
+		<div class="app-sidebar-mobile-backdrop"><a href="#" data-dismiss="app-sidebar-mobile" class="stretched-link"></a></div>
+		<!-- END #sidebar -->
+		
+		<!-- BEGIN #content -->
+		<div id="content" class="app-content d-flex flex-column p-0">
+			<!-- BEGIN content-container -->
+			<div class="app-content-padding flex-grow-1 overflow-hidden" data-scrollbar="true" data-height="100%">
+									
+				<!-- BEGIN nav-tabs -->
+				<ul class="nav nav-tabs">
+					<li class="nav-item">
+						<a href="#default-tab-1" data-bs-toggle="tab" class="nav-link active">
+							<span class="d-sm-none">요청</span>
+							<span class="d-sm-block d-none">Default 요청</span>
+						</a>
+					</li>
+				</ul>
+				<!-- END nav-tabs -->
+				<!-- BEGIN tab-content -->
+				<div class="tab-content panel rounded-0 p-3 m-0">
+					<!-- BEGIN tab-pane -->
+					<div class="tab-pane fade active show" id="default-tab-1">
+						<div class="input-daterange">
+						
+							<div class="form-group row mb-2">
+								<label class="form-label col-form-label col-lg-4">체크인</label>
+								<div class="col-lg-12">
+									<div class="input-group date" >
+										<input type="text" class="form-control text-start" id="datepicker-autoClose" name="start" placeholder="날짜를 선택하세요">
+										<span class="input-group-text input-group-addon"><i class="fa fa-calendar"></i></span>
+									</div>
+								</div>
+							</div>
+							<div class="form-group row mb-2">
+								<label class="form-label col-form-label col-lg-4">체크아웃</label>
+								<div class="col-lg-12">
+									<div class="input-group date" >
+										<input type="text" class="form-control text-start" id="datepicker-autoClose" name="end" placeholder="날짜를 선택하세요">
+										<span class="input-group-text input-group-addon"><i class="fa fa-calendar"></i></span>
+									</div>
+								</div>
+							</div>						
+						</div>
+						
+						<div class="row mb-2">
+							<label class="form-label col-form-label col-md-3">한글이름</label>
+							<div class="col-sm-9">
+								<input type="text" class="form-control" value="홍길동" readonly>
+							</div>
+						</div>
+						<div class="row mb-2">
+							<label class="form-label col-form-label col-md-3">영문이름</label>
+							<div class="col-sm-9">
+								<input type="text" class="form-control" value="HONG GIL DONG" readonly>
+							</div>
+						</div>
+						<div class="total-people-wrap">
+							<div class="inline-flex">
+								<div class="col-form-label">총인원</div>
+								<input type="text" class="form-control text-end" value="" readonly>명
+							</div>
+							<div class="inline-flex">
+								<div class="col-form-label">멤버</div>
+								<input type="text" class="form-control text-end" value="">명
+							</div>
+							<div class="inline-flex">
+								<div class="col-form-label">비멤버</div>
+								<input type="text" class="form-control text-end" value="">명
+							</div>
+							<div class="inline-flex">
+								<div class="col-form-label">소아</div>
+								<input type="text" class="form-control text-end" value="">명
+							</div>
+						</div>
+						<div class="row mb-2">
+							<label class="form-label col-form-label col-md-3">패키지</label>
+							<div class="col-sm-9">
+								<select class="form-select">
+									<option>주중 36홀,주말 오후 18홀</option>
+									<option>주중 18홀,주말 오후 18홀(10박 미만)</option>
+								</select>
+							</div>
+						</div>
+						
+					</div>
+					<!-- END tab-pane -->
+				</div>
+				<!-- END tab-content -->
+
+			</div>
+			<!-- END content-container -->
+			
+			<!-- BEGIN #footer -->
+			<div id="footer" class="app-footer m-0">
+				<a href="#" class="btn btn-success btn-lg">예약 전송</a>
+			</div>
+			<!-- END #footer -->			
+			
+		</div>
+		<!-- END #content -->
+		
+		<!-- BEGIN scroll-top-btn -->
+		<a href="javascript:;" class="btn btn-icon btn-circle btn-theme btn-scroll-to-top" data-toggle="scroll-to-top"><i class="fa fa-angle-up"></i></a>
+		<!-- END scroll-top-btn -->
+	</div>
+	<!-- END #app -->
+	
+	<!-- ================== BEGIN core-js ================== -->
+	<script src="../assets/js/vendor.min.js"></script>
+	<script src="../assets/js/app.min.js"></script>
+	<!-- ================== END core-js ================== -->
+	
+	<!-- ================== BEGIN page-js ================== -->
+	<script src="../assets/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.js"></script>
+	<script src="../assets/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js"></script>
+	<script src="../assets/plugins/clipboard/dist/clipboard.min.js"></script>
+	<script src="../assets/plugins/spectrum-colorpicker2/dist/spectrum.min.js"></script>
+
+	<script>
+		$(".input-daterange").datepicker({
+			todayHighlight: true,
+			autoclose: true,
+		});
+	</script>
+	<!-- ================== END page-js ================== -->
+	
+</body>
+</html>
