@@ -103,9 +103,9 @@ function findId(){
 	
 	<!-- BEGIN #footer -->
 	<div id="footer" class="app-footer m-0">
-		<a href="#" class="btn btn-success btn-lg d-block" id="submit" onclick="findId();">완   료</a>
+		<a href="#" class="btn btn-success btn-lg" id="submit" onclick="findId();">완   료</a>
 	</div>
-	<!-- END #footer -->	
+	<!-- END #footer -->
 	
 </div>
 <!-- END #register -->

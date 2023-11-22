@@ -158,7 +158,6 @@ function idChk(){
 		data:{"user_id":idChk},
 		dataType:"json",
 		success:function(data){
-			alert(data);
 			if(data == "Y") {
 				alert("이미 등록된 회원입니다.");
 				idChkYN = false;
@@ -207,7 +206,7 @@ function pwChk(){
 				<div class="mb-3">
 					<label class="mb-2">아이디 </label>
 					<input type="text" class="form-control fs-13px" placeholder="아이디" id="user_id" name="user_id"/>
-					<button type="button" class="btn btn-pink d-block w-100 mt-2" onclick="idChk()">아이디중복확인</button>
+					<button type="button" class="btn btn-pink w-100 mt-2" onclick="idChk()">아이디중복확인</button>
 				</div>
 				<div class="mb-3">
 					<label class="mb-2">비밀번호 </label>
@@ -234,7 +233,7 @@ function pwChk(){
 	
 	<!-- BEGIN #footer -->
 	<div id="footer" class="app-footer m-0">
-		<a href="#" class="btn btn-success btn-lg d-block" onclick="signUpChk()">회원가입</a>
+		<a href="#" class="btn btn-success btn-lg" onclick="signUpChk()">회원가입</a>
 	</div>
 	<!-- END #footer -->
 	

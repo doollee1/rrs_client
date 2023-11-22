@@ -107,7 +107,7 @@ function signUp() {
 				<label for="password" class="d-flex align-items-center fs-13px text-gray-600">비밀번호</label>
 			</div>
 			<div class="mb-15px">
-				<button type="button" class="btn btn-theme d-block h-45px w-100 btn-lg fs-14px" onclick="signIn()">로그인</button>
+				<button type="button" class="btn btn-theme h-45px w-100 btn-lg fs-14px" onclick="signIn()">로그인</button>
 			</div>
 			<div class="mb-40px pb-40px text-dark btn-links">
 				<a href="/findId.do">아이디찾기</a>

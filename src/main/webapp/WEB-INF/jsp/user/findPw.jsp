@@ -106,9 +106,9 @@ function findPw(){
 	
 	<!-- BEGIN #footer -->
 	<div id="footer" class="app-footer m-0">
-		<a href="#" class="btn btn-success btn-lg d-block" onclick="findPw();">완   료</a>
+		<a href="#" class="btn btn-success btn-lg" onclick="findPw();">완   료</a>
 	</div>
-	<!-- END #footer -->	
+	<!-- END #footer -->
 	
 </div>
 <!-- END #register -->
