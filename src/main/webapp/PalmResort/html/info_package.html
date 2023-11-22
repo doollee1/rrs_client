@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="utf-8" />
+	<title>Palm Resort Reservation System</title>
+	<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+	<meta content="팜리조트 예약" name="description" />
+	<meta content="" name="author" />
+	
+	<!-- ================== BEGIN core-css ================== -->
+	<link href="../assets/css/vendor.min.css" rel="stylesheet" />
+	<link href="../assets/css/default/app.min.css" rel="stylesheet" />
+	<link href="../assets/css/palm.css" rel="stylesheet" />
+	<!-- ================== END core-css ================== -->
+	
+	<!-- ================== BEGIN page-css ================== -->
+	<!-- ================== END page-css ================== -->
+</head>
+<body>
+	<!-- BEGIN #app -->
+	<div id="app" class="app app-header-fixed app-sidebar-fixed app-content-full-height">
+		<!-- BEGIN #header -->
+		<div id="header" class="app-header">
+			<!-- BEGIN navbar-header -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-mobile-toggler btn-pre" >
+					<i class="fas fa-angle-left"></i>
+				</button>
+				<h1>상품소개</h1>
+				<!-- <a href="index.html" class="navbar-brand"><span class="navbar-logo"></span> <b class="me-3px">Color</b> Admin</a> -->
+				<button type="button" class="navbar-mobile-toggler" data-toggle="app-sidebar-mobile">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+			</div>
+			<!-- END navbar-header -->
+
+		</div>
+		<!-- END #header -->
+	
+		<!-- BEGIN #sidebar -->
+		<div id="sidebar" class="app-sidebar" data-bs-theme="dark">
+			<!-- BEGIN scrollbar -->
+			<div class="app-sidebar-content" data-scrollbar="true" data-height="100%">
+				<!-- BEGIN menu -->
+				<div class="menu">
+					<div class="menu-profile">
+						<div class="menu-profile-link">
+							<div class="menu-profile-cover with-shadow"></div>
+							<div class="menu-profile-info">
+								<div class="d-flex align-items-center">
+									<div class="flex-grow-1">
+										팜리조트 예약시스템
+									</div>
+								</div>
+								<small>어서오세요</small>
+							</div>
+						</div>
+					</div>
+
+					<div class="menu-header">Navigation</div>
+
+					<div class="menu-item">
+						<a href="#" class="menu-link">
+							<div class="menu-icon">
+								<i class="fas fa-calendar-check"></i>
+							</div>
+							<div class="menu-text">예약요청 </div>
+						</a>
+					</div>
+					<div class="menu-item ">
+						<a href="#" class="menu-link">
+							<div class="menu-icon">
+								<i class="fas fa-calendar-days"></i>
+							</div>
+							<div class="menu-text">예약현황</div> 
+						</a>
+					</div>
+					<div class="menu-item">
+						<a href="#" class="menu-link">
+							<div class="menu-icon">
+								<i class="fas fa-pencil-alt"></i> 
+							</div>
+							<div class="menu-text">문의사항</div>
+						</a>
+					</div>
+					<div class="menu-item">
+						<a href="#" class="menu-link">
+							<div class="menu-icon">
+								<i class="far fa-message"></i> 
+							</div>
+							<div class="menu-text">공지사항</div>
+						</a>
+					</div>
+					<div class="menu-item">
+						<a href="#" class="menu-link">
+							<div class="menu-icon">
+								<i class="fa fa-cog"></i>
+							</div>
+							<div class="menu-text">개인설정</div>
+						</a>
+					</div>
+					<div class="menu-item logout">
+						<a href="#" class="menu-link">
+							<div class="menu-icon">
+								<i class="fa-solid fa-right-from-bracket"></i>
+							</div>
+							<div class="menu-text">로그아웃</div>
+						</a>
+					</div>
+					
+					<!-- BEGIN minify-button -->
+					<div class="menu-item d-flex">
+						<a href="javascript:;" class="app-sidebar-minify-btn ms-auto d-flex align-items-center text-decoration-none" data-toggle="app-sidebar-minify"><i class="fa fa-angle-double-left"></i></a>
+					</div>
+					<!-- END minify-button -->
+				</div>
+				<!-- END menu -->
+			</div>
+			<!-- END scrollbar -->
+		</div>
+		<div class="app-sidebar-bg" data-bs-theme="dark"></div>
+		<div class="app-sidebar-mobile-backdrop"><a href="#" data-dismiss="app-sidebar-mobile" class="stretched-link"></a></div>
+		<!-- END #sidebar -->
+		
+		<!-- BEGIN #content -->
+		<div id="content" class="app-content d-flex flex-column p-0">
+			<!-- BEGIN content-container -->
+			<div class="app-content-padding flex-grow-1 overflow-hidden" data-scrollbar="true" data-height="100%">
+									
+				<!-- BEGIN nav-tabs -->
+				<ul class="nav nav-tabs">
+					<li class="nav-item">
+						<a href="#default-tab-1" data-bs-toggle="tab" class="nav-link active">
+							<span class="d-sm-none">시즌</span>
+						</a>
+					</li>
+					<li class="nav-item">
+						<a href="#default-tab-2" data-bs-toggle="tab" class="nav-link">
+							<span class="d-sm-none">비시즌</span>
+						</a>
+					</li>
+				</ul>
+				<!-- END nav-tabs -->
+				<!-- BEGIN tab-content -->
+				<div class="tab-content panel rounded-0 p-3 m-0">
+					<!-- BEGIN tab-pane -->
+					<div class="tab-pane fade active show" id="default-tab-1">
+						<table class="table table-striped">
+							<colgroup>
+								<col style="width:50%">
+								<col style="width:50%">
+							</colgroup>
+							<thead>
+								<tr class="table-success">
+									<th><span>2023년 11월30일~2024년12월30일</span></th>
+									<th><span>2023년12월31일~2024년3월10일</span></th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td colspan="2"><span>주중 36홀, 주말오후 18홀</span></td>
+								</tr>
+								<tr>
+									<td><span>140,000원/1인/1일</span></td>
+									<td><span>145,000원/1인/1실</span></td>
+								</tr>
+								<tr>
+									<td colspan="2"><span>주중 27홀, 주말오후 18홀</span></td>
+								</tr>
+								<tr>
+									<td><span>135,000원/1인/1일</span></td>
+									<td><span>140,000원/1인/1실</span></td>
+								</tr>
+								<tr>
+									<td colspan="2"><span>마사지</span></td>
+								</tr>
+								<tr>
+									<td><span>USD35/1시간</span></td>
+									<td><span>USD35/1시간</span></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<!-- END tab-pane -->
+					<!-- BEGIN tab-pane -->
+					<div class="tab-pane fade" id="default-tab-2">
+						<table class="table table-striped">
+							<colgroup>
+								<col style="width:50%">
+								<col style="width:50%">
+							</colgroup>
+							<thead>
+								<tr class="table-warning">
+									<th><span>2023년 11월30일~2024년12월30일</span></th>
+									<th rowspan="2"><span>2023년12월31일~2024년3월10일</span></th>
+								</tr>
+								<tr class="table-warning">
+									<th><span>2023년 11월30일~2024년12월30일</span></th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td colspan="2"><span>주중36홀,주말오후18홀 <br>10일미만체류, 투어리즘텍스 포함</span></td>
+								</tr>
+								<tr>
+									<td><span>140,000원/1인/1일</span></td>
+									<td><span>145,000원/1인/1실</span></td>
+								</tr>
+								<tr>
+									<td colspan="2">주중27홀, 주말오후18홀 <br>10일 이상체류, 투어리즘텍스 포함</td>
+								</tr>
+								<tr>
+									<td><span>135,000원/1인/1일</span></td>
+									<td><span>140,000원/1인/1실</span></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<!-- END tab-pane -->					
+				</div>
+				<!-- END tab-content -->
+
+			</div>
+			<!-- END content-container -->
+			
+			<!-- BEGIN #footer -->
+			<!-- END #footer -->			
+			
+		</div>
+		<!-- END #content -->
+		
+		<!-- BEGIN scroll-top-btn -->
+		<a href="javascript:;" class="btn btn-icon btn-circle btn-theme btn-scroll-to-top" data-toggle="scroll-to-top"><i class="fa fa-angle-up"></i></a>
+		<!-- END scroll-top-btn -->
+	</div>
+	<!-- END #app -->
+	
+	<!-- ================== BEGIN core-js ================== -->
+	<script src="../assets/js/vendor.min.js"></script>
+	<script src="../assets/js/app.min.js"></script>
+	<!-- ================== END core-js ================== -->
+	
+	<!-- ================== BEGIN page-js ================== -->
+	<!-- ================== END page-js ================== -->
+	
+</body>
+</html>
