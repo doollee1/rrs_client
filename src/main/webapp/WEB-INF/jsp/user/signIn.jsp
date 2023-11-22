@@ -5,13 +5,17 @@
 	Update
 	2023.11.15 이민구 - 최초생성
 	----------남은일----------
-	비밀번호 암호화
 	로그인 이벤트 분기 페이지 URL 재점검
 	인풋 이벤트 추가
 	----------남은일----------
 --%>
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
+<script src="resrc/rsa/rsa.js"	></script>
+<script src="resrc/rsa/jsbn.js"	></script>
+<script src="resrc/rsa/prng4.js"></script>
+<script src="resrc/rsa/rng.js"	></script>
 
 <script>
 
@@ -28,8 +32,11 @@ function setEvent(){
 <%// 로그인 이벤트%>
 function signIn(){
 	
+	var rsa = new RSAKey();
+	rsa.setPublic($('#RSAModulus').val(),$('#RSAExponent').val());
+	
 	var user_id = $("#user_id").val();
-	var passwd = $("#password").val();
+	var passwd = rsa.encrypt($("#password").val());
 	
 	if(user_id == null || user_id == ''){
 		 $("#user_id").focus();
@@ -106,6 +113,8 @@ function signUp() {
 				<input type="password" class="form-control h-45px fs-13px" placeholder="비밀번호" id="password" />
 				<label for="password" class="d-flex align-items-center fs-13px text-gray-600">비밀번호</label>
 			</div>
+			<input type="hidden" id="RSAModulus" name="RSAModulus" value="${RSAModulus }"/>
+			<input type="hidden" id="RSAExponent" name="RSAExponent" value="${RSAExponent}"/>
 			<div class="mb-15px">
 				<button type="button" class="btn btn-theme h-45px w-100 btn-lg fs-14px" onclick="signIn()">로그인</button>
 			</div>

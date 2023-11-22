@@ -2,9 +2,18 @@ package com.rrs.web.sign.controller;
 
 import com.rrs.web.sign.service.SignService;
 import com.rrs.web.sign.service.vo.SignVO;
+import com.rrs.comm.util.EgovFileScrty;
 import com.rrs.web.sign.controller.SignController;
 
+import java.security.KeyFactory;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.spec.RSAPublicKeySpec;
+
 import javax.annotation.Resource;
+import javax.crypto.Cipher;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
@@ -21,18 +30,20 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * 파일이름 : SignController.java
  * 파일설명 : 회원가입 컨트롤러
  * ***************************************************************************
- * 함수명			- 함수설명					방식	URL
+ * 함수명			- 함수설명						방식	URL
  * ---------------------------------------------------------------------------
- * signInPage()		- 로그인 화면 진입			GET		/signIn.do
- * signIn()			- 로그인 처리				POST	/signIn.do
- * signUpPage()		- 회원가입 화면 진입		GET		/signUp.do
- * signUp()			- 회원가입 처리				POST	/signUp.do
- * idChk()			- 아이디 중복 체크			POST	/signUpIdChk.do
- * 
- * findIdPage()		- 아이디 찾기 화면 진입		GET		/findId.do
- * findId()			- 아이디 찾기 처리			POST	/findId.do
- * findPwPage()		- 비밀번호 찾기 화면 진입	GET		/findPw.do
- * findPw()			- 비밀번호 찾기 처리		POST	/findPw.do
+ * initRsa()		- RSA 키 생성
+ * decryptRsa()		- RSA 복호화
+ * hexToByteArray()	- 16진 문자열 > byte 배열 전환
+ * signInPage()		- 로그인 화면 진입				GET		/signIn.do
+ * signIn()			- 로그인 처리					POST	/signIn.do
+ * signUpPage()		- 회원가입 화면 진입			GET		/signUp.do
+ * signUp()			- 회원가입 처리					POST	/signUp.do
+ * idChk()			- 아이디 중복 체크				POST	/signUpIdChk.do
+ * findIdPage()		- 아이디 찾기 화면 진입			GET		/findId.do
+ * findId()			- 아이디 찾기 처리				POST	/findId.do
+ * findPwPage()		- 비밀번호 찾기 화면 진입		GET		/findPw.do
+ * findPw()			- 비밀번호 찾기 처리			POST	/findPw.do
  * ***************************************************************************
  */
 @Controller
@@ -43,9 +54,75 @@ public class SignController {
 	@Resource(name = "signService")
 	SignService signService;
 	
+	public static String RSA_WEB_KEY	= "_RSA_WEB_Key_";	// 개인키 session key
+	public static String RSA_INSTANCE	= "RSA";				// rsa transformation
+	
+	/**
+	 * rsa 공개키, 개인키 생성
+	 * @param request
+	 */
+	public void initRsa(HttpServletRequest req) {
+		HttpSession session = req.getSession();
+
+		KeyPairGenerator generator;
+		try {
+			generator = KeyPairGenerator.getInstance(SignController.RSA_INSTANCE);
+			generator.initialize(1024);
+
+			KeyPair keyPair = generator.genKeyPair();
+			KeyFactory keyFactory = KeyFactory.getInstance(SignController.RSA_INSTANCE);
+			PublicKey publicKey = keyPair.getPublic();
+			PrivateKey privateKey = keyPair.getPrivate();
+
+			session.setAttribute(SignController.RSA_WEB_KEY, privateKey); // session에 RSA 개인키를 세션에 저장
+
+			RSAPublicKeySpec publicSpec = (RSAPublicKeySpec) keyFactory.getKeySpec(publicKey, RSAPublicKeySpec.class);
+			String publicKeyModulus = publicSpec.getModulus().toString(16);
+			String publicKeyExponent = publicSpec.getPublicExponent().toString(16);
+
+			req.setAttribute("RSAModulus" , publicKeyModulus ); // rsa modulus 를 request 에 추가
+			req.setAttribute("RSAExponent", publicKeyExponent); // rsa exponent 를 request 에 추가
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * 복호화
+	 * @param privateKey
+	 * @param securedValue
+	 * @return
+	 * @throws Exception
+	 */
+	public String decryptRsa(PrivateKey privateKey, String securedValue) throws Exception {
+		Cipher cipher = Cipher.getInstance(SignController.RSA_INSTANCE);
+		byte[] encryptedBytes = hexToByteArray(securedValue);
+		cipher.init(Cipher.DECRYPT_MODE, privateKey);
+		byte[] decryptedBytes = cipher.doFinal(encryptedBytes);
+		String decryptedValue = new String(decryptedBytes, "utf-8"); // 문자 인코딩 주의.
+		return decryptedValue;
+	}
+
+	/**
+	 * 16진 문자열을 byte 배열로 변환한다.
+	 * @param hex
+	 * @return
+	 */
+	public static byte[] hexToByteArray(String hex) {
+		if (hex == null || hex.length() % 2 != 0) { return new byte[] {}; }
+
+		byte[] bytes = new byte[hex.length() / 2];
+		for (int i = 0; i < hex.length(); i += 2) {
+			byte value = (byte) Integer.parseInt(hex.substring(i, i + 2), 16);
+			bytes[(int) Math.floor(i / 2)] = value;
+		}
+		return bytes;
+	}
+	
 	// 로그인 화면 진입
 	@RequestMapping(value = {"/signIn.do"}, method = {RequestMethod.GET})
-	public String signInPage() throws Exception {
+	public String signInPage(HttpServletRequest req) throws Exception {
+		initRsa(req);
 		return "user/signIn.view1";
 	}
 	
@@ -54,7 +131,16 @@ public class SignController {
 	@ResponseBody
 	public String signIn(@ModelAttribute("SignVO") SignVO vo, HttpServletRequest req) throws Exception {
 		logger.info("signIn");
-		HttpSession session = null;
+//		logger.info("화면에서 입력한 패스워드 ::::: " + vo.getPasswd());
+		
+		HttpSession session = req.getSession();
+		PrivateKey privateKey = (PrivateKey) session.getAttribute(SignController.RSA_WEB_KEY);
+		vo.setPasswd(decryptRsa(privateKey, vo.getPasswd()));
+//		logger.info("> 복호화 처리한 패스워드 ::::: " + vo.getPasswd());
+		
+		vo.setPasswd(EgovFileScrty.encryptPassword(vo.getPasswd(), vo.getUser_id()));
+//		logger.info("> DB 암호화 패스워드 ::::: " + vo.getPasswd());
+		
 		SignVO login = this.signService.signIn(vo);
 		String loginYn = "";
 		
@@ -98,8 +184,9 @@ public class SignController {
 	
 	// 회원가입 화면 진입
 	@RequestMapping(value = {"/signUp.do"}, method = {RequestMethod.GET})
-	public String signUpPage(Model model) throws Exception {
+	public String signUpPage(HttpServletRequest req) throws Exception {
 		logger.info("signUpPage");
+		initRsa(req);
 		return "user/signUp.view1";
 	}
 	
@@ -108,13 +195,21 @@ public class SignController {
 	@ResponseBody
 	public String signUp(@ModelAttribute("SignVO") SignVO vo, HttpServletRequest req) throws Exception {
 		logger.info("signUp");
+//		logger.info("화면에서 입력한 패스워드 ::::: " + vo.getPasswd());
+		
+		HttpSession session = req.getSession();
+		PrivateKey privateKey = (PrivateKey) session.getAttribute(SignController.RSA_WEB_KEY);
+		vo.setPasswd(decryptRsa(privateKey, vo.getPasswd()));
+//		logger.info("> 복호화 처리한 패스워드 ::::: " + vo.getPasswd());
+		
 		vo.setUser_id(req.getParameter("user_id"));
 		vo.setMem_gbn(req.getParameter("mem_gbn"));
 		vo.setHan_name(req.getParameter("han_name"));
 		vo.setEng_name(req.getParameter("eng_name"));
 		vo.setTel_no(req.getParameter("tel_no"));
 		vo.setEmail(req.getParameter("email"));
-		vo.setPasswd(req.getParameter("passwd"));
+		vo.setPasswd(EgovFileScrty.encryptPassword(vo.getPasswd(), vo.getUser_id()));
+//		logger.info("> DB 암호화 패스워드 ::::: " + vo.getPasswd());
 		vo.setRet_yn(req.getParameter("ret_yn"));
 		vo.setReg_dtm(req.getParameter("reg_dtm"));
 		vo.setUpd_dtm(req.getParameter("upd_dtm"));

@@ -6,7 +6,6 @@
 	2023.11.15 이민구 - 최초생성
 	
 	----------남은일----------
-	비밀번호 암호화
 	인풋 이벤트 추가
 		> 아이디 값 변화시 아이디 중복체크 확인 값 idChkYN false 변경
 		> 한글이름 입력창 한글만 입력하도록
@@ -19,6 +18,12 @@
 <%@ page import="java.sql.*,java.text.SimpleDateFormat,java.util.Date"%>
 <%@ page import="java.security.*"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
+<script src="resrc/rsa/rsa.js"	></script>
+<script src="resrc/rsa/jsbn.js"	></script>
+<script src="resrc/rsa/prng4.js"></script>
+<script src="resrc/rsa/rng.js"	></script>
+
 <script>
 $(window).ready( function() {
 	setTitle("회원가입");
@@ -59,13 +64,16 @@ function signUpChk(){
 	$("#reg_dtm").val(now);
 	$("#upd_dtm").val(now);
 	
+	var rsa = new RSAKey();
+	rsa.setPublic($('#RSAModulus').val(),$('#RSAExponent').val());
+	
 	var user_id		= $("#user_id").val();		<%//사용자id%>
 	var mem_gbn		= $("#mem_gbn").val();		<%//회원구분 01 멤버 / 02 일반 / 03 교민 / 04 에이전시%>
 	var han_name	= $("#han_name").val();		<%//한글이름%>
 	var eng_name	= $("#eng_name").val();		<%//영문이름%>
 	var tel_no		= $("#tel_no").val();		<%//전화번호%>
 	var email		= $("#email").val();		<%//이메일%>
-	var passwd		= $("#passwd").val();		<%//비밀번호%>
+	var passwd		= rsa.encrypt($("#passwd").val());		<%//비밀번호%>
 	var ret_yn		= $("#ret_yn").val();		<%//탈퇴여부%>
 	var reg_dtm		= $("#reg_dtm").val();		<%//등록일시%>
 	var upd_dtm		= $("#upd_dtm").val();		<%//수정일시%>
@@ -223,6 +231,8 @@ function pwChk(){
 				<input type="hidden" id="ret_yn" name="ret_yn" class="form-control" placeholder="탈퇴여부"><BR></BR>
 				<input type="hidden" id="reg_dtm" name="reg_dtm" class="form-control" placeholder="등록일시"><BR></BR>
 				<input type="hidden" id="upd_dtm" name="upd_dtm" class="form-control" placeholder="수정일시"><BR></BR>
+				<input type="hidden" id="RSAModulus" name="RSAModulus" value="${RSAModulus }"/>
+				<input type="hidden" id="RSAExponent" name="RSAExponent" value="${RSAExponent}"/>
 <!-- 			</form> -->
 			
 		</div>
