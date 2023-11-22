@@ -4,14 +4,7 @@
 	Creation : 이민구
 	Update
 	2023.11.15 이민구 - 최초생성
-	
 	----------남은일----------
-	인풋 이벤트 추가
-		> 아이디 값 변화시 아이디 중복체크 확인 값 idChkYN false 변경
-		> 한글이름 입력창 한글만 입력하도록
-		> 영문이름 입력창 영문만 입력하도록
-		> 전화번호 입력창 숫자만 입력하도록 + 값 전달 시 '-' 는 로직으로 추가해서 전달하도록
-		> 비밀번호 확인창 비밀번호 입력창과 값 비교 후 값에따라 '비밀번호는 8자리 이상 영문과 숫자를 포함해야 합니다.' 텍스트 변경되도록
 	----------남은일----------
 --%>
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
@@ -30,16 +23,57 @@ $(window).ready( function() {
 	setEvent();
 });
 
+// $(document).on("keyup", "input[telNo]", function() {$(this).val( $(this).val().replace(/[^0-9-]/gi,"") );});
+$(document).on("keyup", "input[noSpecial]", function() {$(this).val( $(this).val().replace(/[^ㄱ-힣a-zA-Z0-9]/gi,"") );});
+$(document).on("keyup", "input[onlyNum]", function() {$(this).val( $(this).val().replace(/[^0-9]/gi,"") );});
+$(document).on("keyup", "input[onlyKor]", function() {$(this).val( $(this).val().replace(/[a-z0-9]|[ \[\]{}()<>?|`~!@#$%^&*-_+=,.;:\"'\\]/g,"") );});
+$(document).on("keyup", "input[onlyEng]", function() {$(this).val( $(this).val().replace(/[^A-Za-z]/ig,"") );});
+
+function validChk_email(val){
+	var pattern = /([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+	return (val != '' && val != 'undefined' && pattern.test(val));
+}
+
+function validChk_passwd(val){
+	var pattern = /^(?=.*[a-zA-Z])(?=.*[0-9]).{8,100}
+	return (val != '' && val != 'undefined' && pattern.test(val));
+}
+
 var today = new Date();
 var year = today.getFullYear();
 var month = ('0' + (today.getMonth() + 1)).slice(-2);
 var day = ('0' + today.getDate()).slice(-2);
 var now = year + '-' + month  + '-' + day; <%//오늘날짜 YYYY-MM-DD%>
 var idChkYN = false; <%//아이디 중복확인 여부%>
+var pwChkYN = false; <%//비밀번호 유효성 확인%>
 
 <%//페이지 이벤트 설정 %>
 function setEvent(){
-	
+	<%//아이디가 변하면 중복체크도 다시하도록 값 초기화%>
+	$('#user_id').on("change", function(){
+		idChkYN = false;
+	});
+	<%//비밀번호 중복확인 여부 확인%>
+	$('#passwd, #passwdChk').on('change', function(){
+		var passwd = $('#passwd').val();
+		var passwdChk = $('#passwdChk').val();
+		if(passwd.length > 8) {
+			$('#passwdChkText').text("비밀번호는 8자리 이상 영문과 숫자를 포함해야 합니다.");
+			pwChkYN = false;
+		}
+		
+		if(passwdChk == "") {
+			return;
+		}
+		
+		if(passwd == passwdChk) {
+			$('#passwdChkText').text("비밀번호가 일치합니다.");
+			pwChkYN = true;
+		} else {
+			$('#passwdChkText').text("비밀번호가 일치하지 않습니다.");
+			pwChkYN = false;
+		}
+	});
 }
 
 <%// 회원가입 버튼 이벤트%>
@@ -94,7 +128,7 @@ function signUpChk(){
 		alert("전화번호를 입력해주세요.");
 		return;
 	}
-				if(email == null || email == ''){
+	if(email == null || email == ''){
 		$("#email").focus();
 		alert("이메일을 입력해주세요.");
 		return;
@@ -109,9 +143,25 @@ function signUpChk(){
 		alert("비밀번호를 입력해주세요.");
 		return;
 	}
+	if(!pwChkYN){
+		alert("입력하신 비밀번호와 비밀번호 확인 값이 일치하지 않습니다.");
+		return;
+	}
+	if(!validChk_passwd){
+		alert("비밀번호는 8자리 이상 영문과 숫자를 포함해야 합니다.");
+		return;
+	}
 	if(!idChkYN){
 		alert("아이디 중복확인을 완료해주세요.");
 		return;
+	}
+	if(!validChk_email(email)) {
+		alert("이메일 형식이 올바르지 않습니다.");
+		return;
+	}
+	<%//일반적인 전화번호에 하이픈 삽입 : 010xxxxyyyy > 010-xxxx-yyyy%>
+	if(tel_no.length == 11) {
+		tel_no = phone.replace(/^(\d{2,3})(\d{3,4})(\d{4})$/, `$1-$2-$3`);
 	}
 	
 	$.ajax({
@@ -197,23 +247,23 @@ function pwChk(){
 <!-- 			<form action="index.html" method="GET" class="fs-13px"> -->
 				<div class="mb-3">
 					<label class="mb-2">이름 </label>
-					<input type="text" class="form-control fs-13px" placeholder="이름" id="han_name" name="han_name"/>
+					<input type="text" class="form-control fs-13px" placeholder="이름" id="han_name" name="han_name" onlyKor/>
 				</div>
 				<div class="mb-3">
 					<label class="mb-2">영문이름</label>
-					<input type="text" class="form-control fs-13px" placeholder="영문이름" id="eng_name" name="eng_name"/>
+					<input type="text" class="form-control fs-13px" placeholder="영문이름" id="eng_name" name="eng_name" onlyEng/>
 				</div>
 				<div class="mb-3">
 					<label class="mb-2">전화번호</label>
-					<input type="text" class="form-control fs-13px" placeholder="전화번호" id="tel_no" name="tel_no"/>
+					<input type="tel" class="form-control fs-13px" placeholder="전화번호" id="tel_no" name="tel_no" onlyNum/>
 				</div>
 				<div class="mb-3">
 					<label class="mb-2">이메일 </label>
-					<input type="text" class="form-control fs-13px" placeholder="이메일" id="email" name="email"/>
+					<input type="email" class="form-control fs-13px" placeholder="이메일" id="email" name="email"/>
 				</div>
 				<div class="mb-3">
 					<label class="mb-2">아이디 </label>
-					<input type="text" class="form-control fs-13px" placeholder="아이디" id="user_id" name="user_id"/>
+					<input type="text" class="form-control fs-13px" placeholder="아이디" id="user_id" name="user_id" noSpecial/>
 					<button type="button" class="btn btn-pink w-100 mt-2" onclick="idChk()">아이디중복확인</button>
 				</div>
 				<div class="mb-3">
@@ -224,7 +274,7 @@ function pwChk(){
 					<label class="mb-2">비밀번호 확인</label>
 					<input type="password" class="form-control fs-13px" placeholder="비밀번호 확인" id="passwdChk" name="passwdChk"/>
 				</div>
-				<div class="small">
+				<div class="small" id="passwdChkText">
 					비밀번호는 8자리 이상 영문과 숫자를 포함해야 합니다.
 				</div>
 				<input type="hidden" id="mem_gbn" name="mem_gbn" class="form-control" placeholder="회원구분"><BR></BR>
