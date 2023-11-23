@@ -60,9 +60,10 @@ function signIn(){
 		dataType:"json",
 		success:function(data){
 			if(data == "Y"){
-				location.href = "/mainPage.do";
-			} else if(data == "D"){
-				alert("비밀번호가 초기 상태입니다.\n비밀번호 변경을 위해	회원수정 화면으로 이동합니다.");
+				location.href = "/main.do";
+			} else if(data == "R"){
+				alert("비밀번호가 초기 상태입니다.\n비밀번호 변경 후 이용해주세요.");
+				// TODO 추후 화면 생기면 수정
 				location.href="/Member_user.do";
 			} else if(data == "F"){
 				alert("이용할 수 없는 게정입니다. 관리자에게 문의해주세요.");

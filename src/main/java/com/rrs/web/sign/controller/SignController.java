@@ -174,10 +174,10 @@ public class SignController {
 			session.setAttribute("upd_dtm",	login.getUpd_dtm());	//수정일시
 			
 			
-			if(login.getPasswd().equals("1234")){
-				loginYn = "D"; //D : 비밀번호가 초기상태일 경우
+			if(login.getRet_yn().equals("R")){
+				loginYn = "R"; //D : 비밀번호가 초기상태일 경우
 			} else if(login.getRet_yn().equals("Y")){
-				loginYn = "F"; //F : 사용자 게정이 이용불가 상태일 경우
+				loginYn = "F"; //F : 사용자 계정이 이용불가 상태일 경우
 			} else{
 				loginYn = "Y"; //Y : 로그인 성공
 			}
