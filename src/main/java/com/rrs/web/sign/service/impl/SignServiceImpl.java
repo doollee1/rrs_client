@@ -41,4 +41,10 @@ public class SignServiceImpl implements SignService {
 	public String findPw(SignVO vo) throws Exception {
 		return this.signMapper.findPw(vo);
 	}
+	public void resetPw(SignVO vo) throws Exception {
+		this.signMapper.resetPw(vo);
+	}
+	public void changePw(SignVO vo) throws Exception {
+		this.signMapper.changePw(vo);
+	}
 }

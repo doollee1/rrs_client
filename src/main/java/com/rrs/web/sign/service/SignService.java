@@ -13,5 +13,6 @@ public interface SignService {
 	int memberChk(SignVO paramSignVo) throws Exception;
 	public String findId(SignVO vo) throws Exception;
 	public String findPw(SignVO vo) throws Exception;
-	
+	public void resetPw(SignVO vo) throws Exception;
+	public void changePw(SignVO vo) throws Exception;
 }

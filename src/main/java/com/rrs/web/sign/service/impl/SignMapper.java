@@ -20,4 +20,6 @@ public interface SignMapper {
 	int memberChk(SignVO paramSignVo) throws Exception;
 	String findId(SignVO paramSignVo) throws Exception;
 	String findPw(SignVO paramSignVo) throws Exception;
+	void resetPw(SignVO paramSignVo) throws Exception;
+	void changePw(SignVO paramSignVo) throws Exception;
 }

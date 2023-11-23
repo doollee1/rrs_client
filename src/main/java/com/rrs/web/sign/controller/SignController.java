@@ -36,6 +36,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * 함수명			- 함수설명						방식	URL
  * ---------------------------------------------------------------------------
  * initRsa()		- RSA 키 생성
+ * encryptRsa()		- RSA 암호화
  * decryptRsa()		- RSA 복호화
  * hexToByteArray()	- 16진 문자열 > byte 배열 전환
  * signInPage()		- 로그인 화면 진입				GET		/signIn.do
@@ -108,7 +109,7 @@ public class SignController {
 		String decryptedValue = new String(decryptedBytes, "utf-8"); // 문자 인코딩 주의.
 		return decryptedValue;
 	}
-
+	
 	/**
 	 * 16진 문자열을 byte 배열로 변환한다.
 	 * @param hex
@@ -239,7 +240,7 @@ public class SignController {
 	
 	// 아이디 찾기 화면 진입
 	@RequestMapping(value = {"/findId.do"}, method = {RequestMethod.GET})
-	public String findIdPage(Model model) throws Exception {
+	public String findIdPage() throws Exception {
 		logger.info("findIdPage");
 		return "user/findId.view1";
 	}
@@ -272,8 +273,9 @@ public class SignController {
 	
 	// 비밀번호 찾기 화면 진입
 	@RequestMapping(value = {"/findPw.do"}, method = {RequestMethod.GET})
-	public String findPwPage(Model model) throws Exception {
+	public String findPwPage(HttpServletRequest req) throws Exception {
 		logger.info("findPwPage");
+		initRsa(req);
 		return "user/findPw.view1";
 	}
 	
@@ -282,12 +284,25 @@ public class SignController {
 	@ResponseBody
 	public String findPw(@ModelAttribute("SignVO") SignVO vo, HttpServletRequest req) throws Exception {
 		logger.info("findPw");
+		
+		HttpSession session = req.getSession();
+		String result = "";
+		
+		// 입력받은 비밀번호를 복호화 후 다시 암호화하여 DB형식의 데이터로 전환
+		PrivateKey privateKey = (PrivateKey) session.getAttribute(SignController.RSA_WEB_KEY);
+		vo.setPasswd(decryptRsa(privateKey, vo.getPasswd()));
+		
 		String find = this.signService.findPw(vo);
 		logger.debug("find ::::: " + find);
 		if(find == null){
-			find = "NONE"; // 해당 정보 없음
+			result = "NONE"; // 해당 정보 없음
+		} else {
+			this.signService.resetPw(vo); // 비밀번호를 초기화, 회원 상태 변경 : R
+			result = "Y";
 		}
-		return find;
+		
+		
+		return result;
 	}
 	/*
 	@RequestMapping(value = {"/signOut.do"}, method = {RequestMethod.GET})
