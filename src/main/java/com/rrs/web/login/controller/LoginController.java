@@ -56,17 +56,17 @@ public class LoginController {
 	@ResponseBody
 	public String login(@ModelAttribute("LoginVO") LoginVO vo, HttpServletRequest req) throws Exception {
 		logger.info("login");
-		logger.info(vo.getIn_pw());
+		logger.info("화면에서 입력한 패스워드 ::::: " + vo.getIn_pw());
 
 		// 복호화
 		HttpSession session = req.getSession();
 		PrivateKey privateKey = (PrivateKey) session.getAttribute(LoginController.RSA_WEB_KEY);
 		vo.setIn_pw(decryptRsa(privateKey, vo.getIn_pw()));
-		logger.info(vo.getIn_pw());
+		logger.info("> 복호화 처리한 패스워드 ::::: " + vo.getIn_pw());
 
 		// 암호화 DB체크, insert 시
 		vo.setIn_pw(EgovFileScrty.encryptPassword(vo.getIn_pw(), vo.getIn_id()));
-		logger.info(vo.getIn_pw());
+		logger.info(">> 암호화 처리한 패스워드 ::::: " + vo.getIn_pw());
 
 		logger.info(EgovFileScrty.encryptPassword("oms1234", "admin"));
 		return "Y";

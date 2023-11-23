@@ -61,12 +61,28 @@ function findId(){
 			if(data == "NONE"){
 				alert("존재하지 않는 정보입니다.");
 			} else {
-				alert("회원님의 아이디는 " + data + " 입니다.");
+				alert("등록된 회원님의 이메일주소(" + email + ")로 아이디가 발송되었습니다.");
 				location.href = "/signIn.do";
 			}
 		},
 		error:function(data){
 			console.log("통신중 오류가 발생하였습니다.");
+		}
+	});
+}
+
+function test(){
+	
+	$.ajax({
+		type : "POST",
+		url : "/comm/sendMail.do",
+		data : {"param" : { "mail_yn" : "Y" } },
+		dataType:"json",
+		success:function(data){
+			alert("data ::::: " + JSON.stringify(data));
+		},
+		error:function(data){
+			alert("error ::::: " + JSON.stringify(data));
 		}
 	});
 }
@@ -104,6 +120,7 @@ function findId(){
 	<!-- BEGIN #footer -->
 	<div id="footer" class="app-footer m-0">
 		<a href="#" class="btn btn-success btn-lg" id="submit" onclick="findId();">완   료</a>
+		<a href="#" class="btn btn-success btn-lg" id="test" onclick="test();">테스트</a>
 	</div>
 	<!-- END #footer -->
 	

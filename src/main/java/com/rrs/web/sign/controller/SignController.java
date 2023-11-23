@@ -3,6 +3,7 @@ package com.rrs.web.sign.controller;
 import com.rrs.web.sign.service.SignService;
 import com.rrs.web.sign.service.vo.SignVO;
 import com.rrs.comm.util.EgovFileScrty;
+import com.rrs.web.comm.service.MailSendService;
 import com.rrs.web.sign.controller.SignController;
 
 import java.security.KeyFactory;
@@ -11,6 +12,8 @@ import java.security.KeyPairGenerator;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.spec.RSAPublicKeySpec;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.crypto.Cipher;
@@ -53,6 +56,9 @@ public class SignController {
 	
 	@Resource(name = "signService")
 	SignService signService;
+	
+	@Resource(name = "mailSendService")
+	MailSendService mailSendService;
 	
 	public static String RSA_WEB_KEY	= "_RSA_WEB_Key_";	// 개인키 session key
 	public static String RSA_INSTANCE	= "RSA";				// rsa transformation
@@ -243,12 +249,25 @@ public class SignController {
 	 @ResponseBody
 	 public String findId(@ModelAttribute("SignVO") SignVO vo, HttpServletRequest req) throws Exception {
 		logger.info("findId");
+		
+		String result = "";
 		String find = this.signService.findId(vo);
 		logger.debug("find ::::: " + find);
 		if(find == null){
-			find = "NONE"; // 해당 정보 없음
+			result = "NONE"; // 해당 정보 없음
+		} else {
+			logger.debug("email");
+			Map<String, Object> param = new HashMap<String, Object>();
+			String han_name = req.getParameter("han_name");
+			String title = "PalmResort 예약 시스템 " + han_name + " 회원 님의 아이디입니다.";
+			String content = "회원님의 아이디는 " + find + " 입니다.";
+			param.put("to", req.getParameter("email"));
+			param.put("title", title);
+			param.put("content", content);
+			mailSendService.sendMail(param);
+			result = "Y";
 		}
-		return find;
+		return result;
 	 }
 	
 	// 비밀번호 찾기 화면 진입
