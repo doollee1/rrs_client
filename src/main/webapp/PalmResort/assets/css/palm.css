@@ -142,7 +142,7 @@ ul li {list-style:none;}
 .reserve-list li a {opacity:0.5;display:flex;align-items:center;grid-column-gap:20px;padding:10px 0}
 .reserve-list li + li {border-top:1px solid var(--bs-component-table-border-color)}
 .reserve-list li a > span:last-child {margin-left:auto}
-.reserve-list li a > span:first-child {font-size:0.75rem}
+.reserve-list li a > span.date {font-size:0.75rem}
 .reserve-list .active a {opacity:1}
 
 
