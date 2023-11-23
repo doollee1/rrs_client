@@ -35,7 +35,7 @@ function validChk_email(val){
 }
 
 function validChk_passwd(val){
-	var pattern = /^(?=.*[a-zA-Z])(?=.*[0-9]).{8,100}
+	var pattern = /^(?=.*[a-zA-Z])(?=.*[0-9]).{8,100}$/;
 	return (val != '' && val != 'undefined' && pattern.test(val));
 }
 
@@ -138,7 +138,7 @@ function signUpChk(){
 		alert("아이디를 입력해주세요.");
 		return;
 	}
-	if(passwd == null || passwd == ''){
+	if($('#passwd').val() == null || $('#passwd').val() == ''){
 		$("#passwd").focus();
 		alert("비밀번호를 입력해주세요.");
 		return;
@@ -147,7 +147,7 @@ function signUpChk(){
 		alert("입력하신 비밀번호와 비밀번호 확인 값이 일치하지 않습니다.");
 		return;
 	}
-	if(!validChk_passwd){
+	if(!validChk_passwd($('#passwd').val())){
 		alert("비밀번호는 8자리 이상 영문과 숫자를 포함해야 합니다.");
 		return;
 	}
@@ -161,7 +161,7 @@ function signUpChk(){
 	}
 	<%//일반적인 전화번호에 하이픈 삽입 : 010xxxxyyyy > 010-xxxx-yyyy%>
 	if(tel_no.length == 11) {
-		tel_no = phone.replace(/^(\d{2,3})(\d{3,4})(\d{4})$/, `$1-$2-$3`);
+		tel_no = tel_no.replace(/^(\d{2,3})(\d{3,4})(\d{4})$/, `$1-$2-$3`);
 	}
 	
 	$.ajax({
