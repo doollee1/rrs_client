@@ -158,6 +158,18 @@ public class SignController {
 		} else {
 			session = req.getSession(true);
 			
+			if(login.getRet_yn().equals("R")) {
+				loginYn = "R";
+				return loginYn;
+			} else if(login.getRet_yn().equals("Y")) {
+				loginYn = "F";
+				return loginYn;
+			} else {
+				loginYn = "Y"; // Y : 로그인 성공
+			}
+			
+			session = req.getSession(true);
+			session.setAttribute("login",	login);
 			session.setAttribute("user_id",	login.getUser_id());	//사용자id
 			session.setAttribute("mem_gbn",	login.getMem_gbn());	//회원구분 01 멤버 / 02 일반 / 03 교민 / 04 에이전시
 			session.setAttribute("han_name",login.getHan_name());	//한글이름
@@ -168,14 +180,6 @@ public class SignController {
 			session.setAttribute("ret_yn",	login.getRet_yn());		//탈퇴여부
 			session.setAttribute("reg_dtm",	login.getReg_dtm());	//등록일시
 			session.setAttribute("upd_dtm",	login.getUpd_dtm());	//수정일시
-			
-			if(login.getRet_yn().equals("R")) {
-				loginYn = "R";
-			} else if(login.getRet_yn().equals("Y")) {
-				loginYn = "F";
-			} else {
-				loginYn = "Y"; // Y : 로그인 성공
-			}
 			
 		}
 		
@@ -316,4 +320,58 @@ public class SignController {
 	}
 	*/
 	
+	// 세팅 화면 진입
+	@RequestMapping(value = {"/setting.do"}, method = {RequestMethod.GET})
+	public String settingPage(HttpServletRequest req) throws Exception {
+		logger.info("settingPage");
+		return "user/setting.view";
+	}
+	
+	// 개인정보처리방침 화면 진입
+	@RequestMapping(value = {"/policy.do"}, method = {RequestMethod.GET})
+	public String policyPage(HttpServletRequest req) throws Exception {
+		logger.info("policyPage");
+		return "user/policy.view";
+	}
+	
+	// 개인정보 변경 화면 진입
+	@RequestMapping(value = {"/infoChange.do"}, method = {RequestMethod.GET})
+	public String infoChangePage(HttpServletRequest req) throws Exception {
+		logger.info("infoChangePage");
+		initRsa(req);
+		return "user/infoChange.view";
+	}
+	
+	// 개인정보 변경 처리
+	@RequestMapping(value = {"/infoChange.do"}, method = {RequestMethod.POST})
+	@ResponseBody
+	public String infoChange(@ModelAttribute("SignVO") SignVO vo, HttpServletRequest req) throws Exception {
+		logger.info("infoChange");
+		
+		String result = "";
+		
+		String find = this.signService.findPw(vo);
+		logger.debug("find ::::: " + find);
+		if(find == null){
+			result = "NONE"; // 해당 정보 없음
+		} else {
+			vo.setPasswd(EgovFileScrty.encryptPassword(RESET_PASSWORD, vo.getUser_id()));
+			this.signService.resetPw(vo); // 비밀번호를 초기화, 회원 상태 변경 : R
+			result = "Y";
+		}
+		
+		
+		return result;
+	}
+	
+	// 회원탈퇴 처리
+	@RequestMapping(value = {"/memberOut.do"}, method = {RequestMethod.POST})
+	@ResponseBody
+	public String memberOut(@ModelAttribute("SignVO") SignVO vo, HttpServletRequest req) throws Exception {
+		logger.info("memberOut");
+		
+		String result = "";
+		
+		return result;
+	}
 }

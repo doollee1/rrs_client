@@ -6,7 +6,6 @@
 	2023.11.21 이민구 - 최초생성
 	----------남은일----------
 	이메일 전송 추가
-	비밀번호 암호화 및 초기화 처리
 	----------남은일----------
 --%>
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
@@ -18,6 +17,14 @@ $(window).ready( function() {
 	setTitle("비밀번호찾기");
 	setEvent();
 });
+
+$(document).on("keyup", "input[noSpecial]", function() {$(this).val( $(this).val().replace(/[^ㄱ-힣a-zA-Z0-9]/gi,"") );});
+$(document).on("keyup", "input[onlyNum]", function() {$(this).val( $(this).val().replace(/[^0-9]/gi,"") );});
+
+function validChk_email(val){
+	var pattern = /([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+	return (val != '' && val != 'undefined' && pattern.test(val));
+}
 
 <%//페이지 이벤트 설정 %>
 function setEvent(){
@@ -48,6 +55,14 @@ function findPw(){
 		alert("이메일을 입력해주세요.");
 		return;
 	}
+	if(!validChk_email(email)) {
+		alert("이메일 형식이 올바르지 않습니다.");
+		return;
+	}
+	<%//일반적인 전화번호에 하이픈 삽입 : 010xxxxyyyy > 010-xxxx-yyyy%>
+	if(tel_no.length == 11) {
+		tel_no = tel_no.replace(/^(\d{2,3})(\d{3,4})(\d{4})$/, `$1-$2-$3`);
+	}
 	
 	$.ajax({
 		type: "POST",
@@ -60,9 +75,9 @@ function findPw(){
 		dataType:"json",
 		success:function(data){
 			if(data == "NONE"){
-				alert("존재하지 않는 정보입니다.");
+				alert("존재하지 않는 사용자입니다.");
 			} else {
-				alert("회원님의 비밀번호는 " + data + " 입니다.");
+				alert("회원님의 비밀번호가 초기화되었습니다. 초기화된 비밀번호로 다시 접속해주세요.");
 				location.href = "/signIn.do";
 			}
 		},
@@ -84,15 +99,15 @@ function findPw(){
 				<div class="text"><i class="fa-solid fa-check"></i> 등록된 회원정보로 비밀번호를 찾아 드립니다.</div>
 				<div class="mb-3">
 					<label class="mb-2">아이디 </label>
-					<input type="text" class="form-control fs-13px" placeholder="아이디" id="user_id"/>
+					<input type="text" class="form-control fs-13px" placeholder="아이디" id="user_id" noSpecial/>
 				</div>						
 				<div class="mb-3"> 
 					<label class="mb-2">전화번호</label>
-					<input type="text" class="form-control fs-13px" placeholder="전화번호" id="tel_no"/>
+					<input type="text" class="form-control fs-13px" placeholder="전화번호" id="tel_no" onlyNum/>
 				</div>
 				<div class="mb-3"> 
 					<label class="mb-2">이메일 </label>
-					<input type="text" class="form-control fs-13px" placeholder="이메일" id="email"/>
+					<input type="email" class="form-control fs-13px" placeholder="이메일" id="email"/>
 				</div> 
 				<div>초기화된 비밀번호를 회원가입시 입력한 이메일로 보내 드립니다. 초기화된 비밀번호를 받으시고 변경해서 사용하세요.</div>
 				
