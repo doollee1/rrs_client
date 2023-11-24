@@ -104,6 +104,8 @@ ul li {list-style:none;}
 .table-striped th, .table-striped td {text-align:center;vertical-align:middle;}
 .table-striped th + th, .table-striped td + td {border-left:1px solid var(--bs-component-table-border-color);}
 
+.policy-wrap pre {white-space:pre-wrap;font-family:"Noto Sans KR", "Sans-serif";}
+.policy-wrap pre .title {font-size:14px;font-weight:500;}
 
 /* 03. Login =================================*/
 .login.login-with-news-feed .login-header .brand .logo, .register.register-with-news-feed .login-header .brand .logo {border:none;background-color:transparent;font-size:unset;}
@@ -116,6 +118,8 @@ ul li {list-style:none;}
 .btn-links .btn-join{margin-left:auto}
 .register-content .text {font-size:14px;margin-bottom:15px;color:var(--bs-app-theme);}
 .register-content .text > i {margin-right:5px}
+.register.register-with-news-feed.set {min-height:unset;}
+.register.register-with-news-feed.set .register-container{justify-content:flex-start;}
 
 
 /* 04. Index =================================*/
