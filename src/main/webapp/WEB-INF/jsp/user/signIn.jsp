@@ -63,8 +63,7 @@ function signIn(){
 				location.href = "/main.do";
 			} else if(data == "R"){
 				alert("비밀번호가 초기 상태입니다.\n비밀번호 변경 후 이용해주세요.");
-				// TODO 추후 화면 생기면 수정
-				location.href="/Member_user.do";
+				location.href="/userInfoChange.do";
 			} else if(data == "F"){
 				alert("이용할 수 없는 게정입니다. 관리자에게 문의해주세요.");
 			} else if(data == "N"){
@@ -77,10 +76,6 @@ function signIn(){
 			console.log("통신중 오류가 발생하였습니다.");
 		}
 	});
-}
-
-function signUp() {
-	location.href = "/signUp.do";
 }
 </script>
 

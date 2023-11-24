@@ -10,6 +10,13 @@
 	AND passwd		= (#{passwd})
 </select>
 
+<!-- 회원정보체크 -->
+<select id="userChk" parameterType="string" resultType="com.rrs.web.sign.service.vo.SignVO">
+SELECT ret_yn, passwd
+FROM tb_member
+WHERE user_id = #{user_id}
+</select>
+
 <!-- ID중복체크 -->
 <select id="idChk" parameterType="string" resultType="int">
 SELECT COUNT(*)
@@ -88,13 +95,13 @@ WHERE user_id = #{user_id}
 	FROM tb_member
 	WHERE user_id	= #{user_id}
 	AND tel_no		= #{tel_no}
-	AND email		= #{email)
+	AND email		= #{email}
 </select>
 
 <!-- 비밀번호 초기화 -->
 <update id="resetPw" parameterType="com.rrs.web.sign.service.vo.SignVO">
 	UPDATE tb_member
-	SET ret_yn = "R" , passwd = "1234"
+	SET ret_yn = "R" , passwd = #{passwd}
 	WHERE user_id = #{user_id}
 </update>
 

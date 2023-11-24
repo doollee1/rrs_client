@@ -62,7 +62,8 @@ public class SignController {
 	MailSendService mailSendService;
 	
 	public static String RSA_WEB_KEY	= "_RSA_WEB_Key_";	// 개인키 session key
-	public static String RSA_INSTANCE	= "RSA";				// rsa transformation
+	public static String RSA_INSTANCE	= "RSA";			// rsa transformation
+	public static String RESET_PASSWORD	= "1234";			// 리셋비밀번호
 	
 	/**
 	 * rsa 공개키, 개인키 생성
@@ -138,27 +139,22 @@ public class SignController {
 	@ResponseBody
 	public String signIn(@ModelAttribute("SignVO") SignVO vo, HttpServletRequest req) throws Exception {
 		logger.info("signIn");
-//		logger.info("화면에서 입력한 패스워드 ::::: " + vo.getPasswd());
 		
 		HttpSession session = req.getSession();
 		PrivateKey privateKey = (PrivateKey) session.getAttribute(SignController.RSA_WEB_KEY);
 		vo.setPasswd(decryptRsa(privateKey, vo.getPasswd()));
-//		logger.info("> 복호화 처리한 패스워드 ::::: " + vo.getPasswd());
-		
 		vo.setPasswd(EgovFileScrty.encryptPassword(vo.getPasswd(), vo.getUser_id()));
-//		logger.info("> DB 암호화 패스워드 ::::: " + vo.getPasswd());
 		
 		SignVO login = this.signService.signIn(vo);
 		String loginYn = "";
 		
 		if (login == null) {
+			// 사용자 계정 상태 확인
 			int chk = this.signService.idChk(vo.getUser_id());
-			logger.debug("chk ::::: " + chk);
 			if(chk > 0) {
-				loginYn = "N"; //아이디 혹은 비밀번호 오류
-			} else {
-				loginYn = ""; //존재하지 않는 계정 정보
+				loginYn = "N";
 			}
+			
 		} else {
 			session = req.getSession(true);
 			
@@ -173,18 +169,17 @@ public class SignController {
 			session.setAttribute("reg_dtm",	login.getReg_dtm());	//등록일시
 			session.setAttribute("upd_dtm",	login.getUpd_dtm());	//수정일시
 			
-			
-			if(login.getRet_yn().equals("R")){
-				loginYn = "R"; //D : 비밀번호가 초기상태일 경우
-			} else if(login.getRet_yn().equals("Y")){
-				loginYn = "F"; //F : 사용자 계정이 이용불가 상태일 경우
-			} else{
-				loginYn = "Y"; //Y : 로그인 성공
+			if(login.getRet_yn().equals("R")) {
+				loginYn = "R";
+			} else if(login.getRet_yn().equals("Y")) {
+				loginYn = "F";
+			} else {
+				loginYn = "Y"; // Y : 로그인 성공
 			}
 			
 		}
 		
-		logger.debug("loginYN ::::: " + loginYn);
+		logger.debug("loginYn ::::: " + loginYn);
 		
 		return loginYn;
 	}
@@ -285,18 +280,14 @@ public class SignController {
 	public String findPw(@ModelAttribute("SignVO") SignVO vo, HttpServletRequest req) throws Exception {
 		logger.info("findPw");
 		
-		HttpSession session = req.getSession();
 		String result = "";
-		
-		// 입력받은 비밀번호를 복호화 후 다시 암호화하여 DB형식의 데이터로 전환
-		PrivateKey privateKey = (PrivateKey) session.getAttribute(SignController.RSA_WEB_KEY);
-		vo.setPasswd(decryptRsa(privateKey, vo.getPasswd()));
 		
 		String find = this.signService.findPw(vo);
 		logger.debug("find ::::: " + find);
 		if(find == null){
 			result = "NONE"; // 해당 정보 없음
 		} else {
+			vo.setPasswd(EgovFileScrty.encryptPassword(RESET_PASSWORD, vo.getUser_id()));
 			this.signService.resetPw(vo); // 비밀번호를 초기화, 회원 상태 변경 : R
 			result = "Y";
 		}

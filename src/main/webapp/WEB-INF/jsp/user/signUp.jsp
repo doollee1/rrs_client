@@ -143,12 +143,12 @@ function signUpChk(){
 		alert("비밀번호를 입력해주세요.");
 		return;
 	}
-	if(!pwChkYN){
-		alert("입력하신 비밀번호와 비밀번호 확인 값이 일치하지 않습니다.");
-		return;
-	}
 	if(!validChk_passwd($('#passwd').val())){
 		alert("비밀번호는 8자리 이상 영문과 숫자를 포함해야 합니다.");
+		return;
+	}
+	if(!pwChkYN){
+		alert("입력하신 비밀번호와 비밀번호 확인 값이 일치하지 않습니다.");
 		return;
 	}
 	if(!idChkYN){

@@ -27,6 +27,10 @@ public class SignServiceImpl implements SignService {
 		return this.signMapper.signUp(vo);
 	}
 	
+	public SignVO userChk(String id) throws Exception {
+		return this.signMapper.userChk(id);
+	}
+	
 	public int idChk(String id) throws Exception {
 		return this.signMapper.idChk(id);
 	}
