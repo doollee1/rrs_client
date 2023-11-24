@@ -23,7 +23,7 @@
 				<button type="button" class="navbar-mobile-toggler btn-pre" >
 					<i class="fas fa-angle-left"></i>
 				</button>
-				<h1>예약현황</h1>
+				<h1>문의사항</h1>
 				<!-- <a href="index.html" class="navbar-brand"><span class="navbar-logo"></span> <b class="me-3px">Color</b> Admin</a> -->
 				<button type="button" class="navbar-mobile-toggler" data-toggle="app-sidebar-mobile">
 					<span class="icon-bar"></span>
@@ -125,50 +125,59 @@
 		<div id="content" class="app-content d-flex flex-column p-0">
 			<!-- BEGIN content-container -->
 			<div class="app-content-padding flex-grow-1 overflow-hidden" data-scrollbar="true" data-height="100%">
-			
-				<!-- BEGIN panel -->
-				<div class="panel panel-inverse">
-					<div class="panel-body">
-						<ul class="reserve-list">
-							<li class="active">
-								<a href="">
-									<span class="date">2023-11-22 13:12:00</span>
-									<span>예약요청</span>
-									<span><i class="fa fa-angle-right fa-lg"></i></span>
-								</a>
-							</li>
-							<li>
-								<a href="">
-									<span class="date">2023-11-21 13:12:00</span>
-									<span>예약확정</span>
-									<span><i class="fa fa-angle-right fa-lg"></i></span>
-								</a>
-							</li>
-							<li>
-								<a href="">
-									<span class="date">2034-11-22 13:12:00</span>
-									<span>예약요청</span>
-									<span><i class="fa fa-angle-right fa-lg"></i></span>
-								</a>
-							</li>
-							<li>
-								<a href="">
-									<span class="date">2034-11-22 13:12:00</span>
-									<span>예약취소</span>
-									<span><i class="fa fa-angle-right fa-lg"></i></span>
-								</a>
-							</li>
-							<li>
-								<a href="">
-									<span class="date">2034-11-22 13:12:00</span>
-									<span>예약요청</span>
-									<span><i class="fa fa-angle-right fa-lg"></i></span>
-								</a>
-							</li>
-						</ul>
+
+				<!-- BEGIN nav-tabs -->
+				<ul class="nav nav-tabs">
+					<li class="nav-item">
+						<a href="#default-tab-1" data-bs-toggle="tab" class="nav-link active">
+							<span class="d-sm-none">전체</span>
+						</a>
+					</li>
+					<li class="nav-item">
+						<a href="#default-tab-2" data-bs-toggle="tab" class="nav-link">
+							<span class="d-sm-none">MY</span>
+						</a>
+					</li>
+				</ul>
+				<!-- END nav-tabs -->
+				<!-- BEGIN tab-content -->
+				<div class="tab-content panel rounded-0 p-3 m-0">
+					<!-- BEGIN tab-pane -->
+					<div class="tab-pane fade active show" id="default-tab-1">
+						<table class="table table-hover table-board">
+							<colgroup>
+								<col style="width:80px">
+								<col style="width:50px">
+								<col style="width:">
+							</colgroup>
+							<tbody>
+								<tr>
+									<td class="date"><span>2023-11-01</span></td>
+									<td><span class="qna-label apply">접수</span></td>
+									<td><span>예약인원 추가는 어떻게?</span></td>
+								</tr>
+								<tr>
+									<td class="date"><span>2023-11-01</span></td>
+									<td><span class="qna-label apply">접수</span></td>
+									<td><span>예약취소는 어떻게?</span></td>
+								</tr>
+								<tr>
+									<td class="date"><span>2023-10-31</span></td>
+									<td><span class="qna-label finish">완료</span></td>
+									<td><span>외부라운딩 추가 문의</span></td>
+								</tr>
+							</tbody>
+						</table>
 					</div>
+					<!-- END tab-pane -->
+					<!-- BEGIN tab-pane -->
+					<div class="tab-pane fade" id="default-tab-2">
+						<!-- MY LIST 영역 -->
+					</div>
+					<!-- END tab-pane -->					
 				</div>
-				<!-- END panel -->
+				<!-- END tab-content -->
+
 			</div>
 			<!-- END content-container -->
 			

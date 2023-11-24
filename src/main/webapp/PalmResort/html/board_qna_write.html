@@ -23,7 +23,7 @@
 				<button type="button" class="navbar-mobile-toggler btn-pre" >
 					<i class="fas fa-angle-left"></i>
 				</button>
-				<h1>예약현황</h1>
+				<h1>문의사항</h1>
 				<!-- <a href="index.html" class="navbar-brand"><span class="navbar-logo"></span> <b class="me-3px">Color</b> Admin</a> -->
 				<button type="button" class="navbar-mobile-toggler" data-toggle="app-sidebar-mobile">
 					<span class="icon-bar"></span>
@@ -129,43 +129,18 @@
 				<!-- BEGIN panel -->
 				<div class="panel panel-inverse">
 					<div class="panel-body">
-						<ul class="reserve-list">
-							<li class="active">
-								<a href="">
-									<span class="date">2023-11-22 13:12:00</span>
-									<span>예약요청</span>
-									<span><i class="fa fa-angle-right fa-lg"></i></span>
-								</a>
-							</li>
-							<li>
-								<a href="">
-									<span class="date">2023-11-21 13:12:00</span>
-									<span>예약확정</span>
-									<span><i class="fa fa-angle-right fa-lg"></i></span>
-								</a>
-							</li>
-							<li>
-								<a href="">
-									<span class="date">2034-11-22 13:12:00</span>
-									<span>예약요청</span>
-									<span><i class="fa fa-angle-right fa-lg"></i></span>
-								</a>
-							</li>
-							<li>
-								<a href="">
-									<span class="date">2034-11-22 13:12:00</span>
-									<span>예약취소</span>
-									<span><i class="fa fa-angle-right fa-lg"></i></span>
-								</a>
-							</li>
-							<li>
-								<a href="">
-									<span class="date">2034-11-22 13:12:00</span>
-									<span>예약요청</span>
-									<span><i class="fa fa-angle-right fa-lg"></i></span>
-								</a>
-							</li>
-						</ul>
+						<div class="notice-view">
+							<!-- BEGIN 제목 -->
+							<input type="text" class="form-control" placeholder="제목을 넣어주세요"  />
+							<!-- END 제목 -->
+							
+							<hr class="bg-gray-500">
+							
+							<!-- BEGIN 문의 내용 -->
+							<textarea class="form-control" rows="10" placeholder="문의사항을 남겨주세요"></textarea>
+							<!-- END 문의 내용 -->
+							
+						</div>
 					</div>
 				</div>
 				<!-- END panel -->
@@ -173,6 +148,9 @@
 			<!-- END content-container -->
 			
 			<!-- BEGIN #footer -->
+			<div id="footer" class="app-footer m-0">
+				<a href="#" class="btn btn-success btn-lg">등   록</a>
+			</div>
 			<!-- END #footer -->			
 			
 		</div>
