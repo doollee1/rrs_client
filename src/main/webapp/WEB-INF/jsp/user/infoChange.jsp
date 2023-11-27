@@ -192,6 +192,7 @@ function pwChk(){
 					비밀번호는 8자리 이상 영문과 숫자를 포함해야 합니다.
 				</div>
 				<input type="hidden" id="user_id" name="user_id" value="${sessionScope.user_id }"/>
+				<input type="hidden" id="upd_dtm" name="upd_dtm" class="form-control" placeholder="수정일시"><BR></BR>
 				<input type="hidden" id="RSAModulus" name="RSAModulus" value="${RSAModulus }"/>
 				<input type="hidden" id="RSAExponent" name="RSAExponent" value="${RSAExponent}"/>
 			</form>
