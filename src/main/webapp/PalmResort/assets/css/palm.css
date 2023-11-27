@@ -101,8 +101,9 @@ ul li {list-style:none;}
 .inline-flex {display:flex;align-items:center;grid-column-gap:10px;}
 
 .table + .table {margin-top:25px;}
-.table-striped th, .table-striped td {text-align:center;vertical-align:middle;}
-.table-striped th + th, .table-striped td + td {border-left:1px solid var(--bs-component-table-border-color);}
+.table.table-pk tr.bg {background-color:var(--bs-table-striped-bg);}
+.table.table-pk th, .table.table-pk td {text-align:center;vertical-align:middle;}
+.table.table-pk th + th, .table.table-pk td + td {border-left:1px solid var(--bs-component-table-border-color);}
 
 .policy-wrap pre {white-space:pre-wrap;font-family:"Noto Sans KR", "Sans-serif";}
 .policy-wrap pre .title {font-size:14px;font-weight:500;}
