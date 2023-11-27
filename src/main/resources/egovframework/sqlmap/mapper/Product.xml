@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rrs.web.product.service.impl.ProductMapper">
+	<select id="productList" parameterType="hashMap" resultType="hashMap">
+        SELECT CONCAT_WS('\\n', C.CODE_NM, NULLIF(A.COM_CNTN, '')) AS TITLE
+             , CASE WHEN C.REF_CHR3 = 'WON' 
+                    THEN CONCAT_WS('/', CONCAT(FORMAT(A.COM_AMT, 0),'원'), NULLIF(C.REF_CHR4, ''), NULLIF(C.REF_CHR5, ''))
+                    WHEN C.REF_CHR3 = 'USD'
+                    THEN CONCAT_WS('/', CONCAT(C.REF_CHR3,FORMAT(A.COM_AMT, 0)), NULLIF(C.REF_CHR4, ''), NULLIF(C.REF_CHR5, ''))
+                    ELSE ''
+                END AS CNTN
+             , CASE WHEN NULLIF(C.CODE_FR, '')  
+                    THEN CONCAT_WS('/'
+                                 , '\\n현장지불'
+                                 , CASE WHEN D.REF_CHR3 = 'WON' 
+                                        THEN CONCAT_WS('/', CONCAT(FORMAT(D.COM_AMT, 0),'원'), NULLIF(D.REF_CHR4, ''), NULLIF(D.REF_CHR5, ''))
+                                        WHEN D.REF_CHR3 = 'USD'
+                                        THEN CONCAT_WS('/', CONCAT(D.REF_CHR3,FORMAT(D.COM_AMT, 0)), NULLIF(D.REF_CHR4, ''), NULLIF(D.REF_CHR5, ''))
+                                        ELSE ''
+                                    END
+                                  )
+                    ELSE ''
+                END AS CNTN2
+             , A.HDNG_GBN
+             , A.PROD_COND
+             , B.ST_DT1
+             , B.ED_DT1
+             , B.ST_DT2
+             , B.ED_DT2
+             , B.ST_DT3
+             , B.ED_DT3
+             , B.BAS_YY_SEQ
+             , C.CODE_FR
+          FROM tb_prod_info   A
+          JOIN tb_bas_yy_info B
+            ON A.BAS_YY     = B.BAS_YY
+           AND A.BAS_YY_SEQ = B.BAS_YY_SEQ
+          JOIN bc_comm_l      C
+            ON A.HDNG_GBN   = C.CODE
+     LEFT JOIN (
+                 SELECT AA.BAS_YY
+                      , AA.BAS_YY_SEQ
+                      , AA.PROD_COND
+                      , AA.HDNG_GBN
+                      , AA.COM_AMT
+                      , BB.REF_CHR3
+                      , BB.REF_CHR4
+                      , BB.REF_CHR5
+                   FROM tb_prod_info AA
+                   JOIN bc_comm_l    BB
+                     ON AA.HDNG_GBN  = BB.CODE
+               ) D
+            ON A.BAS_YY     = D.BAS_YY
+           AND A.BAS_YY_SEQ = D.BAS_YY_SEQ
+           AND A.PROD_COND  = D.PROD_COND
+           AND C.CODE_FR    = D.HDNG_GBN
+         WHERE A.BAS_YY   = ${currentYear}
+           AND A.SSN_GBN  = ${ssnGbn     }
+           AND C.HEAD_CD  = '500000'
+           AND A.HDNG_GBN NOT IN (
+                                   SELECT DISTINCT CC.CODE_FR
+                                     FROM tb_prod_info   AA
+                                     JOIN bc_comm_l      CC
+                                       ON AA.HDNG_GBN   = CC.CODE
+                                    WHERE AA.BAS_YY     = A.BAS_YY
+                                      AND AA.BAS_YY_SEQ = A.BAS_YY_SEQ
+                                      AND NULLIF(CC.CODE_FR, '') IS NOT NULL
+                                      AND CC.HEAD_CD    = C.HEAD_CD
+                                 )
+         ORDER BY A.HDNG_GBN   ASC
+                , A.PROD_COND  ASC
+                , A.BAS_YY_SEQ ASC
+	</select>
+</mapper>
