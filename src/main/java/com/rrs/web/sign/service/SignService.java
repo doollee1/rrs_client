@@ -9,11 +9,12 @@ public interface SignService {
 	int deviceInfoIns(Map<String, Object> paramMap) throws Exception;
 	SignVO signIn(SignVO paramSignVo) throws Exception;	
 	int signUp(SignVO paramSignVo) throws Exception;
-	SignVO userChk(String id) throws Exception;
 	int idChk(String id) throws Exception;
 	int memberChk(SignVO paramSignVo) throws Exception;
-	public String findId(SignVO vo) throws Exception;
-	public String findPw(SignVO vo) throws Exception;
-	public void resetPw(SignVO vo) throws Exception;
-	public void changePw(SignVO vo) throws Exception;
+	String findId(SignVO vo) throws Exception;
+	String findPw(SignVO vo) throws Exception;
+	void resetPw(SignVO vo) throws Exception;
+	int userChk(SignVO vo) throws Exception;
+	void changeInfo(SignVO vo) throws Exception;
+	public String getRamdomPassword(int size) throws Exception;
 }

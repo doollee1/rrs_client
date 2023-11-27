@@ -10,13 +10,6 @@
 	AND passwd		= (#{passwd})
 </select>
 
-<!-- 회원정보체크 -->
-<select id="userChk" parameterType="string" resultType="com.rrs.web.sign.service.vo.SignVO">
-SELECT ret_yn, passwd
-FROM tb_member
-WHERE user_id = #{user_id}
-</select>
-
 <!-- ID중복체크 -->
 <select id="idChk" parameterType="string" resultType="int">
 SELECT COUNT(*)
@@ -105,11 +98,28 @@ WHERE user_id = #{user_id}
 	WHERE user_id = #{user_id}
 </update>
 
-<!-- 비밀번호 변경 -->
-<update id="changePw" parameterType="com.rrs.web.sign.service.vo.SignVO">
-	UPDATE tb_member
-	SET ret_yn = "N" , passwd = ${passwd}
-	WHERE user_id = #{user_id}
+<!-- 회원 아이디/비밀번호 체크 -->
+<select id="userChk" parameterType="com.rrs.web.sign.service.vo.SignVO" resultType="int">
+	SELECT 
+		COUNT(*)
+	FROM 
+		tb_member
+	WHERE 
+		user_id = #{user_id}
+	AND passwd = #{passwd}
+</select>
+
+<!-- 개인정보 변경 -->
+<update id="changeInfo" parameterType="com.rrs.web.sign.service.vo.SignVO">
+	UPDATE
+		tb_member
+	SET 
+		email		=	#{email}
+		, passwd	=	#{passwd}
+		, upd_dtm	=	#{upd_dtm}
+		, ret_yn	=	"N"
+	WHERE
+		user_id = #{user_id}
 </update>
 
 </mapper>

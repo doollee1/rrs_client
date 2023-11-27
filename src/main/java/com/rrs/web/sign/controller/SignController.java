@@ -26,6 +26,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
@@ -63,7 +64,7 @@ public class SignController {
 	
 	public static String RSA_WEB_KEY	= "_RSA_WEB_Key_";	// 개인키 session key
 	public static String RSA_INSTANCE	= "RSA";			// rsa transformation
-	public static String RESET_PASSWORD	= "1234";			// 리셋비밀번호
+	public static int RESET_PASSWORD_SIZE	= 10;				// 랜덤 비밀번호 자리 수 설정
 	
 	/**
 	 * rsa 공개키, 개인키 생성
@@ -149,21 +150,21 @@ public class SignController {
 		String loginYn = "";
 		
 		if (login == null) {
-			// 사용자 계정 상태 확인
+			// 아이디 존재 여부 체크
 			int chk = this.signService.idChk(vo.getUser_id());
 			if(chk > 0) {
+				// 아이디는 존재하지만 비밀번호 오류
 				loginYn = "N";
 			}
 			
 		} else {
 			session = req.getSession(true);
 			
-			if(login.getRet_yn().equals("R")) {
-				loginYn = "R";
-				return loginYn;
-			} else if(login.getRet_yn().equals("Y")) {
+			if(login.getRet_yn().equals("Y")) { // 계정 이용불가 상태
 				loginYn = "F";
 				return loginYn;
+			} else if(login.getRet_yn().equals("R")) {
+				loginYn = "R";
 			} else {
 				loginYn = "Y"; // Y : 로그인 성공
 			}
@@ -259,8 +260,10 @@ public class SignController {
 			logger.debug("email");
 			Map<String, Object> param = new HashMap<String, Object>();
 			String han_name = req.getParameter("han_name");
-			String title = "PalmResort 예약 시스템 " + han_name + " 회원 님의 아이디입니다.";
-			String content = "회원님의 아이디는 " + find + " 입니다.";
+			String title = "[PalmResort 예약 시스템] " + han_name + " 회원 님의 아이디찾기 서비스입니다.";
+			String content = title
+					+ System.lineSeparator() + "회원님의 아이디 : " + find
+					+ System.lineSeparator() + "해당 아이디로 로그인 후 이용해주세요.";
 			param.put("to", req.getParameter("email"));
 			param.put("title", title);
 			param.put("content", content);
@@ -291,8 +294,31 @@ public class SignController {
 		if(find == null){
 			result = "NONE"; // 해당 정보 없음
 		} else {
-			vo.setPasswd(EgovFileScrty.encryptPassword(RESET_PASSWORD, vo.getUser_id()));
+			
+			Map<String, Object> param = new HashMap<String, Object>();
+			
+			String changePw = this.signService.getRamdomPassword(RESET_PASSWORD_SIZE);
+			logger.debug("changePw ::::: " + changePw);
+			
+			vo.setPasswd(EgovFileScrty.encryptPassword(changePw, vo.getUser_id()));
 			this.signService.resetPw(vo); // 비밀번호를 초기화, 회원 상태 변경 : R
+			
+			String user_id = req.getParameter("user_id");
+			String title = "[PalmResort 예약 시스템] " + user_id + " 회원 님의 비밀번호찾기 서비스입니다.";
+			String content = title
+					+ System.lineSeparator() + "변경된 비밀번호 : " + changePw 
+					+ System.lineSeparator() + "변경된 비밀번호로 로그인 후 이용해주세요.";
+			param.put("to", req.getParameter("email"));
+			param.put("title", title);
+			param.put("content", content);
+			mailSendService.sendMail(param);
+			
+			logger.debug("*****************************");
+			logger.debug("이메일 발송 완료 - 비밀번호 찾기");
+			logger.debug("이용자 : " + user_id);
+			logger.debug("email : " + param.get("to"));
+			logger.debug("*****************************");
+			
 			result = "Y";
 		}
 		
@@ -350,16 +376,35 @@ public class SignController {
 		
 		String result = "";
 		
-		String find = this.signService.findPw(vo);
-		logger.debug("find ::::: " + find);
-		if(find == null){
-			result = "NONE"; // 해당 정보 없음
+		HttpSession session = req.getSession();
+		PrivateKey privateKey = (PrivateKey) session.getAttribute(SignController.RSA_WEB_KEY);
+		
+		// 기존 비밀번호 : 화면에서 입력받은 내용
+		String passwdOri = req.getParameter("passwdOri");
+		passwdOri = decryptRsa(privateKey, passwdOri);
+		logger.debug("passwdOri ::::: " + passwdOri);
+		
+		// 변경할 비밀번호 : 화면에서 입력받은 내용
+		String passwdChange = req.getParameter("passwd");
+		passwdChange = decryptRsa(privateKey, passwdChange);
+		logger.debug("passwdChange ::::: " + passwdChange);
+		
+		// 아이디 비밀번호 체크, 사용자 계정 상태 확인
+		vo.setPasswd(EgovFileScrty.encryptPassword(passwdOri, vo.getUser_id()));
+		int chk = this.signService.userChk(vo);
+		
+		if(chk == 0) {
+			// 일치하는 계정 정보가 없음
+			result = "NONE";
+			return result;
 		} else {
-			vo.setPasswd(EgovFileScrty.encryptPassword(RESET_PASSWORD, vo.getUser_id()));
-			this.signService.resetPw(vo); // 비밀번호를 초기화, 회원 상태 변경 : R
+			// 아이디, 비밀번호가 일치할 경우 비밀번호 값을 변경할 비밀번호로 변경하여 개인정보 변경처리
+			vo.setPasswd(EgovFileScrty.encryptPassword(passwdChange, vo.getUser_id()));
+			this.signService.changeInfo(vo);
 			result = "Y";
 		}
 		
+		logger.debug("infoChange - result ::::: " + result);
 		
 		return result;
 	}

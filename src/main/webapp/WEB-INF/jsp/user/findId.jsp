@@ -18,6 +18,15 @@ $(window).ready( function() {
 	setEvent();
 });
 
+$(document).on("keyup", "input[noSpecial]", function() {$(this).val( $(this).val().replace(/[^ㄱ-힣a-zA-Z0-9]/gi,"") );});
+$(document).on("keyup", "input[onlyNum]", function() {$(this).val( $(this).val().replace(/[^0-9]/gi,"") );});
+$(document).on("keyup", "input[onlyKor]", function() {$(this).val( $(this).val().replace(/[a-z0-9]|[ \[\]{}()<>?|`~!@#$%^&*-_+=,.;:\"'\\]/g,"") );});
+
+function validChk_email(val){
+	var pattern = /([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+	return (val != '' && val != 'undefined' && pattern.test(val));
+}
+
 <%//페이지 이벤트 설정 %>
 function setEvent(){
 	
@@ -35,17 +44,19 @@ function findId(){
 		 alert("이름을 입력해주세요.");
 		 return;
 	}
-	
 	if(tel_no == null || tel_no == ''){
 		 $("#tel_no").focus();
 		 alert("전화번호를 입력해주세요.");
 		 return;
 	}
-	
 	if(email == null || email == ''){
 		$("#email").focus();
 		alert("이메일을 입력해주세요.");
 		return;
+	}
+	<%//일반적인 전화번호에 하이픈 삽입 : 010xxxxyyyy > 010-xxxx-yyyy%>
+	if(tel_no.length == 11) {
+		tel_no = tel_no.replace(/^(\d{2,3})(\d{3,4})(\d{4})$/, `$1-$2-$3`);
 	}
 	
 	$.ajax({
@@ -70,7 +81,7 @@ function findId(){
 		}
 	});
 }
-
+/* 
 function test(){
 	
 	$.ajax({
@@ -86,6 +97,7 @@ function test(){
 		}
 	});
 }
+ */
 </script>
 
 <!-- BEGIN register -->
@@ -99,15 +111,15 @@ function test(){
 				<div class="text"><i class="fa-solid fa-check"></i> 등록된 회원정보로 아이디를 찾아 드립니다.</div>
 				<div class="mb-3">
 					<label class="mb-2">이름 </label>
-					<input type="text" class="form-control fs-13px" placeholder="이름" id="han_name"/>
+					<input type="text" class="form-control fs-13px" placeholder="이름" id="han_name" onlyKor/>
 				</div>						
 				<div class="mb-3">
 					<label class="mb-2">전화번호</label>
-					<input type="text" class="form-control fs-13px" placeholder="전화번호" id="tel_no"/>
+					<input type="text" class="form-control fs-13px" placeholder="전화번호" id="tel_no" onlyNum/>
 				</div>
 				<div class="mb-3">
 					<label class="mb-2">이메일 </label>
-					<input type="text" class="form-control fs-13px" placeholder="이메일" id="email"/>
+					<input type="email" class="form-control fs-13px" placeholder="이메일" id="email"/>
 				</div>
 				<div>아이디를 회원가입시 입력한 이메일로 보내 드립니다.</div>
 			</form>
@@ -120,7 +132,9 @@ function test(){
 	<!-- BEGIN #footer -->
 	<div id="footer" class="app-footer m-0">
 		<a href="#" class="btn btn-success btn-lg" id="submit" onclick="findId();">완   료</a>
+		<!-- 
 		<a href="#" class="btn btn-success btn-lg" id="test" onclick="test();">테스트</a>
+		 -->
 	</div>
 	<!-- END #footer -->
 	

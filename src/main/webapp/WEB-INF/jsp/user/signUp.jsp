@@ -53,27 +53,9 @@ function setEvent(){
 	$('#user_id').on("change", function(){
 		idChkYN = false;
 	});
-	<%//비밀번호 중복확인 여부 확인%>
-	$('#passwd, #passwdChk').on('change', function(){
-		var passwd = $('#passwd').val();
-		var passwdChk = $('#passwdChk').val();
-		if(passwd.length > 8) {
-			$('#passwdChkText').text("비밀번호는 8자리 이상 영문과 숫자를 포함해야 합니다.");
-			pwChkYN = false;
-		}
-		
-		if(passwdChk == "") {
-			return;
-		}
-		
-		if(passwd == passwdChk) {
-			$('#passwdChkText').text("비밀번호가 일치합니다.");
-			pwChkYN = true;
-		} else {
-			$('#passwdChkText').text("비밀번호가 일치하지 않습니다.");
-			pwChkYN = false;
-		}
-	});
+	
+	<%//비밀번호 중복확인%>
+	pwChk();
 }
 
 <%// 회원가입 버튼 이벤트%>
@@ -232,7 +214,26 @@ function idChk(){
 
 <%//비밀번호 중복확인%>
 function pwChk(){
-	
+	$('#passwd, #passwdChk').on('change', function(){
+		var passwd = $('#passwd').val();
+		var passwdChk = $('#passwdChk').val();
+		if(passwd.length > 8) {
+			$('#passwdChkText').text("비밀번호는 8자리 이상 영문과 숫자를 포함해야 합니다.");
+			pwChkYN = false;
+		}
+		
+		if(passwdChk == "") {
+			return;
+		}
+		
+		if(passwd == passwdChk) {
+			$('#passwdChkText').text("비밀번호가 일치합니다.");
+			pwChkYN = true;
+		} else {
+			$('#passwdChkText').text("비밀번호가 일치하지 않습니다.");
+			pwChkYN = false;
+		}
+	});
 }
 
 </script>

@@ -77,7 +77,7 @@ function findPw(){
 			if(data == "NONE"){
 				alert("존재하지 않는 사용자입니다.");
 			} else {
-				alert("회원님의 비밀번호가 초기화되었습니다. 초기화된 비밀번호로 다시 접속해주세요.");
+				alert("초기화 된 비밀번호가 "+ user_id + " 회원님의 이메일 : "+ email + " 로 전송되었습니다. \n 초기화된 비밀번호로 다시 접속해주세요.");
 				location.href = "/signIn.do";
 			}
 		},

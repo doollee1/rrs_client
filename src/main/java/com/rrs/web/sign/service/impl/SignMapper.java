@@ -16,11 +16,11 @@ public interface SignMapper {
 	int deviceInfoIns(Map<String, Object> paramMap) throws Exception;
 	SignVO signIn(SignVO paramSignVo) throws Exception;
 	int signUp(SignVO paramSignVo) throws Exception;
-	SignVO userChk(String id) throws Exception;
 	int idChk(String id) throws Exception;
 	int memberChk(SignVO paramSignVo) throws Exception;
 	String findId(SignVO paramSignVo) throws Exception;
 	String findPw(SignVO paramSignVo) throws Exception;
 	void resetPw(SignVO paramSignVo) throws Exception;
-	void changePw(SignVO paramSignVo) throws Exception;
+	int userChk(SignVO paramSignVo) throws Exception;
+	void changeInfo(SignVO paramSignVo) throws Exception;
 }
