@@ -297,7 +297,7 @@ public class SignController {
 			
 			Map<String, Object> param = new HashMap<String, Object>();
 			
-			String changePw = this.signService.getRamdomPassword(RESET_PASSWORD_SIZE);
+			String changePw = this.signService.getRandomPassword(RESET_PASSWORD_SIZE);
 			logger.debug("changePw ::::: " + changePw);
 			
 			vo.setPasswd(EgovFileScrty.encryptPassword(changePw, vo.getUser_id()));
@@ -325,26 +325,6 @@ public class SignController {
 		
 		return result;
 	}
-	/*
-	@RequestMapping(value = {"/signOut.do"}, method = {RequestMethod.GET})
-	public String logout(HttpSession session) throws Exception {
-		
-		//app에서 invalidate 가 동작하지 않아서 추가
-		session.removeAttribute("user_id");
-		session.removeAttribute("mem_gbn");
-		session.removeAttribute("han_name");
-		session.removeAttribute("eng_name");
-		session.removeAttribute("tel_no");
-		session.removeAttribute("email");
-		session.removeAttribute("passwd");
-		session.removeAttribute("ret_yn");
-		session.removeAttribute("reg_dtm");
-		session.removeAttribute("upd_dtm");
-		session.invalidate();
-		
-		return "user/signOut.view";
-	}
-	*/
 	
 	// 세팅 화면 진입
 	@RequestMapping(value = {"/setting.do"}, method = {RequestMethod.GET})
@@ -410,13 +390,48 @@ public class SignController {
 	}
 	
 	// 회원탈퇴 처리
-	@RequestMapping(value = {"/memberOut.do"}, method = {RequestMethod.POST})
+	@RequestMapping(value = {"/userOut.do"}, method = {RequestMethod.GET})
 	@ResponseBody
-	public String memberOut(@ModelAttribute("SignVO") SignVO vo, HttpServletRequest req) throws Exception {
-		logger.info("memberOut");
+	public String userOut(HttpSession session) throws Exception {
+		logger.info("userOut");
 		
-		String result = "";
+		String result = "N";
+		int chk = this.signService.userOut((String) session.getAttribute("user_id"));
+		logger.debug("userOut - user_id ::::: " + (String) session.getAttribute("user_id"));
+		
+		if(chk > 0) {
+			logger.debug("userOut - "+ (String) session.getAttribute("user_id") +" 탈퇴처리 및 로그아웃");
+			result = (String) session.getAttribute("user_id");
+			this.signOut(session);
+		}
+		
+		logger.debug("userOut - chk ::::: " + chk);
 		
 		return result;
 	}
+	
+	// 로그아웃 처리
+	@RequestMapping(value = {"/signOut.do"}, method = {RequestMethod.GET})
+	public void signOut(HttpSession session) throws Exception {
+		
+		logger.info("signOut");
+		
+		session.removeAttribute("login");
+		session.removeAttribute("user_id");
+		session.removeAttribute("mem_gbn");
+		session.removeAttribute("han_name");
+		session.removeAttribute("eng_name");
+		session.removeAttribute("tel_no");
+		session.removeAttribute("email");
+		session.removeAttribute("passwd");
+		session.removeAttribute("ret_yn");
+		session.removeAttribute("reg_dtm");
+		session.removeAttribute("upd_dtm");
+		session.invalidate();
+		
+		logger.debug("signOut Complete");
+		
+		return;
+	}
+	
 }

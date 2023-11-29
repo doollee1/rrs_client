@@ -60,7 +60,7 @@ public class SignServiceImpl implements SignService {
 	 * @param (int) size : 자리수
 	 * @return
 	 */
-	public String getRamdomPassword(int size) {
+	public String getRandomPassword(int size) {
 		char[] charSet = new char[] {
 			'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
 			'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
@@ -77,5 +77,9 @@ public class SignServiceImpl implements SignService {
 			sb.append(charSet[idx]);
 		}
 		return sb.toString();
+	}
+	
+	public int userOut(String id) throws Exception {
+		return this.signMapper.userOut(id);
 	}
 }

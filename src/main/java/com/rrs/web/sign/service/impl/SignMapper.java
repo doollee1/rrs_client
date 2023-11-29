@@ -23,4 +23,5 @@ public interface SignMapper {
 	void resetPw(SignVO paramSignVo) throws Exception;
 	int userChk(SignVO paramSignVo) throws Exception;
 	void changeInfo(SignVO paramSignVo) throws Exception;
+	int userOut(String id) throws Exception;
 }

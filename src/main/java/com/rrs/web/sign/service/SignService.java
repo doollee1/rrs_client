@@ -16,5 +16,6 @@ public interface SignService {
 	void resetPw(SignVO vo) throws Exception;
 	int userChk(SignVO vo) throws Exception;
 	void changeInfo(SignVO vo) throws Exception;
-	public String getRamdomPassword(int size) throws Exception;
+	public String getRandomPassword(int size) throws Exception;
+	int userOut(String id) throws Exception;
 }

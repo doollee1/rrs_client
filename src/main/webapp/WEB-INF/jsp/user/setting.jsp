@@ -16,6 +16,29 @@ $(window).ready( function() {
 	setTitle("설정");
 });
 
+function userOut(){
+	if(confirm("정말 회원탈퇴를 진행하시곘습니까? 회원탈퇴 후에는 사용중인 계정으로 접속이 불가능해집니다.")){
+		$.ajax({
+			type: "GET",
+			url : "/userOut.do",
+			data:{},
+			success:function(data){
+				if(data == "N"){
+					alert("회원탈퇴 처리 중 오류가 발생했습니다. 관리자에게 문의해주세요.")
+				} else {
+					alert("회원탈퇴 처리가 완료되었습니다.");
+					location.href="/main.do";
+				}
+			},
+			error:function(data){
+				console.log("통신중 오류가 발생하였습니다.");
+			}
+		});
+	} else {
+		
+	}
+}
+
 </script>
 
 <!-- BEGIN #content -->
@@ -40,7 +63,7 @@ $(window).ready( function() {
 						</a>
 					</li>
 					<li class="active">
-						<a href="/memberOut">
+						<a href="#" onclick="userOut();">
 							<span>회원탈퇴</span>
 							<span><i class="fa fa-angle-right fa-lg"></i></span>
 						</a>

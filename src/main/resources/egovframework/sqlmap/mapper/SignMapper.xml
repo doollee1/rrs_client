@@ -122,4 +122,14 @@ WHERE user_id = #{user_id}
 		user_id = #{user_id}
 </update>
 
+<!-- 회원탈퇴 처리 -->
+<update id="userOut" parameterType="String">
+	UPDATE
+		tb_member
+	SET 
+		ret_yn	=	'Y'
+	WHERE
+		user_id = #{user_id}
+</update>
+
 </mapper>
