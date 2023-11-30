@@ -118,8 +118,7 @@ function imageTest() {
 	}
 
 	let data = {
-		test : "1",
-		test2 : "3"
+		filePath : "/opt/apache-tomcat-8.5.32/webapps/upload/"
 	};
 	formData.append("param", new Blob([JSON.stringify(data)], {type:"application/json"}));
 

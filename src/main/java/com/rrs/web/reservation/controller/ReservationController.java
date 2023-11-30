@@ -37,9 +37,11 @@ public class ReservationController {
 	
 	@RequestMapping(value = "/testImage3.do", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String, Object> testImage3(@RequestPart MultipartFile file) throws Exception {
+	public Map<String, Object> testImage3(@RequestPart Map<String, Object> param, @RequestPart MultipartFile file) throws Exception {
 		Map<String, Object> rMap = new HashMap<String, Object>();
-		String savePath = "/opt/apache-tomcat-8.5.32/webapps/upload/";
+		String savePath = (String)param.get("filePath"); 
+		//"/opt/apache-tomcat-8.5.32/webapps/upload/";
+		
 		if(!new File(savePath).exists()) {
 			System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ XXXXXXXX");
 			try {
