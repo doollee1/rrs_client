@@ -39,7 +39,7 @@ public class ReservationController {
 	@ResponseBody
 	public Map<String, Object> testImage3(@RequestPart MultipartFile file) throws Exception {
 		Map<String, Object> rMap = new HashMap<String, Object>();
-		String savePath = "/opt/tomcat/webapps/upload/";
+		String savePath = "/opt/apache-tomcat-8.5.32/webapps/upload/";
 		if(!new File(savePath).exists()) {
 			System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ XXXXXXXX");
 			try {
