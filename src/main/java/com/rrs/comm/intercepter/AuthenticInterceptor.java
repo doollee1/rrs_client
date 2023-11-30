@@ -8,13 +8,15 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.ModelAndViewDefiningException;
 import org.springframework.web.servlet.mvc.WebContentInterceptor;
 
+import com.rrs.web.sign.service.vo.SignVO;
+
 public class AuthenticInterceptor extends WebContentInterceptor {
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws ServletException {
 		HttpSession session = request.getSession();
-		String loginYn = (String)session.getAttribute("loginYn");
-		if ("Y".equals(loginYn))
+		SignVO login = (SignVO)session.getAttribute("login");
+		if (login != null)
 			return true; 
-		ModelAndView modelAndView = new ModelAndView("redirect:/go_Login.do");
+		ModelAndView modelAndView = new ModelAndView("redirect:/main.do");
 		throw new ModelAndViewDefiningException(modelAndView);
 	}
 }

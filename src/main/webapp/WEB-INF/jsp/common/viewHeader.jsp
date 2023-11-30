@@ -12,5 +12,6 @@
 <link href="PalmResort/assets/css/default/app.min.css" rel="stylesheet" />
 <link href="PalmResort/assets/css/palm.css" rel="stylesheet" />
 <!-- ================== END core-css ================== -->
+<link href="PalmResort/assets/plugins/bootstrap-datepicker/dist/css/bootstrap-datepicker.css" rel="stylesheet" />
 
 <script src="resrc/vendor/jquery/jquery.js"></script>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rrs.web.reservation.service.impl.ReservationMapper">
+	<insert id="imageSave" parameterType="hashMap">
+        INSERT INTO tb_req_add_file
+        (
+           REQ_DT
+         , REQ_SEQ
+         , ADD_FILE_SEQ
+         , ADD_FILE_NM
+         , ADD_FILE_PATH
+         , ADD_FILE
+        ) VALUES
+        (
+           '20231129'
+         , 1
+         , 1
+         , #{fileNm}
+         , #{filePath}
+         , #{image}
+        )
+	</insert>
+
+	<select id="imageLoad" parameterType="hashMap" resultType="hashMap">
+        SELECT REQ_DT
+             , REQ_SEQ
+             , ADD_FILE_SEQ
+             , ADD_FILE_NM
+             , ADD_FILE_PATH
+             , ADD_FILE
+          FROM tb_req_add_file   A
+         WHERE REQ_DT  = '20231129'
+           AND REQ_SEQ = '1'
+	</select>
+</mapper>

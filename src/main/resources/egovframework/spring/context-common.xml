@@ -68,8 +68,12 @@
 			</list>
 		</property>
 	</bean>
-	
+
 	<bean id="antPathMater" class="org.springframework.util.AntPathMatcher" />
 	<bean id="defaultTraceHandler" class="egovframework.rte.fdl.cmmn.trace.handler.DefaultTraceHandler" />
-	 
+
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="maxUploadSize" value="10485760" />   <!-- Max upload size : 10MB -->	        
+		<property name="maxInMemorySize" value="10485760" /> <!-- Max size of file in memory : 10MB -->
+	</bean>
 </beans>

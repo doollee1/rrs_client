@@ -58,6 +58,10 @@
             <mvc:mapping path="/Doollee_prod_main_app.do"/>
             <mvc:mapping path="/Doollee_repair_main.do"/>
             <mvc:mapping path="/Doollee_trans_main.do"/>
+
+
+
+            <mvc:mapping path="/reservationReq.do"/>
             <bean class="com.rrs.comm.intercepter.AuthenticInterceptor" />
         </mvc:interceptor>
     </mvc:interceptors>
