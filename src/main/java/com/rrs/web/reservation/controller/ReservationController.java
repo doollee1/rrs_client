@@ -51,7 +51,7 @@ public class ReservationController {
 		}
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmssSSS"); //SSS가 밀리세컨드 표시
 		Calendar calendar = Calendar.getInstance();
-		String filePath = savePath + dateFormat.format(calendar.getTime()).toString();
+		String filePath = savePath + dateFormat.format(calendar.getTime()).toString() + file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".") + 1);
 		//file.getOriginalFilename();
 		File realFile = new File(filePath);
 		file.transferTo(realFile);
