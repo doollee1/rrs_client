@@ -66,6 +66,8 @@
         </mvc:interceptor>
     </mvc:interceptors>
 
+	<mvc:resources mapping="/upload/**" location="file:/web/rrs_webapps/upload/"/>
+
     <bean id="tilesViewResolver" class="org.springframework.web.servlet.view.UrlBasedViewResolver"
           p:order="1" p:viewClass="org.springframework.web.servlet.view.tiles3.TilesView" />
 
@@ -73,6 +75,7 @@
         p:viewClass="org.springframework.web.servlet.view.JstlView"
         p:prefix="/WEB-INF/jsp/" p:suffix=".jsp"/>
 
+	
     <!-- 컨트롤러에서 넘어온 데이터(JSON 같은)를 messageConverter로 사용할 수 있는 방법 2 -->
     <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
         <property name="messageConverters">

@@ -211,6 +211,8 @@ function imageTest2() {
 		<img src="" id="photoImg2" width="100px" height="100px" style="display:none;">
 		<img src="" id="preview">
 		<img src="" id="output" >
+		<img src="/images/aaaa.png" id="output3" >
+		<img src="<c:url value="images/aaaa.png" />" id="output3" >
 		<input type="file" name="photoFile" id="photoFile" accept="image/*" >
 		<!-- <input type="file" name="photoFile" id="photoFile" accept="image/*" capture="camera" style="display:none;"> -->
 		<br>
