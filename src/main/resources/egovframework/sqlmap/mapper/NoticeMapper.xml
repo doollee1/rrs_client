@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rrs.web.notice.service.impl.NoticeMapper">
+
+<select id="noticeList" parameterType="hashMap" resultType="hashMap">
+<![CDATA[
+	SELECT
+		notice_seq, title, st_dt
+	FROM
+		tb_notice_board
+	WHERE 
+		reg_sts = '2'
+		AND st_dt <= #{now}
+	ORDER BY
+		notice_seq DESC
+	LIMIT
+		#{page}, 10
+]]>
+</select>
+
+<select id="noticeListCnt" resultType="int">
+<![CDATA[
+	SELECT 
+		count(*)
+	FROM 
+		tb_notice_board
+	WHERE
+		reg_sts = '2'
+		AND st_dt <= NOW();
+]]>
+</select>
+
+<select id="noticeView" parameterType="String" resultType="com.rrs.web.notice.service.vo.NoticeVO">
+<![CDATA[
+	SELECT
+		title, content
+	FROM
+		tb_notice_board
+	WHERE 
+		notice_seq = #{notice_seq}
+]]>
+</select>
+
+
+</mapper>
