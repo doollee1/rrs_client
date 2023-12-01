@@ -1,12 +1,9 @@
 package com.rrs.web.reservation.controller;
 
+import com.rrs.comm.util.EgovDateUtil;
 import com.rrs.web.reservation.service.ReservationService;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
-import java.net.SocketException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -39,25 +36,28 @@ public class ReservationController {
 	@ResponseBody
 	public Map<String, Object> testImage3(@RequestPart Map<String, Object> param, @RequestPart MultipartFile file) throws Exception {
 		Map<String, Object> rMap = new HashMap<String, Object>();
-		String savePath = (String)param.get("filePath"); 
-		//"/opt/apache-tomcat-8.5.32/webapps/upload/";
-		
+		String savePath = "/opt/apache-tomcat-8.5.32/webapps/upload/";
+
+		String toDay   = EgovDateUtil.getToday();
+		String strYyyy = toDay.substring(0, 4) + "/";
+		String strMm   = toDay.substring(4, 6) + "/";
+		savePath = savePath + strYyyy + strMm;
 		if(!new File(savePath).exists()) {
-			System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ XXXXXXXX");
 			try {
-				System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@22222222 XXXXXXXX");
 				new File(savePath).mkdir();
 			} catch(Exception ex) {
 				ex.printStackTrace();
 			}
 		}
-		String filePath = savePath + file.getOriginalFilename();
-		file.transferTo(new File(filePath));
-		
-		
-		
-		
-		
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmssSSS"); //SSS가 밀리세컨드 표시
+		Calendar calendar = Calendar.getInstance();
+		String filePath = savePath + dateFormat.format(calendar.getTime()).toString();
+		//file.getOriginalFilename();
+		File realFile = new File(filePath);
+		file.transferTo(realFile);
+		realFile.setExecutable(true);
+		realFile.setWritable  (true);
+		realFile.setReadable  (true);
 		rMap.put("result", "SUCCESS");
 		return rMap;
 	}

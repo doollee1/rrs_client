@@ -213,8 +213,6 @@ function imageTest2() {
 		<img src="" id="output" >
 		<img src="/upload/aaaa.png" id="output3" >
 		<img src="<c:url value="upload/aaaa.png" />" id="output4" >
-		<img src="/uploads/aaaa.png" id="output5" >
-		<img src="<c:url value="uploads/aaaa.png" />" id="output6" >
 		<input type="file" name="photoFile" id="photoFile" accept="image/*" >
 		<!-- <input type="file" name="photoFile" id="photoFile" accept="image/*" capture="camera" style="display:none;"> -->
 		<br>
