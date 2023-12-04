@@ -3,23 +3,19 @@ package com.rrs.web.notice.controller;
 import com.rrs.web.notice.service.NoticeService;
 import com.rrs.web.notice.service.vo.NoticeVO;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
@@ -41,8 +37,11 @@ public class NoticeController {
 	NoticeService noticeService;
 	
 	@RequestMapping({"/noticeList.do"})
-	public String noticeList(@RequestParam Map<String, Object> map, Model model) throws Exception {
+	@ResponseBody
+	public ModelAndView noticeList(@RequestParam Map<String, Object> map, Model model) throws Exception {
 		logger.info("noticeList");
+		
+		ModelAndView mav = new ModelAndView();
 		
 		List<Map<String, Object>> list = null;
 		int listCnt = 0;
@@ -53,11 +52,6 @@ public class NoticeController {
 		int totalPage = 0;
 		int lastPage = 0;
 		String strPage = (String)map.get("page");
-		Date DateNow = new Date();
-		SimpleDateFormat formatNow = new SimpleDateFormat("yyyy-MM-dd");
-		String now = formatNow.format(DateNow);
-		
-		map.put("now", now);
 		
 		if (!map.containsKey("page")) {
 			map.put("page", Integer.valueOf(0));
@@ -75,20 +69,43 @@ public class NoticeController {
 		totalCount = listCnt;
 		totalPage = totalCount / countList;
 		if (totalCount % countList > 0) { totalPage++; }
-		if (totalPage < page) { page = totalPage; } 
+		if (totalPage < page) { page = totalPage; }
 		int startPage = (page - 1) / 10 * 10 + 1;
 		int endPage = startPage + countPage - 1;
-		if (endPage > totalPage) { endPage = totalPage; } 
+		if (endPage > totalPage) { endPage = totalPage; }
 		lastPage = (int)Math.ceil(listCnt / countList);
 		
-		model.addAttribute("page", Integer.valueOf(page));
-		model.addAttribute("startPage", Integer.valueOf(startPage));
-		model.addAttribute("endPage", Integer.valueOf(endPage));
-		model.addAttribute("lastPage", Integer.valueOf(lastPage));
-		model.addAttribute("list", list);
-		model.addAttribute("listCnt", Integer.valueOf(listCnt));
+		mav.addObject("page", Integer.valueOf(page));
+		mav.addObject("startPage", Integer.valueOf(startPage));
+		mav.addObject("endPage", Integer.valueOf(endPage));
+		mav.addObject("lastPage", Integer.valueOf(lastPage));
+		mav.addObject("list", list);
+		mav.addObject("listCnt", Integer.valueOf(listCnt));
+		mav.setViewName("notice/noticeList.view");
 		
-		return "notice/noticeList.view";
+		return mav;
+	}
+	
+	@RequestMapping(value={"/noticeListNextPage.do"}, method={RequestMethod.POST})
+	@ResponseBody
+	public List<Map<String, Object>> noticeListNextPage(@RequestParam Map<String, Object> map, Model model) throws Exception {
+		logger.info("noticeList");
+		
+		List<Map<String, Object>> list = null;
+		int page = 0;
+		String strPage = (String)map.get("page");
+		
+		if (!map.containsKey("page")) {
+			map.put("page", Integer.valueOf(0));
+			page = 1;
+		} else {
+			page = Integer.parseInt(strPage);
+			map.put("page", Integer.valueOf(page * 10 - 10));
+		}
+		
+		list = this.noticeService.noticeList(map);
+		
+		return list;
 	}
 	
 	@RequestMapping(value = {"/noticeView.do"}, method = RequestMethod.GET)

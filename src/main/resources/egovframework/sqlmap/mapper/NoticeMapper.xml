@@ -7,12 +7,13 @@
 <select id="noticeList" parameterType="hashMap" resultType="hashMap">
 <![CDATA[
 	SELECT
-		notice_seq, title, st_dt
+		notice_seq, title, DATE_FORMAT(now(), st_dt) AS st_dt
 	FROM
 		tb_notice_board
 	WHERE 
 		reg_sts = '2'
-		AND st_dt <= #{now}
+		AND st_dt <= NOW()
+		AND ed_dt >= NOW()
 	ORDER BY
 		notice_seq DESC
 	LIMIT
