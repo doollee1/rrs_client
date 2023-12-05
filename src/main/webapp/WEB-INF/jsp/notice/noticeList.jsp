@@ -37,10 +37,10 @@ function scrollEvent(){
 	};
 	const onIntersect = (entries, observer) => {
 		entries.forEach(async (entry) => {
-			if (entry.isIntersecting) {
+			if (entry.isIntersecting && page < '${endPage}') {
 				//console.log('무한 스크롤 실행');
 				//console.log('page: ' + page);
-				nextPage();
+				await nextPage();
 			}
 		});
 	};
@@ -50,7 +50,11 @@ function scrollEvent(){
 
 <%//다음 페이지 로딩 %>
 function nextPage(){
-	
+	/* 
+	if(page > '${endPage}') {
+		return;
+	}
+	 */
 	$.ajax({
 		type:"post",
 		url:"/noticeListNextPage.do",
