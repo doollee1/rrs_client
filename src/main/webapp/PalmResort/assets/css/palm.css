@@ -101,6 +101,8 @@ ul li {list-style:none;}
 .inline-flex {display:flex;align-items:center;grid-column-gap:10px;}
 
 .table + .table {margin-top:25px;}
+.table.table-pk thead {position:sticky;top:60px;}
+
 .table.table-pk tr.bg {background-color:var(--bs-table-striped-bg);}
 .table.table-pk th, .table.table-pk td {text-align:center;vertical-align:middle;}
 .table.table-pk th + th, .table.table-pk td + td {border-left:1px solid var(--bs-component-table-border-color);}

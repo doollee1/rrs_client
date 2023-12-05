@@ -15,6 +15,7 @@
 	
 	<!-- ================== BEGIN page-css ================== -->
 	<!-- ================== END page-css ================== -->
+
 </head>
 <body>
 	<!-- BEGIN #app -->
@@ -28,7 +29,7 @@
 				</button>
 				<h1>상품소개</h1>
 				<!-- <a href="index.html" class="navbar-brand"><span class="navbar-logo"></span> <b class="me-3px">Color</b> Admin</a> -->
-				<button type="button" class="navbar-mobile-toggler" data-toggle="app-sidebar-mobile">
+				<button type="button" class="navbar-mobile-toggler hidden" data-toggle="app-sidebar-mobile">
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
@@ -127,7 +128,7 @@
 		<!-- BEGIN #content -->
 		<div id="content" class="app-content d-flex flex-column p-0">
 			<!-- BEGIN content-container -->
-			<div class="app-content-padding flex-grow-1 overflow-hidden" data-scrollbar="true" data-height="100%">
+			<div class="app-content-padding flex-grow-1 " data-scrollbar="true" data-height="100%">
 									
 				<!-- BEGIN nav-tabs -->
 				<ul class="nav nav-tabs">
@@ -147,8 +148,9 @@
 				<div class="tab-content panel rounded-0 p-3 m-0">
 					<!-- BEGIN tab-pane -->
 					<div class="tab-pane fade active show" id="default-tab-1">
+
 						<!-- th 두개 -->
-						<table class="table table-pk">
+						<table class="table table-pk ">
 							<colgroup>
 								<col style="width:50%">
 								<col style="width:50%">
@@ -166,6 +168,27 @@
 								<tr class="bg">
 									<td><span>140,000원/1인/1일</span></td>
 									<td><span>145,000원/1인/1실</span></td>
+								</tr>
+								<tr>
+									<td colspan="2"><span>주중 27홀, 주말오후 18홀</span></td>
+								</tr>
+								<tr class="bg">
+									<td><span>135,000원/1인/1일</span></td>
+									<td><span>140,000원/1인/1실</span></td>
+								</tr>
+								<tr>
+									<td colspan="2"><span>주중 27홀, 주말오후 18홀</span></td>
+								</tr>
+								<tr class="bg">
+									<td><span>135,000원/1인/1일</span></td>
+									<td><span>140,000원/1인/1실</span></td>
+								</tr>
+								<tr>
+									<td colspan="2"><span>주중 27홀, 주말오후 18홀</span></td>
+								</tr>
+								<tr class="bg">
+									<td><span>135,000원/1인/1일</span></td>
+									<td><span>140,000원/1인/1실</span></td>
 								</tr>
 								<tr>
 									<td colspan="2"><span>주중 27홀, 주말오후 18홀</span></td>
@@ -203,6 +226,62 @@
 									<td><span>145,000원/1인/1실</span></td>
 								</tr>
 								<tr>
+									<td colspan="2"><span>주중 36홀, 주말오후 18홀</span></td>
+								</tr>
+								<tr class="bg">
+									<td><span>140,000원/1인/1일</span></td>
+									<td><span>145,000원/1인/1실</span></td>
+								</tr>
+								<tr>
+									<td colspan="2"><span>주중 36홀, 주말오후 18홀</span></td>
+								</tr>
+								<tr class="bg">
+									<td><span>140,000원/1인/1일</span></td>
+									<td><span>145,000원/1인/1실</span></td>
+								</tr>
+								<tr>
+									<td colspan="2"><span>주중 36홀, 주말오후 18홀</span></td>
+								</tr>
+								<tr class="bg">
+									<td><span>140,000원/1인/1일</span></td>
+									<td><span>145,000원/1인/1실</span></td>
+								</tr>
+								<tr>
+									<td colspan="2"><span>주중 36홀, 주말오후 18홀</span></td>
+								</tr>
+								<tr class="bg">
+									<td><span>140,000원/1인/1일</span></td>
+									<td><span>145,000원/1인/1실</span></td>
+								</tr>
+								<tr>
+									<td colspan="2"><span>주중 36홀, 주말오후 18홀</span></td>
+								</tr>
+								<tr class="bg">
+									<td><span>140,000원/1인/1일</span></td>
+									<td><span>145,000원/1인/1실</span></td>
+								</tr>
+								<tr>
+									<td colspan="2"><span>주중 27홀, 주말오후 18홀</span></td>
+								</tr>
+								<tr class="bg">
+									<td><span>135,000원/1인/1일</span></td>
+									<td><span>140,000원/1인/1실</span></td>
+								</tr>
+								<tr>
+									<td colspan="2"><span>주중 27홀, 주말오후 18홀</span></td>
+								</tr>
+								<tr class="bg">
+									<td><span>135,000원/1인/1일</span></td>
+									<td><span>140,000원/1인/1실</span></td>
+								</tr>
+								<tr>
+									<td colspan="2"><span>주중 27홀, 주말오후 18홀</span></td>
+								</tr>
+								<tr class="bg">
+									<td><span>135,000원/1인/1일</span></td>
+									<td><span>140,000원/1인/1실</span></td>
+								</tr>
+								<tr>
 									<td colspan="2"><span>주중 27홀, 주말오후 18홀</span></td>
 								</tr>
 								<tr class="bg">
@@ -218,7 +297,7 @@
 								</tr>
 							</tbody>
 						</table>					
-					
+
 					</div>
 					<!-- END tab-pane -->
 					<!-- BEGIN tab-pane -->
@@ -291,6 +370,7 @@
 	<!-- ================== END core-js ================== -->
 	
 	<!-- ================== BEGIN page-js ================== -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 	<!-- ================== END page-js ================== -->
 	
 </body>
