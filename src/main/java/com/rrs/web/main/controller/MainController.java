@@ -254,7 +254,7 @@ public class MainController {
     logger.info("Recruit");
     return "Recruit";
   }
-  
+  /*
   @RequestMapping({"/noticeList.do"})
   public String noticeList(@RequestParam Map<String, Object> map, Model model) throws Exception {
     logger.info("noticeList");
@@ -295,7 +295,7 @@ public class MainController {
     model.addAttribute("rsListCnt", Integer.valueOf(rsListCnt));
     return "noticeList";
   }
-  
+  */
   @RequestMapping({"/noticeDetail.do"})
   public ModelAndView noticesDetail(@RequestParam Map<String, Object> map, Model model) throws Exception {
     logger.info("noticesDetail");

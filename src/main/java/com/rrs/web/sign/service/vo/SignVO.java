@@ -1,7 +1,5 @@
 package com.rrs.web.sign.service.vo;
 
-import java.util.Date;
-
 import com.rrs.web.sign.service.vo.SignVO;
 
 public class SignVO {

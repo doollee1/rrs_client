@@ -411,8 +411,8 @@ public class SignController {
 	}
 	
 	// 로그아웃 처리
-	@RequestMapping(value = {"/signOut.do"}, method = {RequestMethod.GET})
-	public void signOut(HttpSession session) throws Exception {
+	@RequestMapping({"/signOut.do"})
+	public String signOut(HttpSession session) throws Exception {
 		
 		logger.info("signOut");
 		
@@ -431,7 +431,7 @@ public class SignController {
 		
 		logger.debug("signOut Complete");
 		
-		return;
+		return "/main.view1";
 	}
 	
 }

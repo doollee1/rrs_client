@@ -55,7 +55,7 @@
 						</a>
 					</div>
 					<div class="menu-item">
-						<a href="#" class="menu-link">
+						<a href="/setting.do" class="menu-link">
 							<div class="menu-icon">
 								<i class="fa fa-cog"></i>
 							</div>
@@ -63,7 +63,7 @@
 						</a>
 					</div>
 					<div class="menu-item logout">
-						<a href="#" class="menu-link">
+						<a href="/signOut.do" class="menu-link">
 							<div class="menu-icon">
 								<i class="fa-solid fa-right-from-bracket"></i>
 							</div>
