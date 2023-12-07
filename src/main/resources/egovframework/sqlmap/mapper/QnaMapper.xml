@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rrs.web.qna.service.impl.QnaMapper">
+
+<select id="qnaList" parameterType="hashMap" resultType="hashMap">
+<![CDATA[
+	SELECT
+		qna_seq, title, DATE_FORMAT(reg_dt, '%Y-%m-%d') AS reg_dt, reg_sts
+	FROM
+		tb_qna_board
+	WHERE
+		qna_seq = up_seq
+	ORDER BY
+		qna_seq DESC
+	LIMIT
+		#{page}, 10
+]]>
+</select>
+
+<select id="qnaListCnt" resultType="int">
+<![CDATA[
+	SELECT 
+		count(*)
+	FROM 
+		tb_qna_board
+	WHERE
+		qna_seq = up_seq
+]]>
+</select>
+
+<select id="myQnaList" parameterType="hashMap" resultType="hashMap">
+<![CDATA[
+	SELECT
+		qna_seq, title, DATE_FORMAT(reg_dt, '%Y-%m-%d') AS reg_dt, reg_sts
+	FROM
+		tb_qna_board
+	WHERE
+		reg_id = #{user_id}
+	ORDER BY
+		qna_seq DESC
+]]>
+</select>
+
+<select id="myQnaListCnt" resultType="int">
+<![CDATA[
+	SELECT 
+		count(*)
+	FROM 
+		tb_qna_board
+	WHERE
+		reg_id = #{user_id}
+]]>
+</select>
+
+<select id="qnaView" parameterType="String" resultType="hashMap">
+<![CDATA[
+	SELECT
+		title, content
+	FROM
+		tb_qna_board
+	WHERE 
+		up_seq = #{qna_seq}
+]]>
+</select>
+
+<insert id="qnaWrite" parameterType="com.rrs.web.qna.service.vo.QnaVO">
+	INSERT INTO 
+		tb_qna_board (
+			qna_seq
+			, up_seq
+			, reg_dt
+			, title
+			, content
+			, reg_sts
+			, reg_dtm
+			, reg_id
+		)
+		VALUES (
+			#{qna_seq}
+			, #{up_seq}
+			, DATE_FORMAT(#{reg_dtm},'%Y%m%d')
+			, #{title}
+			, #{content}
+			, #{reg_sts}
+			, NOW()
+			, #{user_id}
+		)
+</insert>
+
+<update id="qnaModify" parameterType="com.rrs.web.qna.service.vo.QnaVO">
+	UPDATE tb_qna_board
+	SET 
+		title = #{title}
+		,content = #{content}
+		,reg_sts = #{reg_sts}
+		,upd_dtm = NOW()
+		,upd_id = #{user_id}
+	WHERE 
+		qna_seq = #{qna_seq};
+</update>
+
+
+</mapper>

@@ -24,7 +24,7 @@
 			<div class="goto-menu">
 				<a href="/reservationReq.do" class="btn btn-success"><i class="fas fa-calendar-check"></i>예약요청</a>
 				<a href="#" class="btn btn-success"><i class="fas fa-calendar-days"></i>예약현황</a>
-				<a href="#" class="btn btn-success"><i class="fas fa-pencil-alt"></i>문의사항</a>
+				<a href="/qnaList.do" class="btn btn-success"><i class="fas fa-pencil-alt"></i>문의사항</a>
 				<a href="/noticeList.do" class="btn btn-success"><i class="far fa-message"></i>공지사항</a>
 			</div>
 			<a href="/setting.do" class="btn btn-dark btn-sm btn-set">설정</a>

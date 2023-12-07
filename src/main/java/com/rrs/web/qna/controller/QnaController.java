@@ -1,7 +1,7 @@
-package com.rrs.web.notice.controller;
+package com.rrs.web.qna.controller;
 
-import com.rrs.web.notice.service.NoticeService;
-import com.rrs.web.notice.service.vo.NoticeVO;
+import com.rrs.web.qna.service.QnaService;
+import com.rrs.web.qna.service.vo.QnaVO;
 
 import java.util.List;
 import java.util.Map;
@@ -20,28 +20,31 @@ import org.springframework.web.servlet.ModelAndView;
 
 /**
  * @author 이민구
- * 파일이름 : noticeController.java
- * 파일설명 : 공지사항 컨트롤러
+ * 파일이름 : qnaController.java
+ * 파일설명 : 문의사항 컨트롤러
  * ***************************************************************************
- * 함수명				- 함수설명						방식	URL
+ * 함수명				함수설명						방식	URL
  * ---------------------------------------------------------------------------
- * noticeListPage()		- 공지사항 목록 페이지 진입		GET		/noticeList.do
- * noticeListNextPage()	- 공지사항 다음 페이지 로딩		POST	/noticeListNextPage.do
- * noticeView()			- 공지사항 상세보기 페이지 진입	GET		/noticeView.do
+ * qnaListPage()		문의사항 목록 페이지 진입		GET		/qnaList.do
+ * myQnaListPage()		내 문의사항 목록 페이지 진입	GET		/myQnaList.do 
+ * qnaListNextPage()	문의사항 다음 페이지 로딩		POST	/qnaListNextPage.do
+ * qnaView()			문의사항 상세보기 페이지 진입	GET		/qnaView.do
+ * qnaWrite()
+ * qnaModify()
  * ***************************************************************************
  */
 @Controller
-public class NoticeController {
+public class QnaController {
 	
-	private static final Logger logger = LoggerFactory.getLogger(NoticeController.class);
+	private static final Logger logger = LoggerFactory.getLogger(QnaController.class);
 	
-	@Resource(name = "noticeService")
-	NoticeService noticeService;
+	@Resource(name = "qnaService")
+	QnaService qnaService;
 	
-	@RequestMapping({"/noticeList.do"})
+	@RequestMapping({"/qnaList.do"})
 	@ResponseBody
-	public ModelAndView noticeList(@RequestParam Map<String, Object> map, Model model) throws Exception {
-		logger.info("noticeList");
+	public ModelAndView qnaList(@RequestParam Map<String, Object> map, Model model) throws Exception {
+		logger.info("qnaList");
 		
 		ModelAndView mav = new ModelAndView();
 		
@@ -65,8 +68,8 @@ public class NoticeController {
 		
 		logger.info("page :::::" + page);
 		
-		list = this.noticeService.noticeList(map);
-		listCnt = this.noticeService.noticeListCnt();
+		list = this.qnaService.qnaList(map);
+		listCnt = this.qnaService.qnaListCnt();
 		
 		totalCount = listCnt;
 		totalPage = totalCount / countList;
@@ -83,15 +86,31 @@ public class NoticeController {
 		mav.addObject("lastPage", Integer.valueOf(lastPage));
 		mav.addObject("list", list);
 		mav.addObject("listCnt", Integer.valueOf(listCnt));
-		mav.setViewName("notice/noticeList.view");
+		mav.setViewName("qna/qnaList.view");
 		
 		return mav;
 	}
 	
-	@RequestMapping(value={"/noticeListNextPage.do"}, method={RequestMethod.POST})
+	@RequestMapping(value={"/myQnaList.do"}, method={RequestMethod.POST})
 	@ResponseBody
-	public List<Map<String, Object>> noticeListNextPage(@RequestParam Map<String, Object> map, Model model) throws Exception {
-		logger.info("noticeList");
+	public List<Map<String, Object>> myQnaList(@RequestParam Map<String, Object> map, Model model) throws Exception {
+		logger.info("myQnaList");
+		
+		List<Map<String, Object>> list = null;
+		
+		list = this.qnaService.myQnaList(map);
+//		listCnt = this.qnaService.myQnaListCnt((String) map.get("user_id"));
+		
+		logger.info("list ::::: " + list);
+		logger.info("list.isEmpty ::::: " + list.isEmpty());
+		
+		return list;
+	}
+	
+	@RequestMapping(value={"/qnaListNextPage.do"}, method={RequestMethod.POST})
+	@ResponseBody
+	public List<Map<String, Object>> qnaListNextPage(@RequestParam Map<String, Object> map, Model model) throws Exception {
+		logger.info("QnaList");
 		
 		List<Map<String, Object>> list = null;
 		int page = 0;
@@ -105,21 +124,21 @@ public class NoticeController {
 			map.put("page", Integer.valueOf(page * 10 - 10));
 		}
 		
-		list = this.noticeService.noticeList(map);
+		list = this.qnaService.qnaList(map);
 		
 		return list;
 	}
 	
-	@RequestMapping(value = {"/noticeView.do"}, method = RequestMethod.GET)
-	public ModelAndView noticeView(@RequestParam  Map<String, Object> map, Model model) throws Exception {
-		logger.info("noticeDetail");
+	@RequestMapping(value = {"/qnaView.do"}, method = RequestMethod.GET)
+	public ModelAndView qnaView(@RequestParam  Map<String, Object> map, Model model) throws Exception {
+		logger.info("qnaDetail");
 		
 		ModelAndView mav = new ModelAndView();
+		List<Map<String, Object>> list = null;
 		
-		NoticeVO vo = this.noticeService.noticeView((String)map.get("notice_seq"));
-		mav.addObject("title", vo.getTitle());
-		mav.addObject("content", vo.getContent());
-		mav.setViewName("notice/noticeView.view");
+		list = this.qnaService.qnaView((String)map.get("qna_seq"));
+		mav.addObject("list", list);
+		mav.setViewName("qna/qnaView.view");
 		
 		return mav;
 	}
