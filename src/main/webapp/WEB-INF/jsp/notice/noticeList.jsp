@@ -24,7 +24,7 @@ function setEvent(){
 
 <%//공지사항 상세보기%>
 function goDetail(notice_seq){
-	location.href="/noticeView.do?notice_seq="+notice_seq
+	location.href="/noticeView.do?notice_seq="+notice_seq;
 }
 
 <%//무한 스크롤%>
@@ -37,9 +37,7 @@ function scrollEvent(){
 	};
 	const onIntersect = (entries, observer) => {
 		entries.forEach(async (entry) => {
-			if (entry.isIntersecting && page < '${endPage}') {
-				//console.log('무한 스크롤 실행');
-				//console.log('page: ' + page);
+			if (entry.isIntersecting && page <= '${endPage}') {
 				await nextPage();
 			}
 		});
@@ -50,11 +48,6 @@ function scrollEvent(){
 
 <%//다음 페이지 로딩 %>
 function nextPage(){
-	/* 
-	if(page > '${endPage}') {
-		return;
-	}
-	 */
 	$.ajax({
 		type:"post",
 		url:"/noticeListNextPage.do",
@@ -62,19 +55,6 @@ function nextPage(){
 		{ "page":page
 		},
 		dataType:"json",
-		/* 
-		success:function(data){
-			page++;
-			var html = "";
-			for(var i = 0; i < data.length; i++) {
-				html += '<tr onclick="goDetail(' + data[i].notice_seq + ')">';
-				html += '	<td class="date"><span>' + data[i].st_dt + '</span></td>';
-				html += '	<td><span>' + data[i].title + '</span></td>';
-				html += '</tr>';
-			}
-			$('tbody').last().append(html);
-		},
-		*/
 		error:function(request, status, error){
 			console.log("code: " + request.status)
 			console.log("message: " + request.responseText)
@@ -110,11 +90,6 @@ function nextPage(){
 						<col style="width:">
 					</colgroup>
 					<tbody>
-						<%-- 
-						<tr>
-							<td onclick="nextPage();">${page } / ${startPage } / ${endPage } / ${lastPage } / ${listCnt }</td>
-						</tr>
-						 --%>
 						<c:forEach var="list" items="${list}">
 							<tr onclick="goDetail('${list.notice_seq}')">
 								<td class="date"><span>${list.st_dt }</span></td>
