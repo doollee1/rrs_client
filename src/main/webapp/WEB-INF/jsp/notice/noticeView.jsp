@@ -1,11 +1,9 @@
 ﻿<%--
-	File Name : noticeDetail.jsp (PalmResort > html > board_notice_view.html)
+	File Name : noticeView.jsp (PalmResort > html > board_notice_view.html)
 	Description : 공지사항 상세보기 페이지
 	Creation : 2023.11.29 이민구
 	Update
 	2023.11.29 이민구 - 최초생성
-	----------남은일----------
-	----------남은일----------
 --%>
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
@@ -23,8 +21,6 @@ function setEvent(){
 }
 
 </script>
-
-<%-- <c:set value="${list}" var="list" /> --%>
 
 <!-- BEGIN #content -->
 <div id="content" class="app-content d-flex flex-column p-0">
@@ -57,7 +53,7 @@ function setEvent(){
 	<!-- END content-container -->
 	
 	<!-- BEGIN #footer -->
-	<!-- END #footer -->			
+	<!-- END #footer -->
 	
 </div>
 <!-- END #content -->
