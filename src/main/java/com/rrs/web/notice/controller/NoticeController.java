@@ -23,9 +23,11 @@ import org.springframework.web.servlet.ModelAndView;
  * 파일이름 : noticeController.java
  * 파일설명 : 공지사항 컨트롤러
  * ***************************************************************************
- * 함수명			- 함수설명						방식	URL
+ * 함수명				- 함수설명						방식	URL
  * ---------------------------------------------------------------------------
- * noticeListPage()	- 공지사항 목록 페이지 진입		GET		/noticeList.do
+ * noticeListPage()		- 공지사항 목록 페이지 진입		GET		/noticeList.do
+ * noticeListNextPage()	- 공지사항 다음 페이지 로딩		POST	/noticeListNextPage.do
+ * noticeView()			- 공지사항 상세보기 페이지 진입	GET		/noticeView.do
  * ***************************************************************************
  */
 @Controller
