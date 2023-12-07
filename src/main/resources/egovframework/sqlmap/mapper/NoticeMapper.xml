@@ -7,7 +7,7 @@
 <select id="noticeList" parameterType="hashMap" resultType="hashMap">
 <![CDATA[
 	SELECT
-		notice_seq, title, DATE_FORMAT(now(), st_dt) AS st_dt
+		notice_seq, title, DATE_FORMAT(st_dt, '%Y-%m-%d') AS st_dt
 	FROM
 		tb_notice_board
 	WHERE 
