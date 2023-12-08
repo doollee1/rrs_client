@@ -57,7 +57,7 @@
 <select id="qnaView" parameterType="String" resultType="hashMap">
 <![CDATA[
 	SELECT
-		title, content
+		title, content, reg_id
 	FROM
 		tb_qna_board
 	WHERE 

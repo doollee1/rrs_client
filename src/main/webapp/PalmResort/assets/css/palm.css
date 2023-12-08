@@ -70,6 +70,7 @@ input.form-control[readonly], .readonly {background-color:var(--bs-gray-100);poi
 ul {padding-left:0}
 ul li {list-style:none;}
 
+
 /* 01. Header & Footer ================================*/
 .app-header .navbar-header {height:60px;justify-content:space-between;}
 .app-header .navbar-header h1 {line-height:1;margin-bottom:0;}
@@ -94,6 +95,9 @@ ul li {list-style:none;}
 	.app-content .app-content-padding {padding:20px 20px 60px}
 	/* .app-content-full-height .app-content {min-height:calc(100vh - 120px);} */
 	}
+.app-content-padding.info-resort {padding:20px 0}
+.app-content-padding.info-resort .nav.nav-tabs{padding-left:.9375rem}
+	
 .app-sidebar-content {overflow-x:hidden !important;}
 .app-sidebar .menu .menu-item.logout {position:absolute;bottom:0;width:100%;border-top:1px solid #424242} 
 .col-form-label {font-weight:400}
@@ -101,7 +105,7 @@ ul li {list-style:none;}
 .inline-flex {display:flex;align-items:center;grid-column-gap:10px;}
 
 .table + .table {margin-top:25px;}
-.table.table-pk thead {position:sticky;top:60px;}
+/* .table.table-pk thead {position:sticky;top:60px;} */
 
 .table.table-pk tr.bg {background-color:var(--bs-table-striped-bg);}
 .table.table-pk th, .table.table-pk td {text-align:center;vertical-align:middle;}
@@ -109,6 +113,11 @@ ul li {list-style:none;}
 
 .policy-wrap pre {white-space:pre-wrap;font-family:"Noto Sans KR", "Sans-serif";}
 .policy-wrap pre .title {font-size:14px;font-weight:500;}
+
+/* info resort */
+.info-resort img {width:100%;height:auto}
+.info-resort .pic-tit {font-size:1rem;margin-bottom:10px;}
+.room-list {display:flex;flex-flow:column;gap:10px}
 
 /* 03. Login =================================*/
 .login.login-with-news-feed .login-header .brand .logo, .register.register-with-news-feed .login-header .brand .logo {border:none;background-color:transparent;font-size:unset;}
@@ -165,5 +174,7 @@ ul li {list-style:none;}
 
 .qna-label.apply{color:var(--bs-app-theme-color);background-color:var(--bs-primary);}
 .qna-label.finish{color:var(--bs-app-theme-color);background-color:var(--bs-gray-dark);}
+
+.btn-icon.btn-write {position:fixed;right:20px;bottom:20px;z-index:10}
 
 
