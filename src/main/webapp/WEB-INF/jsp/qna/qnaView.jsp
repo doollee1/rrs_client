@@ -14,7 +14,7 @@
 <script>
 
 $(window).ready( function() {
-	setTitle("공지사항");
+	setTitle("문의사항");
 	setEvent();
 });
 
@@ -48,7 +48,7 @@ function setEvent(){
 					
 					<hr class="bg-gray-500">
 					
-					<c:if test="${fn:length(list) > 1 }">
+					<c:if test="${fn:length(list) > 1 }" var="answer">
 						<!-- BEGIN 문의 답변-->
 						<p class="qna-a">
 							${list[1].content }
@@ -67,6 +67,12 @@ function setEvent(){
 	<!-- END content-container -->
 	
 	<!-- BEGIN #footer -->
+	<c:if test="${list[0].reg_id eq sessionScope.user_id && answer == false }">
+		<div id="footer" class="app-footer m-0">
+			<a href="/qnaDelete.do" class="btn btn-gray btn-lg">삭제</a>
+			<a href="#" class="btn btn-success btn-lg">수정</a>
+		</div>
+	</c:if>
 	<!-- END #footer -->
 	
 </div>
