@@ -28,7 +28,6 @@ function setEvent(){
  * @param str	: 체크할 문자열
  */
 function isEmpty(str){
-	
 	if(typeof str == "undefined" || str == null || str == "")
 		return true;
 	else
@@ -62,7 +61,7 @@ function myQnaList(){
 		}
 	}).done(function(data){
 		myListLoad = true;
-		var html = "";
+		let html = "";
 		if(isEmpty(data)) {
 			alert('문의하신 내역이 없습니다.');
 			location.href="/qnaList.do";
@@ -121,7 +120,7 @@ function nextPage(){
 		}
 	}).done(function(data){
 		page++;
-		var html = "";
+		let html = "";
 		for(var i = 0; i < data.length; i++) {
 			html+= '<tr onclick="goDetail('+data[i].qna_seq+')">';
 			html+= '	<td class="date"><span>'+data[i].reg_dt+'</span></td>';
