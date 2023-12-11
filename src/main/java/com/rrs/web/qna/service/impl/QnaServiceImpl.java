@@ -35,4 +35,7 @@ public class QnaServiceImpl implements QnaService {
 	public void qnaModify(QnaVO vo) throws Exception {
 		this.qnaMapper.qnaModify(vo);
 	}
+	public void qnaDelete(QnaVO vo) throws Exception {
+		this.qnaMapper.qnaDelete(vo);
+	}
 }
