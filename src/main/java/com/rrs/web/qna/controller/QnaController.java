@@ -142,4 +142,58 @@ public class QnaController {
 		
 		return mav;
 	}
+	
+	@RequestMapping(value = {"/qnaWrite.do"}, method = RequestMethod.GET)
+	public String qnaWritePage(@RequestParam  Map<String, Object> map, Model model) throws Exception {
+		logger.info("qnaWritePage");
+		return "qna/qnaWrite.view";
+	}
+	
+	@RequestMapping(value = {"/qnaWrite.do"}, method = RequestMethod.POST)
+	public String qnaWrite(@RequestParam  Map<String, Object> map, Model model) throws Exception {
+		logger.info("qnaWritePage");
+		String result = "";
+		return result;
+	}
+	
+	@RequestMapping(value = {"/qnaModify.do"}, method = RequestMethod.GET)
+	public ModelAndView qnaModifyPage(@RequestParam  Map<String, Object> map, Model model) throws Exception {
+		logger.info("qnaModifyPage");
+		
+		ModelAndView mav = new ModelAndView();
+		
+		mav.addObject("qna_seq", map.get("qna_seq"));
+		mav.addObject("title", map.get("title"));
+		mav.addObject("content", map.get("content"));
+		
+		mav.setViewName("qna/qnaModify.view");
+		
+		return mav;
+	}
+	
+	@RequestMapping(value = {"/qnaModify.do"}, method = RequestMethod.POST)
+	@ResponseBody
+	public String qnaModify(@RequestParam  Map<String, Object> map, Model model) throws Exception {
+		logger.info("qnaModify");
+		
+		String result = "";
+		QnaVO vo = new QnaVO();
+		vo.setQna_seq(Integer.parseInt((String) map.get("qna_seq")));
+		vo.setTitle((String) map.get("title"));
+		vo.setContent((String) map.get("content"));
+		vo.setReg_sts((String) map.get("reg_sts"));
+		vo.setUpd_id((String) map.get("user_id"));
+		
+		this.qnaService.qnaModify(vo);
+		result = "Y";
+		
+		return result;
+	}
+	
+	@RequestMapping(value = {"/qnaDelete.do"}, method = RequestMethod.GET)
+	public String qnaDelete(@RequestParam  Map<String, Object> map, Model model) throws Exception {
+		logger.info("qnaDelete");
+		String result = "";
+		return result;
+	}
 }
