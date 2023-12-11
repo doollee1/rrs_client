@@ -39,7 +39,7 @@
 						</a>
 					</div>
 					<div class="menu-item">
-						<a href="#" class="menu-link">
+						<a href="/qnaList.do" class="menu-link">
 							<div class="menu-icon">
 								<i class="fas fa-pencil-alt"></i> 
 							</div>
@@ -47,7 +47,7 @@
 						</a>
 					</div>
 					<div class="menu-item">
-						<a href="#" class="menu-link">
+						<a href="/noticeList.do" class="menu-link">
 							<div class="menu-icon">
 								<i class="far fa-message"></i> 
 							</div>
