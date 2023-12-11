@@ -57,7 +57,7 @@
 <select id="qnaView" parameterType="String" resultType="hashMap">
 <![CDATA[
 	SELECT
-		title, content, reg_id
+		qna_seq, title, content, reg_id
 	FROM
 		tb_qna_board
 	WHERE 
@@ -96,7 +96,7 @@
 		,content = #{content}
 		,reg_sts = #{reg_sts}
 		,upd_dtm = NOW()
-		,upd_id = #{user_id}
+		,upd_id = #{upd_id}
 	WHERE 
 		qna_seq = #{qna_seq};
 </update>
