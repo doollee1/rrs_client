@@ -67,9 +67,10 @@ function modQna(){
 
 }
 
-<%//문의사항 삭제%>
-function delQna(){
-	
+<%//문의사항 수정 취소%>
+function cancle(){
+	let qna_seq = $('#qna_seq').val();
+	location.href="/qnaView.do?qna_seq="+qna_seq;
 }
 
 </script>
@@ -103,7 +104,7 @@ function delQna(){
 	
 	<!-- BEGIN #footer -->
 	<div id="footer" class="app-footer m-0">
-		<a href="#" class="btn btn-gray btn-lg" onclick="delQna()">삭제</a>
+		<a href="#" class="btn btn-gray btn-lg" onclick="cancle();">취소</a>
 		<a href="#" class="btn btn-success btn-lg" onclick="modQna();">수정</a>
 	</div>
 	<!-- END #footer -->
