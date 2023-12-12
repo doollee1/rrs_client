@@ -12,6 +12,7 @@
 		tb_qna_board
 	WHERE
 		qna_seq = up_seq
+		AND reg_sts NOT IN (0)
 	ORDER BY
 		qna_seq DESC
 	LIMIT
@@ -27,6 +28,7 @@
 		tb_qna_board
 	WHERE
 		qna_seq = up_seq
+		AND reg_sts NOT IN (0)
 ]]>
 </select>
 
@@ -38,6 +40,7 @@
 		tb_qna_board
 	WHERE
 		reg_id = #{user_id}
+		AND reg_sts NOT IN (0)
 	ORDER BY
 		qna_seq DESC
 ]]>
@@ -51,13 +54,14 @@
 		tb_qna_board
 	WHERE
 		reg_id = #{user_id}
+		AND reg_sts NOT IN (0)
 ]]>
 </select>
 
 <select id="qnaView" parameterType="String" resultType="hashMap">
 <![CDATA[
 	SELECT
-		title, content, reg_id
+		qna_seq, title, content, reg_id
 	FROM
 		tb_qna_board
 	WHERE 
@@ -78,14 +82,14 @@
 			, reg_id
 		)
 		VALUES (
-			#{qna_seq}
-			, #{up_seq}
-			, DATE_FORMAT(#{reg_dtm},'%Y%m%d')
+			(SELECT IFNULL(MAX(qna_seq) + 1, 1) FROM tb_qna_board a)
+			, (SELECT IFNULL(MAX(qna_seq) + 1, 1) FROM tb_qna_board a)
+			, DATE_FORMAT(NOW(),'%Y%m%d')
 			, #{title}
 			, #{content}
-			, #{reg_sts}
+			, '1'
 			, NOW()
-			, #{user_id}
+			, #{reg_id}
 		)
 </insert>
 
@@ -96,8 +100,17 @@
 		,content = #{content}
 		,reg_sts = #{reg_sts}
 		,upd_dtm = NOW()
-		,upd_id = #{user_id}
+		,upd_id = #{upd_id}
 	WHERE 
+		qna_seq = #{qna_seq};
+</update>
+
+<update id="qnaDelete" parameterType="com.rrs.web.qna.service.vo.QnaVO">
+	UPDATE tb_qna_board
+	SET
+		reg_sts = '0'
+		, upd_dtm = NOW()
+	WHERE
 		qna_seq = #{qna_seq};
 </update>
 

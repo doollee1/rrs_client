@@ -16,4 +16,5 @@ public interface QnaMapper {
 	List<Map<String, Object>> qnaView(String qna_seq) throws Exception;
 	void qnaWrite(QnaVO vo) throws Exception;
 	void qnaModify(QnaVO vo) throws Exception;
+	void qnaDelete(QnaVO vo) throws Exception;
 }

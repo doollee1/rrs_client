@@ -23,6 +23,41 @@ function setEvent(){
 	
 }
 
+function goModify(){
+	
+	let qna_seq = '${list[0].qna_seq}';
+	let title = '${list[0].title}';
+	let content = '${list[0].content}';
+	
+	location.href="/qnaModify.do?qna_seq="+qna_seq+"&&title="+title+"&&content="+content;
+}
+
+function goDelete(){
+	
+	let qna_seq = '${list[0].qna_seq}';
+	
+	$.ajax({
+		type:"get",
+		url:"/qnaDelete.do",
+		dataType:'json',
+		data: {	"qna_seq":qna_seq },
+		success:function(data){
+			if(data == "Y") {
+				alert("문의사항 삭제가 완료되었습니다.");
+				location.href="/qnaList.do";
+			} else {
+				alert("문의사항 삭제 도중 오류가 발생했습니다. 다시 시도해주세요.");
+			}
+		},
+		error:function(request, status, error){
+			console.log("code: " + request.status)
+			console.log("message: " + request.responseText)
+			console.log("error: " + error);
+			console.log("통신중 오류가 발생하였습니다.");
+		}
+	});
+}
+
 </script>
 
 <!-- BEGIN #content -->
@@ -40,23 +75,34 @@ function setEvent(){
 					
 					<hr class="bg-gray-500">
 					
-					<!-- BEGIN 문의 내용 -->
-					<p>
-						${list[0].content }
-					</p>
-					<!-- END 문의 내용 -->
-					
-					<hr class="bg-gray-500">
-					
-					<c:if test="${fn:length(list) > 1 }" var="answer">
-						<!-- BEGIN 문의 답변-->
-						<p class="qna-a">
-							${list[1].content }
-						</p>
-						<!-- END 문의 답변 -->
-					</c:if>
-					
-					
+					<c:choose>
+						<c:when test="${fn:length(list) eq 1}">
+							<p>
+								${list[0].content }
+							</p>
+						</c:when>
+						<c:when test="${fn:length(list) > 1 }">
+							<c:forEach var="list" items="${list}" varStatus="status">
+								<c:if test="${status.index eq 0 || status.index / 2 eq 0 }">
+									<!-- BEGIN 문의 내용 -->
+									<p>
+										${list.content }
+									</p>
+									<!-- END 문의 내용 -->
+								</c:if>
+								
+								
+								<c:if test="${status.index / 2 ne 0 }" var="answer">
+									<hr class="bg-gray-500">
+									<!-- BEGIN 문의 답변-->
+									<p class="qna-a">
+										${list.content }
+									</p>
+									<!-- END 문의 답변 -->	
+								</c:if>
+							</c:forEach>
+						</c:when>
+					</c:choose>
 					
 					<a href="/qnaList.do" class="btn btn-success btn-list">목록</a>
 				</div>
@@ -67,10 +113,10 @@ function setEvent(){
 	<!-- END content-container -->
 	
 	<!-- BEGIN #footer -->
-	<c:if test="${list[0].reg_id eq sessionScope.user_id && answer == false }">
+	<c:if test="${list[0].reg_id eq sessionScope.user_id && empty list[1] }">
 		<div id="footer" class="app-footer m-0">
-			<a href="/qnaDelete.do" class="btn btn-gray btn-lg">삭제</a>
-			<a href="#" class="btn btn-success btn-lg">수정</a>
+			<a href="#"" class="btn btn-gray btn-lg" onclick="goDelete();">삭제</a>
+			<a href="#" class="btn btn-success btn-lg" onclick="goModify();">수정</a>
 		</div>
 	</c:if>
 	<!-- END #footer -->
