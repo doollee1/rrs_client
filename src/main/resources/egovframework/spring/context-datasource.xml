@@ -23,6 +23,7 @@
         <property name="url" value="jdbc:mariadb://106.240.164.71:44006/doollee?serverTimezone=UTC" />
         <property name="username" value="doollee"/> 
         <property name="password" value="EnfflEnffl12#$"/>
+        <property name="validationQuery" value="select 1" />
     </bean>
     
 </beans>
