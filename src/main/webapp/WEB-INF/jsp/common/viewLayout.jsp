@@ -36,24 +36,5 @@
 		<!-- END scroll-top-btn -->
 	</div>
 	<!-- END #app -->
-
-	<!-- ================== BEGIN core-js ================== -->
-	<script src="PalmResort/assets/js/vendor.min.js"></script>
-	<script src="PalmResort/assets/js/app.min.js"></script>
-	<!-- ================== END core-js ================== -->
-
-	<script src="PalmResort/assets/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.js"></script>
-	<script src="PalmResort/assets/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js"></script>
-	<script src="PalmResort/assets/plugins/clipboard/dist/clipboard.min.js"></script>
-	<script src="PalmResort/assets/plugins/spectrum-colorpicker2/dist/spectrum.min.js"></script>
 </body>
-<script>
-function setTitle(title) {
-	$("#app > #header > .navbar-header > h1").html(title);
-}
-
-$("#back-button").click(function() {
-	history.back();
-});
-</script>
 </html>

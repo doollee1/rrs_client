@@ -14,4 +14,31 @@
 <!-- ================== END core-css ================== -->
 <link href="PalmResort/assets/plugins/bootstrap-datepicker/dist/css/bootstrap-datepicker.css" rel="stylesheet" />
 
-<script src="resrc/vendor/jquery/jquery.js"></script>
+<script src="PalmResort/assets/js/vendor.min.js"></script>
+<script src="PalmResort/assets/js/app.min.js"></script>
+
+<script src="PalmResort/assets/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.js"></script>
+<script src="PalmResort/assets/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js"></script>
+<script src="PalmResort/assets/plugins/clipboard/dist/clipboard.min.js"></script>
+<script src="PalmResort/assets/plugins/spectrum-colorpicker2/dist/spectrum.min.js"></script>
+
+<script>
+$(document).ready(function() {
+	function setTitle(title) {
+		$("#app > #header > .navbar-header > h1").html(title);
+	}
+
+	function strToNum(str) {
+		return Number(str.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1'));
+	}
+
+	function numberComma(val) {
+		val += "";
+		return strToNum(val).toString().replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
+	}
+
+	$("#back-button").click(function() {
+		history.back();
+	});
+})
+</script>
