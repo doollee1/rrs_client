@@ -1,5 +1,6 @@
 package com.rrs.web.qna.controller;
 
+import com.rrs.web.comm.service.CommonService;
 import com.rrs.web.qna.service.QnaService;
 import com.rrs.web.qna.service.vo.QnaVO;
 
@@ -40,6 +41,9 @@ public class QnaController {
 	
 	@Resource(name = "qnaService")
 	QnaService qnaService;
+	
+	@Resource(name = "commonService")
+	CommonService commonService;
 	
 	@RequestMapping({"/qnaList.do"})
 	@ResponseBody
@@ -159,9 +163,26 @@ public class QnaController {
 		vo.setTitle((String) map.get("title"));
 		vo.setContent((String) map.get("content"));
 		vo.setReg_id((String) map.get("user_id"));
+		
+		StringBuffer sb = new StringBuffer();
+		
+		sb.append("[문의사항 등록 알림]").append(System.getProperty("line.separator"))
+		.append("[등록자] : ").append((String) map.get("user_id")).append(System.getProperty("line.separator"))
+		.append("[제목] : ").append((String) map.get("title")).append(System.getProperty("line.separator"))
+		.append("등록된 문의사항을 확인해주세요.");
+		
 		try {
 			this.qnaService.qnaWrite(vo);
 			result = "Y";
+			
+			
+			logger.debug(":::::텔레그램 메세지 전송 시도:::::");
+			logger.debug("msg :: " + sb.toString());
+			
+			this.commonService.telegramMsgSend(sb.toString());
+			
+			logger.debug(":::::텔레그램 메세지 전송 완료:::::");
+			
 		} catch (Exception e) {
 			// TODO: handle exception
 			result = "N";
