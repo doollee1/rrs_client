@@ -24,21 +24,21 @@
 
 <script>
 $(document).ready(function() {
-	function setTitle(title) {
-		$("#app > #header > .navbar-header > h1").html(title);
-	}
-
-	function strToNum(str) {
-		return Number(str.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1'));
-	}
-
-	function numberComma(val) {
-		val += "";
-		return strToNum(val).toString().replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
-	}
-
 	$("#back-button").click(function() {
 		history.back();
 	});
-})
+});
+
+function setTitle(title) {
+	$("#app > #header > .navbar-header > h1").html(title);
+}
+
+function strToNum(str) {
+	return Number(str.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1'));
+}
+
+function numberComma(val) {
+	val += "";
+	return strToNum(val).toString().replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
+}
 </script>
