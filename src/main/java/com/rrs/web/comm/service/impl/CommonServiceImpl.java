@@ -79,9 +79,9 @@ public class CommonServiceImpl implements CommonService {
 			String filePath = path + fileNm;
 			File realFile = new File(filePath);
 			image.transferTo(realFile);
-			realFile.setExecutable(true);
-			realFile.setWritable  (true);
-			realFile.setReadable  (true);
+			realFile.setExecutable(true, false);
+			realFile.setWritable  (true, false);
+			realFile.setReadable  (true, false);
 		} catch(Exception e) {
 			e.printStackTrace();
 			return null;
