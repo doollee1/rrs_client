@@ -36,7 +36,7 @@ $(document).ready(function() {
 			//$("#preview").attr("src", e.target.result);
 		};
 		reader.readAsDataURL(file);
-		if(file.size >= (1024 * 1024)) {
+		if(file.size >= (1024 * 512)) {
 			resizeImage({
 				file: file,
 				maxSize: 600
