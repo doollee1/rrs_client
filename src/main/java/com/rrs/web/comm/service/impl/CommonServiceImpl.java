@@ -66,11 +66,11 @@ public class CommonServiceImpl implements CommonService {
 			path = path + strYyyy;
 			if(!new File(path).exists()) {
 				new File(path).mkdir(); // 년폴더
-				path = path + strMm;
-				if(!new File(path).exists()) {
-					new File(path).mkdir(); // 월폴더
+				if(!new File(path + strMm).exists()) {
+					new File(path + strMm).mkdir(); // 월폴더
 				}
 			}
+			path = path + strMm;
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmssSSS"); //SSS가 밀리세컨드 표시
 			Calendar calendar = Calendar.getInstance();
 			String fileNm   = dateFormat.format(calendar.getTime()).toString() + "." + image.getOriginalFilename().substring(image.getOriginalFilename().lastIndexOf(".") + 1);

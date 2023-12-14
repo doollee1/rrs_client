@@ -315,7 +315,7 @@
 
 	<insert id="insertTbReqAddFile" parameterType="hashMap">
 		<selectKey resultType="string" keyProperty="file_seq" order="BEFORE">
-            SELECT IFNULL(MAX(SEQ) + 1 ,1) 
+            SELECT IFNULL(MAX(ADD_FILE_SEQ) + 1 ,1) 
               FROM tb_req_add_file /* 예약첨부파일(항공권) */
              WHERE REQ_DT   = #{today      }
                AND REQ_SEQ  = #{booking_seq}
