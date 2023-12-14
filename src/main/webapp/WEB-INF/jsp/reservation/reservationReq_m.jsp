@@ -290,7 +290,7 @@ lateCheckOut : \${numberComma(data.lateCheckOutAmt)}`);
 				success : function(data) {
 					if(data.result == "SUCCESS") {
 						alert("등록이 완료되었습니다.");
-						location.href = "/main.do";
+						location.replace("/main.do");
 					}
 			 	},
 			 	error : function(request, status, error) {

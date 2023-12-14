@@ -16,8 +16,7 @@
              , A.COM_AMT * DATEDIFF(CAST(#{chk_out_dt} AS DATE), CAST(#{chk_in_dt} AS DATE)) * #{tot_person} AS MEM_ROOM_CHARGE /* 숙박비 */
           FROM tb_prod_info   A /* 상품정보 테이블 */
           JOIN tb_bas_yy_info B /* 년도별 기간 관리테이블 */
-            ON A.BAS_YY     = SUBSTRING(#{chk_in_dt}, 1, 4)
-           AND A.HDNG_GBN   = #{hdng_gbn} /* 항목구분 */
+            ON A.HDNG_GBN   = #{hdng_gbn} /* 항목구분 */
            AND A.BAS_YY     = B.BAS_YY
            AND A.BAS_YY_SEQ = B.BAS_YY_SEQ
          WHERE 1 = 1
@@ -43,7 +42,6 @@
           JOIN tb_prod_info B /* 상품정보 테이블 */
             ON A.HEAD_CD  = '500050' /* 미팅센딩 */
            AND A.CODE     = #{pick_gbn}
-           AND B.BAS_YY   = SUBSTRING(#{chk_in_dt}, 1, 4)
            AND A.REF_CHR1 = B.HDNG_GBN
            AND A.REF_CHR2 = B.PROD_COND
           JOIN tb_bas_yy_info C /* 년도별 기간 관리테이블 */
@@ -59,8 +57,7 @@
         SELECT A.COM_AMT * #{per_num} AS SURCHARGE
           FROM tb_prod_info A
           JOIN tb_bas_yy_info B
-            ON A.BAS_YY     = SUBSTRING(#{chk_in_dt}, 1, 4)
-           AND A.HDNG_GBN   = '21' /* 야간차량 할증료 */
+            ON A.HDNG_GBN   = '21' /* 야간차량 할증료 */
            AND A.BAS_YY     = B.BAS_YY
            AND A.BAS_YY_SEQ = B.BAS_YY_SEQ
          WHERE A.PROD_COND  = CASE WHEN #{per_num} < 4
@@ -84,8 +81,7 @@
                          END AS ROOMUP_AMT
                    FROM tb_prod_info   A  /* 상품정보 테이블 */
                    JOIN tb_bas_yy_info B  /* 년도별 기간 관리테이블 */
-                     ON A.BAS_YY     = SUBSTRING(#{chk_in_dt}, 1, 4)
-                    AND A.HDNG_GBN   IN('14', '15') /* 룸추가 비용 */
+                     ON A.HDNG_GBN   IN('14', '15') /* 룸추가 비용 */
                     AND A.BAS_YY     = B.BAS_YY
                     AND A.BAS_YY_SEQ = B.BAS_YY_SEQ
                   WHERE 1 = 1
@@ -102,7 +98,6 @@
           JOIN tb_prod_info B  /* 상품정보 테이블 */
             ON A.HEAD_CD    = '500060' /* Late체크아웃여부  */
            AND A.CODE       = #{late_check_out}
-           AND B.BAS_YY     = SUBSTRING(#{chk_in_dt}, 1, 4)
            AND B.HDNG_GBN   = A.REF_CHR1
           JOIN tb_bas_yy_info C /* 년도별 기간 관리테이블 */
             ON B.BAS_YY     = C.BAS_YY
