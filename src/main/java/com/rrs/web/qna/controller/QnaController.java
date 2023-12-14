@@ -30,8 +30,11 @@ import org.springframework.web.servlet.ModelAndView;
  * myQnaListPage()		내 문의사항 목록 페이지 진입	GET		/myQnaList.do 
  * qnaListNextPage()	문의사항 다음 페이지 로딩		POST	/qnaListNextPage.do
  * qnaView()			문의사항 상세보기 페이지 진입	GET		/qnaView.do
- * qnaWrite()
- * qnaModify()
+ * qnaWritePage()		문의사항 입력 페이지 진입		GET		/qnaWrite.do
+ * qnaWrite()			문의사항 입력 처리				POST	/qnaWrite.do
+ * qnaModifyPage()		문의사항 수정 페이지 진입		GET		/qnaModify.do
+ * qnaModify()			문의사항 수정 처리				POST	/qnaModify.do
+ * qnaDelete()			문의사항 삭제 처리				GET		/qnaDelete.do
  * ***************************************************************************
  */
 @Controller

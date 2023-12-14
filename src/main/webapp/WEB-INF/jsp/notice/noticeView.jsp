@@ -12,13 +12,7 @@
 
 $(window).ready( function() {
 	setTitle("공지사항");
-	setEvent();
 });
-
-<%//페이지 이벤트 설정 %>
-function setEvent(){
-	
-}
 
 </script>
 
@@ -44,7 +38,7 @@ function setEvent(){
 					<!-- END 공지사항 내용 -->
 					
 					<hr class="bg-gray-500">
-					<a href="/noticeList.do" class="btn btn-success btn-list">목록</a>
+					<a href="#" class="btn btn-success btn-list" onclick="history.back();">목록</a>
 				</div>
 			</div>
 		</div>

@@ -4,8 +4,6 @@
 	Creation : 이민구
 	Update
 	2023.11.24 이민구 - 최초생성
-	----------남은일----------
-	----------남은일----------
 --%>
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ page import="java.sql.*,java.text.SimpleDateFormat,java.util.Date"%>
@@ -128,9 +126,6 @@ function infoChange(){
 				} else {
 					alert("기존 비밀번호가 일치하지 않습니다. 다시 확인해주세요.");
 				}
-			},
-			error:function(data){
-				console.log("통신중 오류가 발생하였습니다.");
 			}
 		});
 	

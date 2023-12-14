@@ -29,9 +29,6 @@ function userOut(){
 					alert("회원탈퇴 처리가 완료되었습니다.");
 					location.href="/main.do";
 				}
-			},
-			error:function(data){
-				console.log("통신중 오류가 발생하였습니다.");
 			}
 		});
 	} else {

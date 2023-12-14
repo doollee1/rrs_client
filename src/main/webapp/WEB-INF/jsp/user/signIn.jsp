@@ -4,10 +4,6 @@
 	Creation : 2023.11.15 이민구
 	Update
 	2023.11.15 이민구 - 최초생성
-	----------남은일----------
-	로그인 이벤트 분기 페이지 URL 재점검
-	인풋 이벤트 추가
-	----------남은일----------
 --%>
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
@@ -71,9 +67,6 @@ function signIn(){
 			} else {
 				alert("존재하지 않는 회원입니다. 회원가입 후 이용해주세요.");
 			}
-		},
-		error:function(data){
-			console.log("통신중 오류가 발생하였습니다.");
 		}
 	});
 }

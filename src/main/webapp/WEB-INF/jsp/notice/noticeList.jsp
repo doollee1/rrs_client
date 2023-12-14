@@ -55,12 +55,6 @@ function nextPage(){
 		{ "page":page
 		},
 		dataType:"json",
-		error:function(request, status, error){
-			console.log("code: " + request.status)
-			console.log("message: " + request.responseText)
-			console.log("error: " + error);
-			console.log("통신중 오류가 발생하였습니다.");
-		}
 	}).done(function(data){
 		page++;
 		var html = "";

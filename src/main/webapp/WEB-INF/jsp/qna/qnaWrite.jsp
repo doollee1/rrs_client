@@ -4,9 +4,6 @@
 	Creation : 2023.12.05 이민구
 	Update
 	2023.12.05 이민구 - 최초생성
-	----------남은일----------
-	관리자에게 텔레그램 알림 전송
-	----------남은일----------
 --%>
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
@@ -15,13 +12,7 @@
 
 $(window).ready( function() {
 	setTitle("문의사항");
-	setEvent();
 });
-
-<%//페이지 이벤트 설정 %>
-function setEvent(){
-	
-}
 
 function qnaWrite(){
 	
@@ -45,12 +36,6 @@ function qnaWrite(){
 				alert("문의사항 등록 도중 오류가 발생했습니다. 다시 시도해주세요.");
 			}
 		},
-		error:function(request, status, error){
-			console.log("code: " + request.status)
-			console.log("message: " + request.responseText)
-			console.log("error: " + error);
-			console.log("통신중 오류가 발생하였습니다.");
-		}
 	});
 	
 }

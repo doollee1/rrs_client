@@ -53,12 +53,6 @@ function myQnaList(){
 		url:"/myQnaList.do",
 		data: { "user_id":user_id },
 		dataType:'json',
-		error:function(request, status, error){
-			console.log("code: " + request.status)
-			console.log("message: " + request.responseText)
-			console.log("error: " + error);
-			console.log("통신중 오류가 발생하였습니다.");
-		}
 	}).done(function(data){
 		myListLoad = true;
 		let html = "";
@@ -112,12 +106,6 @@ function nextPage(){
 		{ "page":page
 		},
 		dataType:"json",
-		error:function(request, status, error){
-			console.log("code: " + request.status)
-			console.log("message: " + request.responseText)
-			console.log("error: " + error);
-			console.log("통신중 오류가 발생하였습니다.");
-		}
 	}).done(function(data){
 		page++;
 		let html = "";

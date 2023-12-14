@@ -4,8 +4,6 @@
 	Creation : 2023.12.05 이민구
 	Update
 	2023.12.05 이민구 - 최초생성
-	----------남은일----------
-	----------남은일----------
 --%>
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
@@ -48,12 +46,6 @@ function goDelete(){
 			} else {
 				alert("문의사항 삭제 도중 오류가 발생했습니다. 다시 시도해주세요.");
 			}
-		},
-		error:function(request, status, error){
-			console.log("code: " + request.status)
-			console.log("message: " + request.responseText)
-			console.log("error: " + error);
-			console.log("통신중 오류가 발생하였습니다.");
 		}
 	});
 }
@@ -104,7 +96,7 @@ function goDelete(){
 						</c:when>
 					</c:choose>
 					
-					<a href="/qnaList.do" class="btn btn-success btn-list">목록</a>
+					<a href="#" class="btn btn-success btn-list" onclick="history.back();">목록</a>
 				</div>
 			</div>
 		</div>

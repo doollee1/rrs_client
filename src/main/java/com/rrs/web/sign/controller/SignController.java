@@ -431,7 +431,7 @@ public class SignController {
 		
 		logger.debug("signOut Complete");
 		
-		return "/main.view1";
+		return "main.index";
 	}
 	
 }

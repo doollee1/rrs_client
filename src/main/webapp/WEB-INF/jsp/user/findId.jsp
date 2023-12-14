@@ -4,9 +4,6 @@
 	Creation : 2023.11.21 이민구
 	Update
 	2023.11.21 이민구 - 최초생성
-	----------남은일----------
-	이메일 전송 추가
-	----------남은일----------
 --%>
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
@@ -75,29 +72,9 @@ function findId(){
 				alert("등록된 회원님의 이메일주소(" + email + ")로 아이디가 발송되었습니다.");
 				location.href = "/signIn.do";
 			}
-		},
-		error:function(data){
-			console.log("통신중 오류가 발생하였습니다.");
 		}
 	});
 }
-/* 
-function test(){
-	
-	$.ajax({
-		type : "POST",
-		url : "/comm/sendMail.do",
-		data : {"param" : { "mail_yn" : "Y" } },
-		dataType:"json",
-		success:function(data){
-			alert("data ::::: " + JSON.stringify(data));
-		},
-		error:function(data){
-			alert("error ::::: " + JSON.stringify(data));
-		}
-	});
-}
- */
 </script>
 
 <!-- BEGIN register -->

@@ -4,9 +4,6 @@
 	Creation : 2023.11.21 이민구
 	Update
 	2023.11.21 이민구 - 최초생성
-	----------남은일----------
-	이메일 전송 추가
-	----------남은일----------
 --%>
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
@@ -15,7 +12,6 @@
 
 $(window).ready( function() {
 	setTitle("비밀번호찾기");
-	setEvent();
 });
 
 $(document).on("keyup", "input[noSpecial]", function() {$(this).val( $(this).val().replace(/[^ㄱ-힣a-zA-Z0-9]/gi,"") );});
@@ -24,11 +20,6 @@ $(document).on("keyup", "input[onlyNum]", function() {$(this).val( $(this).val()
 function validChk_email(val){
 	var pattern = /([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
 	return (val != '' && val != 'undefined' && pattern.test(val));
-}
-
-<%//페이지 이벤트 설정 %>
-function setEvent(){
-	
 }
 
 <%//비밀번호 찾기%>
@@ -80,9 +71,6 @@ function findPw(){
 				alert("초기화 된 비밀번호가 "+ user_id + " 회원님의 이메일 : "+ email + " 로 전송되었습니다. \n 초기화된 비밀번호로 다시 접속해주세요.");
 				location.href = "/signIn.do";
 			}
-		},
-		error:function(data){
-			console.log("통신중 오류가 발생하였습니다.");
 		}
 	});
 }
