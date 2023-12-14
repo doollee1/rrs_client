@@ -39,7 +39,7 @@ $(document).ready(function() {
 		if(file.size >= (1024 * 1024)) {
 			resizeImage({
 				file: file,
-				maxSize: 700
+				maxSize: 600
 			}).then(function (resizedImage) {
 				//reader.onload = function(e){
 				//	document.getElementById('output').src = URL.createObjectURL(resizedImage);
