@@ -23,6 +23,23 @@
 <script src="PalmResort/assets/plugins/spectrum-colorpicker2/dist/spectrum.min.js"></script>
 
 <script>
+(function($) {
+	$.ajaxSetup({
+		beforeSend : function(xhr) {
+			xhr.setRequestHeader("HEADER", true);
+		},
+		error : function(xhr, status, err) {
+			if (xhr.status == 999) {
+				alert("세션이 종료되어 로그인 화면으로 이동됩니다.");
+				location.href="/signIn.do";
+			} else {
+				console.log(xhr);
+				alert("예외가 발생했습니다. 관리자에게 문의하세요.");
+			}
+		}
+	});
+})(jQuery);
+
 $(document).ready(function() {
 	$("#back-button").click(function() {
 		history.back();

@@ -9,6 +9,7 @@
                 http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
                 http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.0.xsd">
 
+
     <context:component-scan base-package="com">
         <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
         <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service"/>
@@ -30,38 +31,11 @@
         <property name="paramName" value="language" />
     </bean>
 
-    <bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
-        <property name="defaultErrorView" value="cmmn/egovError"/>
-        <property name="exceptionMappings">
-            <props>
-                <prop key="org.springframework.dao.DataAccessException">cmmn/dataAccessFailure</prop>
-                <prop key="org.springframework.transaction.TransactionException">cmmn/transactionFailure</prop>
-                <prop key="egovframework.rte.fdl.cmmn.exception.EgovBizException">cmmn/egovError</prop>
-                <prop key="org.springframework.security.AccessDeniedException">cmmn/egovError</prop>
-            </props>
-        </property>
-    </bean>
 
     <!-- 로그인 체크가 필요한 URL과 로그인 여부를 체크해준다 -->
     <mvc:interceptors>
         <mvc:interceptor>
-            <mvc:mapping path="/Member_user.do"/> <!-- 사용자- 수정 페이지 -->
-            <mvc:mapping path="/noticeWrite.do"/>
-            <mvc:mapping path="/noticeIns.do"/>
-            <mvc:mapping path="/Member_sel.do"/>
-            <mvc:mapping path="/Member_upd.do"/>
-            <mvc:mapping path="/Member_newIns.do"/>
-            <mvc:mapping path="/Comm_code.do"/>
-            <mvc:mapping path="/Doollee_holi_main.do"/>
-            <mvc:mapping path="/Doollee_holi_main_app.do"/>
-            <mvc:mapping path="/Doollee_prod_main.do"/>
-            <mvc:mapping path="/Doollee_prod_main_app.do"/>
-            <mvc:mapping path="/Doollee_repair_main.do"/>
-            <mvc:mapping path="/Doollee_trans_main.do"/>
-
-
-
-            <mvc:mapping path="/reservationReq.do"/>
+            <mvc:mapping path="/*.do"/>
             <bean class="com.rrs.comm.intercepter.AuthenticInterceptor" />
         </mvc:interceptor>
     </mvc:interceptors>

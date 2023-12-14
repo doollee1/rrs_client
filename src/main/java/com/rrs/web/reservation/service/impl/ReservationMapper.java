@@ -22,5 +22,23 @@ public interface ReservationMapper {
 	// lateCheckOut 계산
 	Map<String, Object> lateCheckOutCalc(Map<String, Object> paramMap) throws Exception;
 
+	// 예약등록 상품 조회(멤버숙박)
+	Map<String, Object> getRoomProdInfo(Map<String, Object> paramMap) throws Exception;
+
+	// 예약등록 픽업 상품 조회
+	Map<String, Object> getCarProdInfo(Map<String, Object> paramMap) throws Exception;
+
+	// 예약테이블 등록
+	int insertTbReqBookingM(Map<String, Object> paramMap) throws Exception;
+
+	// 미팅센딩 테이블 등록
+	int insertTbReqPickup(Map<String, Object> paramMap) throws Exception;
+
+	// 비용 테이블 등록
+	int insertTbReqFee(Map<String, Object> paramMap) throws Exception;
+
+	// 예약첨부파일(항공권) 등록
+	int insertTbReqAddFile(Map<String, Object> paramMap) throws Exception;
+
 	Map<String, Object> imageLoad(Map<String, Object> paramMap) throws Exception;
 }

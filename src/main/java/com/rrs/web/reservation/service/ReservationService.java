@@ -7,6 +7,10 @@ public interface ReservationService {
 
 	Map<String, Object> memRoomChargeCalc(Map<String, Object> param) throws Exception;
 
+	Map<String, Object> getRoomProdInfo(Map<String, Object> param) throws Exception;
+
+	Map<String, Object> getCarProdInfo(Map<String, Object> param) throws Exception;
+
 	Map<String, Object> sendingCalc(Map<String, Object> param) throws Exception;
 
 	Map<String, Object> surchageCalc(Map<String, Object> param) throws Exception;

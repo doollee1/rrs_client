@@ -14,10 +14,5 @@
 		<a href="javascript:;" class="btn btn-icon btn-circle btn-theme btn-scroll-to-top" data-toggle="scroll-to-top"><i class="fa fa-angle-up"></i></a>
 	</div>
 	<!-- END #app -->
-
-	<!-- ================== BEGIN core-js ================== -->
-	<script src="PalmResort/assets/js/vendor.min.js"></script>
-	<script src="PalmResort/assets/js/app.min.js"></script>
-	<!-- ================== END core-js ================== -->
 </body>
 </html>
