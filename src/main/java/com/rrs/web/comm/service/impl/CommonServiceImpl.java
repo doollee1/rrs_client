@@ -56,8 +56,9 @@ public class CommonServiceImpl implements CommonService {
 	public Map<String, Object> imageUpload(MultipartFile image) {
 		Map<String, Object> rMap = new HashMap<String, Object>();
 		try {
-			String path = properties.getProperty("UPLOAD.PATH");  //업로드 기존 path
-			rMap.put("add_file_path", path);
+			String path  = properties.getProperty("UPLOAD.PATH"    );  //업로드 기존 path
+			String path2 = properties.getProperty("UPLOAD.NAS_PATH");  //업로드 기존 path(NAS)
+			rMap.put("add_file_path", path2);
 			String toDay   = EgovDateUtil.getToday();
 			String strYyyy = toDay.substring(0, 4) + "/";
 			String strMm   = toDay.substring(4, 6) + "/";
