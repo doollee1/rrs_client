@@ -35,6 +35,7 @@
           JOIN tb_bas_yy_info B
             ON A.BAS_YY     = B.BAS_YY
            AND A.BAS_YY_SEQ = B.BAS_YY_SEQ
+           AND (LEFT(B.ST_DT1, 4) = #{currentYear} OR LEFT(B.ED_DT1, 4) = #{currentYear})
           JOIN bc_comm_l      C
             ON A.HDNG_GBN   = C.CODE
      LEFT JOIN (
@@ -54,9 +55,9 @@
            AND A.BAS_YY_SEQ = D.BAS_YY_SEQ
            AND A.PROD_COND  = D.PROD_COND
            AND C.CODE_FR    = D.HDNG_GBN
-         WHERE A.BAS_YY   = ${currentYear}
-           AND A.SSN_GBN  = ${ssnGbn     }
-           AND C.HEAD_CD  = '500000'
+         WHERE 1 = 1
+           AND A.SSN_GBN         = #{ssnGbn     }
+           AND C.HEAD_CD         = '500000'
            AND A.HDNG_GBN NOT IN (
                                    SELECT DISTINCT CC.CODE_FR
                                      FROM tb_prod_info   AA
@@ -68,6 +69,7 @@
                                       AND CC.HEAD_CD    = C.HEAD_CD
                                  )
          ORDER BY A.HDNG_GBN   ASC
+                , A.BAS_YY     ASC
                 , A.PROD_COND  ASC
                 , A.BAS_YY_SEQ ASC
 	</select>

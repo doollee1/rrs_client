@@ -21,5 +21,9 @@ public interface ReservationService {
 
 	int reservationStep1_m(Map<String, Object> param) throws Exception;
 
+	int insertTbReqAddFile(Map<String, Object> param) throws Exception;
+
+	List<Map<String, Object>> reservationList(Map<String, Object> param) throws Exception;
+
 	Map<String, Object> imageLoad(Map<String, Object> param) throws Exception;
 }

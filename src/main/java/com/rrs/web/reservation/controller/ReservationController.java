@@ -33,6 +33,19 @@ public class ReservationController {
 	@Resource(name = "commonService")
 	CommonService commonService;
 
+	@RequestMapping(value = "/reservationList.do", method = RequestMethod.GET)
+	public String reservationList(Model model, @RequestParam Map<String, Object> param, HttpServletRequest req) throws Exception {
+		Map<String, Object> rMap = new HashMap<String, Object>();
+		HttpSession session = req.getSession();
+
+		param.put("user_id" , session.getAttribute("user_id" ));
+
+		// 예약 리스트
+		List<Map<String, Object>> reservationList = reservationService.reservationList(param);
+		model.addAttribute("reservationList", reservationList);
+		return "reservation/reservationList.view";
+	}
+
 	@RequestMapping(value = "/reservationReq.do", method = RequestMethod.GET)
 	public String reservationReq(Model model, @RequestParam Map<String, Object> param, HttpServletRequest req) throws Exception {
 		param.put("HEAD_CD" , "500050"); // 미팅센딩
@@ -74,14 +87,16 @@ public class ReservationController {
 		param.put("mem_gbn" , session.getAttribute("mem_gbn" ));
 		param.put("prc_sts" , "02"                            ); // 예약요청-멤버
 
-		// 이미지 업로드
-		Map<String, Object> imageMap = commonService.imageUpload(file);
-		if(imageMap != null) {
-			param.putAll(imageMap);
-		}
 		// 멤버 예약등록 step1
 		int result = reservationService.reservationStep1_m(param);
 		if(result >= 1) {
+			// 이미지 업로드
+			Map<String, Object> imageMap = commonService.imageUpload(file);
+			if(imageMap != null) {
+				param.putAll(imageMap);
+				// 예약첨부파일(항공권) 등록
+				reservationService.insertTbReqAddFile(param);
+			}
 			String msg = "멤버 예약이 등록되었습니다.";
 			commonService.telegramMsgSend(msg);
 			rMap.put("result", "SUCCESS");

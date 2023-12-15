@@ -15,6 +15,11 @@ public class ReservationServiceImpl implements ReservationService {
 		return reservationMapper.imageSave(paramMap);
 	}
 
+	// 예약 리스트
+	public List<Map<String, Object>> reservationList(Map<String, Object> paramMap) throws Exception {
+		return reservationMapper.reservationList(paramMap);
+	}
+
 	// 멤버 숙박비 계산
 	public Map<String, Object> memRoomChargeCalc(Map<String, Object> paramMap) throws Exception {
 		return reservationMapper.memRoomChargeCalc(paramMap);
@@ -48,6 +53,11 @@ public class ReservationServiceImpl implements ReservationService {
 	// lateCheckOut 계산
 	public Map<String, Object> lateCheckOutCalc(Map<String, Object> paramMap) throws Exception {
 		return reservationMapper.lateCheckOutCalc(paramMap);
+	}
+
+	// 예약첨부파일(항공권) 등록
+	public int insertTbReqAddFile(Map<String, Object> paramMap) throws Exception {
+		return reservationMapper.insertTbReqAddFile(paramMap);
 	}
 
 	// 멤버 예약등록 step1
@@ -126,14 +136,6 @@ public class ReservationServiceImpl implements ReservationService {
 
 		// 비용테이블 등록
 		insertGbn = reservationMapper.insertTbReqFee(paramMap);
-		if(insertGbn == 0) return insertGbn;
-
-		// 예약첨부파일(항공권)
-		String filePath = (String)paramMap.get("add_file_path");
-		if(filePath != null && !"".equals(filePath)) {
-			// 예약첨부파일(항공권) 등록
-			reservationMapper.insertTbReqAddFile(paramMap);
-		}
 
 		return insertGbn;
 	}

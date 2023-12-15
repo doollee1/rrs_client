@@ -340,6 +340,14 @@
         )
 	</insert>
 
+	<select id="reservationList" parameterType="hashMap" resultType="hashMap">
+        SELECT *
+          FROM tb_req_booking_m
+         WHERE USER_ID  = #{user_id}
+         ORDER BY REQ_DT DESC
+                , SEQ    DESC
+	</select>
+
 	<select id="imageLoad" parameterType="hashMap" resultType="hashMap">
         SELECT REQ_DT
              , REQ_SEQ
