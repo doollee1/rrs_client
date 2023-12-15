@@ -35,6 +35,8 @@ public class ProductController {
 		// 비수기
 		paramMap.put("ssnGbn", "2"); // 비수기
 		List<Map<String, Object>> productListTmp2 = productService.productList(paramMap);
+		
+		System.out.println(productListTmp);
 
 		// 리스트 merge
 		List<Map<String, Object>> tableList  = makeList(productListTmp );
@@ -43,6 +45,9 @@ public class ProductController {
 		// 리스트 날짜별로 그룹핑
 		List<List<Map<String, Object>>> tableLists  = listGroupBy(tableList );
 		List<List<Map<String, Object>>> tableLists2 = listGroupBy(tableList2);
+		
+		System.out.println(tableLists);
+		System.out.println(tableLists2);
 
 		mav.addObject("tableLists" , tableLists );  // 성수기
 		mav.addObject("tableLists2", tableLists2);  // 비수기
@@ -54,6 +59,7 @@ public class ProductController {
 	public List<Map<String, Object>> makeList(List<Map<String, Object>> tmpList) {
 		List<Map<String, Object>> tableList = new ArrayList<Map<String, Object>>();
 		Map<String, Object> nextData = new HashMap<String, Object>();
+		int maxSize = tmpList.size() -1;
 		for(int i=0; i<tmpList.size(); i++) {
 			String header = "";
 			String cntn   = "";
@@ -76,49 +82,66 @@ public class ProductController {
 					rowData.put("ST_DT3", data.get("ST_DT3"));
 					rowData.put("ED_DT3", data.get("ED_DT3"));
 				} else {
+					if(maxSize > i) {
+						nextData = tmpList.get(i+1);
+						if(data.get("HDNG_GBN").equals(nextData.get("HDNG_GBN")) && data.get("PROD_COND").equals(nextData.get("PROD_COND"))) {
+							i++;
+							header += "||" + Integer.toString((Integer)nextData.get("BAS_YY_SEQ"));
+							cntn = (String)nextData.get("CNTN") + (String)nextData.get("CNTN2");
+							rowData.put("CNTN3" , cntn);
+							rowData.put("ST_DT3", nextData.get("ST_DT1"));
+							rowData.put("ED_DT3", nextData.get("ED_DT1"));
+						}
+					}
+				}
+			} else {
+				if(maxSize > i) {
 					nextData = tmpList.get(i+1);
 					if(data.get("HDNG_GBN").equals(nextData.get("HDNG_GBN")) && data.get("PROD_COND").equals(nextData.get("PROD_COND"))) {
 						i++;
 						header += "||" + Integer.toString((Integer)nextData.get("BAS_YY_SEQ"));
 						cntn = (String)nextData.get("CNTN") + (String)nextData.get("CNTN2");
-						rowData.put("CNTN3" , cntn);
-						rowData.put("ST_DT3", nextData.get("ST_DT1"));
-						rowData.put("ED_DT3", nextData.get("ED_DT1"));
-					}
-				}
-			} else {
-				nextData = tmpList.get(i+1);
-				if(data.get("HDNG_GBN").equals(nextData.get("HDNG_GBN")) && data.get("PROD_COND").equals(nextData.get("PROD_COND"))) {
-					i++;
-					header += "||" + Integer.toString((Integer)nextData.get("BAS_YY_SEQ"));
-					cntn = (String)nextData.get("CNTN") + (String)nextData.get("CNTN2");
-					rowData.put("CNTN2"  , cntn);
-					rowData.put("ST_DT2", nextData.get("ST_DT1"));
-					rowData.put("ED_DT2", nextData.get("ED_DT1"));
-					if(nextData.get("ED_DT2") != null && !"".equals(nextData.get("ED_DT2"))) {
-						cntn = (String)nextData.get("CNTN") + (String)nextData.get("CNTN2");
-						rowData.put("CNTN3" , cntn);
-						rowData.put("ST_DT3", nextData.get("ST_DT2"));
-						rowData.put("ED_DT3", nextData.get("ED_DT2"));
-					} else {
-						nextData = tmpList.get(i+1);
-						if(data.get("HDNG_GBN").equals(nextData.get("HDNG_GBN")) && data.get("PROD_COND").equals(nextData.get("PROD_COND"))) {
+						rowData.put("CNTN2"  , cntn);
+						rowData.put("ST_DT2", nextData.get("ST_DT1"));
+						rowData.put("ED_DT2", nextData.get("ED_DT1"));
+						if(nextData.get("ED_DT2") != null && !"".equals(nextData.get("ED_DT2"))) {
 							cntn = (String)nextData.get("CNTN") + (String)nextData.get("CNTN2");
 							rowData.put("CNTN3" , cntn);
-							rowData.put("ST_DT3", nextData.get("ST_DT1"));
-							rowData.put("ED_DT3", nextData.get("ED_DT1"));
-							i++;
-							header += "||" + Integer.toString((Integer)nextData.get("BAS_YY_SEQ"));
+							rowData.put("ST_DT3", nextData.get("ST_DT2"));
+							rowData.put("ED_DT3", nextData.get("ED_DT2"));
+						} else {
+							if(maxSize > i) {
+								nextData = tmpList.get(i+1);
+								if(data.get("HDNG_GBN").equals(nextData.get("HDNG_GBN")) && data.get("PROD_COND").equals(nextData.get("PROD_COND"))) {
+									cntn = (String)nextData.get("CNTN") + (String)nextData.get("CNTN2");
+									rowData.put("CNTN3" , cntn);
+									rowData.put("ST_DT3", nextData.get("ST_DT1"));
+									rowData.put("ED_DT3", nextData.get("ED_DT1"));
+									i++;
+									header += "||" + Integer.toString((Integer)nextData.get("BAS_YY_SEQ"));
+								}
+							}
 						}
 					}
 				}
 			}
 			String date1 = EgovDateUtil.formatDate2((String)rowData.remove("ST_DT1")) + "~" + EgovDateUtil.formatDate2((String)rowData.remove("ED_DT1"));
-			String date2 = EgovDateUtil.formatDate2((String)rowData.remove("ST_DT2")) + "~" + EgovDateUtil.formatDate2((String)rowData.remove("ED_DT2"));
-			String date3 = EgovDateUtil.formatDate2((String)rowData.remove("ST_DT3")) + "~" + EgovDateUtil.formatDate2((String)rowData.remove("ED_DT3"));
 			rowData.put("DT1", date1);
-			rowData.put("DT2", date2);
-			rowData.put("DT3", date3);
+			if((String)rowData.get("ST_DT2") != null && !"".equals((String)rowData.get("ST_DT2"))) {
+				String date2 = EgovDateUtil.formatDate2((String)rowData.remove("ST_DT2")) + "~" + EgovDateUtil.formatDate2((String)rowData.remove("ED_DT2"));
+				rowData.put("DT2", date2);
+			} else {
+				rowData.put("DT2", rowData.get("DT1"));
+				rowData.put("CNTN2", rowData.get("CNTN1"));
+			}
+
+			if((String)rowData.get("ST_DT3") != null && !"".equals((String)rowData.get("ST_DT3"))) {
+				String date3 = EgovDateUtil.formatDate2((String)rowData.remove("ST_DT3")) + "~" + EgovDateUtil.formatDate2((String)rowData.remove("ED_DT3"));
+				rowData.put("DT3", date3);
+			} else {
+				rowData.put("DT3", rowData.get("DT2"));
+				rowData.put("CNTN3", rowData.get("CNTN2"));
+			}
 			rowData.put("HEADER", header);
 			tableList.add(rowData);
 		}
