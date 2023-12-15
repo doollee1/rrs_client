@@ -104,6 +104,9 @@ ul li {list-style:none;}
 /* display */
 .inline-flex {display:flex;align-items:center;grid-column-gap:10px;}
 
+.dim-layer {position:fixed;top:0;left:0;right:0;bottom:0;z-index:1020;width:100%;height:100%;padding:0;border:0;margin:0;outline:0;display:none;}
+.dim-layer.show {display:block;background:rgba(32,37,42,.5);animation: appSidebarMobileBackdrop .2s ease;}
+
 .table + .table {margin-top:25px;}
 /* .table.table-pk thead {position:sticky;top:60px;} */
 
@@ -118,6 +121,7 @@ ul li {list-style:none;}
 .info-resort img {width:100%;height:auto}
 .info-resort .pic-tit {font-size:1rem;margin-bottom:10px;}
 .room-list {display:flex;flex-flow:column;gap:10px}
+
 
 /* 03. Login =================================*/
 .login.login-with-news-feed .login-header .brand .logo, .register.register-with-news-feed .login-header .brand .logo {border:none;background-color:transparent;font-size:unset;}
