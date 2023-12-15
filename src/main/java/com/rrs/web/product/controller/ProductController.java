@@ -35,8 +35,6 @@ public class ProductController {
 		// 비수기
 		paramMap.put("ssnGbn", "2"); // 비수기
 		List<Map<String, Object>> productListTmp2 = productService.productList(paramMap);
-		
-		System.out.println(productListTmp);
 
 		// 리스트 merge
 		List<Map<String, Object>> tableList  = makeList(productListTmp );
@@ -45,9 +43,6 @@ public class ProductController {
 		// 리스트 날짜별로 그룹핑
 		List<List<Map<String, Object>>> tableLists  = listGroupBy(tableList );
 		List<List<Map<String, Object>>> tableLists2 = listGroupBy(tableList2);
-		
-		System.out.println(tableLists);
-		System.out.println(tableLists2);
 
 		mav.addObject("tableLists" , tableLists );  // 성수기
 		mav.addObject("tableLists2", tableLists2);  // 비수기
@@ -65,15 +60,13 @@ public class ProductController {
 			Map<String, Object> newData = new HashMap<String, Object>();
 			int dtNum1 = 1;
 			int dtNum2 = 1;
-			do {
+			while(true) {
 				String stDt = (String)data.get("ST_DT" + dtNum2);
 				while(stDt != null && !"".equals(stDt)) {
 					if(dtNum1 == 4) {
 						newData.put("TITLE" , data.get("TITLE"));
-						Map<String, Object> newData2 = new HashMap<String, Object>();
-						newData2.putAll(newData);
-						tableList.add(newData2);
-						newData.clear();
+						tableList.add(newData);
+						newData = new HashMap<String, Object>();
 						dtNum1 = 1;
 					}
 					String dt   = EgovDateUtil.formatDate2((String)data.get("ST_DT" + dtNum2)) + "~" + EgovDateUtil.formatDate2((String)data.get("ED_DT" + dtNum2));
@@ -96,7 +89,7 @@ public class ProductController {
 				newData.put("TITLE" , data.get("TITLE"));
 				tableList.add(newData);
 				break;
-			} while(true);
+			}
 		}
 		return tableList;
 	}
