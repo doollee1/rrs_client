@@ -95,7 +95,7 @@ ul li {list-style:none;}
 	.app-content .app-content-padding {padding:20px 20px 60px}
 	/* .app-content-full-height .app-content {min-height:calc(100vh - 120px);} */
 	}
-.app-content-padding.info-resort {padding:20px 0}
+.app-content-padding.info-resort {padding:20px 0 0}
 .app-content-padding.info-resort .nav.nav-tabs{padding-left:.9375rem}
 	
 .app-sidebar-content {overflow-x:hidden !important;}
