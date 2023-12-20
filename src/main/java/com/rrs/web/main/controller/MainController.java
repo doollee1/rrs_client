@@ -26,4 +26,9 @@ public class MainController {
 	public String main() throws Exception {
 		return "main.index";
 	}
+	
+	@RequestMapping(value = {"/resortInfo.do"}, method = {RequestMethod.GET})
+	public String resortInfo() throws Exception {
+		return "resort/resortInfo.view1";
+	}
 }

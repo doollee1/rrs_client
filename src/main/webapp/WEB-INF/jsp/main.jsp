@@ -12,7 +12,7 @@
 	<%//로그인 전 화면 : index.html %>
 	<c:if test="${sessionScope.login == null}">
 		<ul class="btn-wrap list-unstyled">
-			<li><a href="javascript:;" class="btn btn-white btn-lg d-block">리조트&골프장</a></li>
+			<li><a href="/resortInfo.do" class="btn btn-white btn-lg d-block">리조트&골프장</a></li>
 			<li><a href="/productInfo.do" class="btn btn-white btn-lg d-block">상품소개</a></li>
 			<li><a href="/signIn.do" class="btn btn-white btn-lg d-block">로그인</a></li>
 		</ul>
