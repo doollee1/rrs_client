@@ -36,11 +36,11 @@
              , A.REF_CHR1 AS SENDING_GBN /* 미팅센딩구분 */
              , B.BAS_YY
              , B.PROD_SEQ
-             , CEILING(#{per_num} / CASE WHEN A.REF_CHR3 IS NULL OR A.REF_CHR3 = '' OR A.REF_CHR3 = '0' THEN 1 ELSE A.REF_CHR3 END) AS CAR_NUM /* 차량대수 */
+             , IFNULL(CEILING(#{per_num} / REF_CHR3) , 1) AS CAR_NUM /* 차량대수 */
              , B.COM_AMT /* 일반금액 */
           FROM bc_comm_l    A
           JOIN tb_prod_info B /* 상품정보 테이블 */
-            ON A.HEAD_CD  = '500050' /* 미팅센딩 */
+            ON A.HEAD_CD  = '500210' /* 미팅센딩 */
            AND A.CODE     = #{pick_gbn}
            AND A.REF_CHR1 = B.HDNG_GBN
            AND A.REF_CHR2 = B.PROD_COND
@@ -108,25 +108,25 @@
                )
 	</select>
 
-	<insert id="imageSave" parameterType="hashMap">
-        INSERT INTO tb_req_add_file
-        (
-           REQ_DT
-         , REQ_SEQ
-         , ADD_FILE_SEQ
-         , ADD_FILE_NM
-         , ADD_FILE_PATH
-         , ADD_FILE
-        ) VALUES
-        (
-           '20231129'
-         , 1
-         , 1
-         , #{fileNm}
-         , #{filePath}
-         , #{image}
-        )
-	</insert>
+	<select id="getPrcSts" parameterType="hashMap" resultType="String">
+        SELECT A.PRC_STS /* 예약상태 */
+          FROM tb_req_booking_m A
+         WHERE REQ_DT = #{req_dt}
+           AND SEQ    = #{seq   }
+	</select>
+
+	<update id="reservationCancel" parameterType="hashMap">
+        UPDATE tb_req_booking_m 
+           SET PRC_STS = CASE WHEN #{prc_sts} = '06' /* 예약확정 */
+                              THEN '08' /* 환불요청 */
+                              ELSE '07' /* 예약취소 */
+                          END
+             , UPD_DTM = NOW()
+             , UPD_ID  = #{user_id       }
+         WHERE REQ_DT  = #{req_dt        }
+           AND SEQ     = #{seq           }
+           AND USER_ID = #{user_id       }
+	</update>
 
 	<insert id="insertTbReqBookingM" parameterType="hashMap">
 		<selectKey resultType="string" keyProperty="booking_seq" order="BEFORE">
@@ -201,11 +201,11 @@
          , CASE WHEN '01' = #{mem_gbn       }
                 THEN #{r_person      } + #{nr_person     }
                 ELSE #{r_person      }
-            END
+            END /* 멤버 라운딩인원 = 멤버 + 비멤버 */
          , CASE WHEN '01' = #{mem_gbn       }
                 THEN 0
                 ELSE #{n_person      }
-            END
+            END /* 멤버일때 노라운딩 0 */
          , CASE WHEN '01' = #{mem_gbn       }
                 THEN #{nr_person     }
                 ELSE 0
@@ -245,6 +245,70 @@
          , #{user_id       }
         )
 	</insert>
+	
+	<update id="updateTbReqBookingM" parameterType="hashMap">
+        UPDATE tb_req_booking_m 
+           SET CHK_IN_DT  = #{chk_in_dt }
+             , CHK_OUT_DT = #{chk_out_dt}
+             , ROOM_TYPE  = #{room_type }
+             , FLIGHT_IN  = #{flight_in }
+             , FLIGHT_OUT = #{flight_out}
+             , TOT_PERSON = #{tot_person}
+             , R_PERSON   = CASE WHEN '01' = #{mem_gbn       }
+                                 THEN #{r_person      } + #{nr_person     }
+                                 ELSE #{r_person      }
+                             END /* 멤버 라운딩인원 = 멤버 + 비멤버 */
+             , N_PERSON   = CASE WHEN '01' = #{mem_gbn       }
+                                 THEN 0
+                                 ELSE #{n_person      }
+                             END /* 멤버일때 노라운딩 0 */
+             , NR_PERSON  = CASE WHEN '01' = #{mem_gbn       }
+                                 THEN #{nr_person     }
+                                 ELSE 0
+                            END
+             , K_PERSON    = #{k_person      }
+             , BAS_YY      = #{res_bas_yy    }
+             , BAS_YY_SEQ  = #{res_bas_yy_seq}
+             , PROD_SEQ    = #{res_prod_seq  }
+             , PICK_GBN    = #{pick_gbn      }
+             , ADD_R_S_PER = #{add_r_s_per   }
+             , ADD_R_S_DAY = #{add_r_s_day   }
+             , ADD_R_S_CNT = IF( FLOOR(${add_r_s_per   } / 2) = 0, 1, FLOOR(${add_r_s_per   } / 2) )
+             , ADD_R_P_PER = #{add_r_p_per   }
+             , ADD_R_P_DAY = #{add_r_p_day   }
+             , ADD_R_P_CNT = IF( FLOOR(${add_r_p_per   } / 2) = 0, 1, FLOOR(${add_r_p_per   } / 2) )
+             , CNT_D1      = CASE WHEN #{room_type      } = '01'
+                                  THEN IF( FLOOR(${tot_person    } / 2) = 0, 1, FLOOR(${tot_person    } / 2) )
+                                  ELSE 0
+                              END
+             , CNT_D2      = CASE WHEN #{room_type      } = '02'
+                                  THEN IF( FLOOR(${tot_person    } / 2) = 0, 1, FLOOR(${tot_person    } / 2) )
+                                  ELSE 0
+                              END
+             , LATE_CHECK_OUT = #{late_check_out}
+             , REMARK         = #{remark        }
+             , UPD_DTM        = NOW()
+             , UPD_ID         = #{user_id       }
+         WHERE REQ_DT  = #{req_dt        }
+           AND SEQ     = #{seq           }
+           AND USER_ID = #{user_id       }
+	</update>
+
+	<update id="updateTbReqFee" parameterType="hashMap">
+        UPDATE tb_req_fee 
+           SET TOT_AMT = ${tot_amt}
+             , UPD_DTM = NOW()
+             , UPD_ID  = #{user_id}
+         WHERE REQ_DT  = #{req_dt }
+           AND REQ_SEQ = #{seq    }
+	</update>
+
+	<delete id="deleteTbReqPickup" parameterType="hashMap">
+        DELETE
+          FROM tb_req_pickup
+         WHERE REQ_DT   = #{req_dt      }
+           AND REQ_SEQ  = #{seq         }
+	</delete>
 
 	<insert id="insertTbReqPickup" parameterType="hashMap">
         INSERT INTO tb_req_pickup
@@ -341,22 +405,56 @@
 	</insert>
 
 	<select id="reservationList" parameterType="hashMap" resultType="hashMap">
-        SELECT *
-          FROM tb_req_booking_m
-         WHERE USER_ID  = #{user_id}
-         ORDER BY REQ_DT DESC
-                , SEQ    DESC
+        SELECT A.REQ_DT
+             , A.SEQ
+             , A.PRC_STS
+             , (SELECT CODE_NM FROM bc_comm_l WHERE HEAD_CD = '500020' AND CODE = A.PRC_STS) AS PRC_STS_NM
+          FROM tb_req_booking_m A
+         WHERE A.USER_ID  = #{user_id}
+         ORDER BY A.REQ_DT DESC
+                , A.SEQ    DESC
 	</select>
 
-	<select id="imageLoad" parameterType="hashMap" resultType="hashMap">
-        SELECT REQ_DT
-             , REQ_SEQ
-             , ADD_FILE_SEQ
-             , ADD_FILE_NM
-             , ADD_FILE_PATH
-             , ADD_FILE
-          FROM tb_req_add_file   A
-         WHERE REQ_DT  = '20231129'
-           AND REQ_SEQ = '1'
+	<select id="reservationDetail" parameterType="hashMap" resultType="hashMap">
+        SELECT A.REQ_DT
+             , A.SEQ
+             , A.REQ_HAN_NM
+             , A.REQ_ENG_NM
+             , A.MEM_GBN
+             , A.PRC_STS
+             , DATE_FORMAT(A.CHK_IN_DT , '%Y-%m-%d') AS CHK_IN_DT
+             , DATE_FORMAT(A.CHK_OUT_DT, '%Y-%m-%d') AS CHK_OUT_DT
+             , A.ROOM_TYPE
+             , A.FLIGHT_IN
+             , A.FLIGHT_OUT
+             , A.TOT_PERSON
+             , IFNULL(A.R_PERSON , 0) AS R_PERSON
+             , IFNULL(A.N_PERSON , 0) AS N_PERSON
+             , IFNULL(A.NR_PERSON, 0) AS NR_PERSON
+             , IFNULL(A.K_PERSON , 0) AS K_PERSON
+             , A.ADD_R_S_PER
+             , A.ADD_R_S_DAY
+             , A.ADD_R_P_PER
+             , A.ADD_R_P_DAY
+             , A.LATE_CHECK_OUT
+             , A.REMARK
+             , ( SELECT ADD_FILE_REAL_NM
+                   FROM tb_req_add_file
+                  WHERE REQ_DT  = A.REQ_DT
+                   AND REQ_SEQ  = A.SEQ
+                   AND (SELECT MAX(ADD_FILE_SEQ) FROM tb_req_add_file WHERE REQ_DT = A.REQ_DT AND REQ_SEQ = A.SEQ)
+               ) AS FLIGTH_IMAGE
+             , A.PICK_GBN
+             , ( SELECT SUM(PER_NUM) FROM tb_req_pickup WHERE REQ_DT = A.REQ_DT AND REQ_SEQ = A.SEQ ) AS PER_NUM
+             , IFNULL(C.TOT_AMT, 0) AS CAL_AMT
+             , IFNULL(C.DEP_AMT, 0) AS DEP_AMT
+             , IFNULL(C.BAL_AMT, 0) AS BAL_AMT
+          FROM tb_req_booking_m A
+     LEFT JOIN tb_req_fee       C
+            ON A.REQ_DT   = C.REQ_DT
+           AND A.SEQ      = C.REQ_SEQ
+         WHERE A.REQ_DT   = #{req_dt }
+           AND A.SEQ      = #{seq    }
+           AND A.USER_ID  = #{user_id}
 	</select>
 </mapper>

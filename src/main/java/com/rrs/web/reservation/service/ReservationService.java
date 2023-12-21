@@ -3,7 +3,7 @@ package com.rrs.web.reservation.service;
 import java.util.*;
 
 public interface ReservationService {
-	int imageSave(Map<String, Object> param) throws Exception;
+	String getPrcSts (Map<String, Object> param) throws Exception;
 
 	Map<String, Object> memRoomChargeCalc(Map<String, Object> param) throws Exception;
 
@@ -19,11 +19,16 @@ public interface ReservationService {
 
 	Map<String, Object> lateCheckOutCalc(Map<String, Object> param) throws Exception;
 
-	int reservationStep1_m(Map<String, Object> param) throws Exception;
+	int reservationInsert_m(Map<String, Object> param) throws Exception;
+
+	int reservationUpdate_m(Map<String, Object> param) throws Exception;
+
+	int reservationCancel(Map<String, Object> param) throws Exception;
 
 	int insertTbReqAddFile(Map<String, Object> param) throws Exception;
 
 	List<Map<String, Object>> reservationList(Map<String, Object> param) throws Exception;
 
-	Map<String, Object> imageLoad(Map<String, Object> param) throws Exception;
+	Map<String, Object> reservationDetail(Map<String, Object> param) throws Exception;
+
 }

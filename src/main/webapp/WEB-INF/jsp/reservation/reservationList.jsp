@@ -7,7 +7,26 @@
 <script>
 $(document).ready(function() {
 	setTitle("예약현황");
+	setEvent();
 });
+
+function setEvent() {
+	$(".reserve-list > li").on("click", function() {
+		var form = document.createElement("form");
+		var data = $(this).data();
+		for(key in data) {
+			var inputData = document.createElement("input");
+			inputData.setAttribute("type" , "hidden" );
+			inputData.setAttribute("name" , key      );
+			inputData.setAttribute("value", data[key]);
+			form.appendChild(inputData);
+		}
+		form.setAttribute("method", "POST");
+		form.setAttribute("action", "reservationDetail.do");
+		document.body.appendChild(form);
+		form.submit();
+	});
+}
 </script>
 
 <div id="content" class="app-content d-flex flex-column p-0">
@@ -19,10 +38,10 @@ $(document).ready(function() {
 				<ul class="reserve-list">
 					<c:forEach items="${reservationList}" var = "list">
 						<fmt:parseDate var="reqDate" pattern="yyyyMMdd" value="${list.REQ_DT}"/>
-						<li class="active">
-							<a href="">
+						<li class="active" data-req_dt="${list.REQ_DT}" data-seq=${list.SEQ}>
+							<a href="javascript:;">
 								<span class="date"><fmt:formatDate value="${reqDate}" pattern="yyyy-MM-dd"/></span>
-								<span>예약요청</span>
+								<span>${list.PRC_STS_NM }</span>
 								<span><i class="fa fa-angle-right fa-lg"></i></span>
 							</a>
 						</li>

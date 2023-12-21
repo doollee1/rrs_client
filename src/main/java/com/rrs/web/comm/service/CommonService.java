@@ -9,5 +9,5 @@ public interface CommonService {
 
 	void telegramMsgSend(String msg);
 
-	Map<String, Object> imageUpload(MultipartFile image) throws Exception;
+	Map<String, Object> imageUpload(MultipartFile image);
 }

@@ -8,6 +8,7 @@
 	<tiles:insertAttribute name="header"/>
 </head>
 <body>
+	<div class="dim-layer"></div>
 	<!-- BEGIN #app -->
 	<div id="app" class="app app-header-fixed app-sidebar-fixed app-content-full-height">
 		<!-- BEGIN #header -->

@@ -29,6 +29,7 @@
 			xhr.setRequestHeader("HEADER", true);
 		},
 		error : function(xhr, status, err) {
+			dimClose();
 			if (xhr.status == 999) {
 				alert("세션이 종료되어 로그인 화면으로 이동됩니다.");
 				location.href="/signIn.do";
@@ -46,6 +47,17 @@ $(document).ready(function() {
 	});
 });
 
+function dimClose() {
+	if($(".dim-layer").length >= 1 && $(".dim-layer").hasClass("show")) {
+		$(".dim-layer").removeClass("show");
+	}
+}
+
+function dimOpen() {
+	if($(".dim-layer").length >= 1) {
+		$(".dim-layer").addClass("show");
+	}
+}
 function setTitle(title) {
 	$("#app > #header > .navbar-header > h1").html(title);
 }
