@@ -31,6 +31,7 @@
         SELECT A.BAS_YY /* 기준년도 */
              , A.BAS_YY_SEQ /* 기간년도순번 */
              , A.PROD_SEQ /* 상품순번 */
+             , A.COM_AMT * DATEDIFF(CAST(#{chk_out_dt} AS DATE), CAST(#{chk_in_dt} AS DATE)) * #{tot_person} AS PACKAGE_AMT /* 패키지가격 */
           FROM tb_prod_info   A /* 상품정보 테이블 */
           JOIN tb_bas_yy_info B /* 년도별 기간 관리테이블 */
             ON A.HDNG_GBN   = #{package_} /* 항목구분 */
@@ -51,20 +52,20 @@
 	</select>
 
 	<select id="getCarProdInfo" parameterType="hashMap" resultType="hashMap">
-        SELECT B.COM_AMT * #{per_num} AS SENDING_AMT /* 미팅센딩 총 가격 */
+        SELECT B.COM_AMT * #{per_num} AS SENDING_AMT /* 미팅샌딩 총 가격 */
              , ( SELECT COUNT(*)
                    FROM bc_comm_l AA
                   WHERE HEAD_CD = '500160' /* 야간할증항공편 */
                     AND CODE IN (#{flight_in}, #{flight_out})
                ) AS SURCHARGE_CNT /* 야간할증 갯수 */
-             , A.REF_CHR1 AS SENDING_GBN /* 미팅센딩구분 */
+             , A.REF_CHR1 AS SENDING_GBN /* 미팅샌딩구분 */
              , B.BAS_YY
              , B.PROD_SEQ
              , IFNULL(CEILING(#{per_num} / REF_CHR3) , 1) AS CAR_NUM /* 차량대수 */
              , B.COM_AMT /* 일반금액 */
           FROM bc_comm_l    A
           JOIN tb_prod_info B /* 상품정보 테이블 */
-            ON A.HEAD_CD  = '500210' /* 미팅센딩 */
+            ON A.HEAD_CD  = '500210' /* 미팅샌딩 */
            AND A.CODE     = #{pick_gbn}
            AND A.REF_CHR1 = B.HDNG_GBN
            AND A.REF_CHR2 = B.PROD_COND
@@ -153,8 +154,9 @@
 	</update>
 
 	<insert id="insertTbReqBookingM" parameterType="hashMap">
-		<selectKey resultType="string" keyProperty="booking_seq" order="BEFORE">
-            SELECT IFNULL(MAX(SEQ) + 1 ,1) 
+		<selectKey resultType="hashMap" keyProperty="seq,req_dt" order="BEFORE">
+            SELECT IFNULL(MAX(SEQ) + 1 ,1)  AS seq
+                 , #{today}                 AS req_dt
               FROM tb_req_booking_m /* 예약 테이블 */
              WHERE REQ_DT = #{today}
 		</selectKey>
@@ -207,8 +209,8 @@
          , UPD_ID          /* 수정자ID */
         ) VALUES
         (
-           #{today         }
-         , #{booking_seq   }
+           #{req_dt        }
+         , #{seq           }
          , #{user_id       }
          , #{han_name      }
          , #{eng_name      }
@@ -278,7 +280,8 @@
 	
 	<update id="updateTbReqBookingM" parameterType="hashMap">
         UPDATE tb_req_booking_m 
-           SET CHK_IN_DT  = #{chk_in_dt }
+           SET PRC_STS    = IFNULL(#{prc_sts   }, PRC_STS)
+             , CHK_IN_DT  = #{chk_in_dt }
              , CHK_OUT_DT = #{chk_out_dt}
              , ROOM_TYPE  = #{room_type }
              , FLIGHT_IN  = #{flight_in }
@@ -362,8 +365,8 @@
          , UPD_ID   /* 수정자ID */
         ) VALUES
         (
-           #{today         }
-         , #{booking_seq   }
+           #{req_dt        }
+         , #{seq           }
          , #{car_prod_seq  }
          , #{per_num       }
          , #{car_num       }
@@ -393,8 +396,8 @@
          , UPD_ID    /* 수정자ID */
         ) VALUES
         (
-           #{today      }
-         , #{booking_seq}
+           #{req_dt     }
+         , #{seq        }
          , ''
          , 0
          , 0
@@ -412,8 +415,8 @@
 		<selectKey resultType="string" keyProperty="file_seq" order="BEFORE">
             SELECT IFNULL(MAX(ADD_FILE_SEQ) + 1 ,1) 
               FROM tb_req_add_file /* 예약첨부파일(항공권) */
-             WHERE REQ_DT   = #{today      }
-               AND REQ_SEQ  = #{booking_seq}
+             WHERE REQ_DT   = #{req_dt     }
+               AND REQ_SEQ  = #{seq        }
 		</selectKey>	
         INSERT INTO tb_req_add_file /* 예약첨부파일(항공권) */
         (
@@ -428,8 +431,8 @@
          , REG_ID    /* 등록자ID */
         ) VALUES
         (
-           #{today           }
-         , #{booking_seq     }
+           #{req_dt          }
+         , #{seq             }
          , #{file_seq        }
          , #{add_file_nm     }
          , #{add_file_real_nm}
@@ -481,7 +484,7 @@
                     AND (SELECT MAX(ADD_FILE_SEQ) FROM tb_req_add_file WHERE REQ_DT = A.REQ_DT AND REQ_SEQ = A.SEQ)
                ) AS FLIGTH_IMAGE
              , A.PICK_GBN
-             , ( SELECT SUM(PER_NUM) FROM tb_req_pickup WHERE REQ_DT = A.REQ_DT AND REQ_SEQ = A.SEQ ) AS PER_NUM
+             , ( SELECT IFNULL(SUM(PER_NUM), 0) FROM tb_req_pickup WHERE REQ_DT = A.REQ_DT AND REQ_SEQ = A.SEQ ) AS PER_NUM
              , IFNULL(C.TOT_AMT, 0) AS CAL_AMT
              , IFNULL(C.DEP_AMT, 0) AS DEP_AMT
              , IFNULL(C.BAL_AMT, 0) AS BAL_AMT

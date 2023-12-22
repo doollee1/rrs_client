@@ -36,12 +36,17 @@ public class ReservationServiceImpl implements ReservationService {
 		return reservationMapper.getRoomProdInfo(paramMap);
 	}
 
-	// 미팅센딩 상품 조회(멤버숙박)
+	// 일반 패키지 상품 조회
+	public Map<String, Object> getPackageInfo(Map<String, Object> paramMap) throws Exception {
+		return reservationMapper.getPackageInfo(paramMap);
+	}
+
+	// 미팅샌딩 상품 조회(멤버숙박)
 	public Map<String, Object> getCarProdInfo(Map<String, Object> paramMap) throws Exception {
 		return reservationMapper.getCarProdInfo(paramMap);
 	}
 
-	// 미팅센딩 계산
+	// 미팅샌딩 계산
 	public Map<String, Object> sendingCalc(Map<String, Object> paramMap) throws Exception {
 		return reservationMapper.sendingCalc(paramMap);
 	}
@@ -66,40 +71,57 @@ public class ReservationServiceImpl implements ReservationService {
 		return reservationMapper.insertTbReqAddFile(paramMap);
 	}
 
-	// 멤버 예약등록
-	public int reservationInsert_m(Map<String, Object> paramMap) throws Exception {
+	// 멤버 예약요청, 일반 예약신청
+	public int reservationInsert(Map<String, Object> paramMap) throws Exception {
 		long totalAmt        = 0;  // 총액
 		long roomCharge      = 0;  // 숙박비
-		long sendingAmt      = 0;  // 미팅센딩비
+		long packageAmt      = 0;  // 패키지가격
+		long sendingAmt      = 0;  // 미팅샌딩비
 		long surchageAmt     = 0;  // 야간할증비
 		long roomupAmt       = 0;  // room업그레이드 가격
 		long lateCheckOutAmt = 0;  // lateCheckOut 가격
 		int insertGbn = 0;
 
-		paramMap.put("hdng_gbn", "28"); //숙박(멤버)
-		// 예약등록 상품 조회(멤버숙박)
-		Map<String, Object> prodMap = reservationMapper.getRoomProdInfo(paramMap);
-		if(prodMap == null || prodMap.size() == 0) {
-			return insertGbn;
+		// 회원구분 01 멤버 / 02 일반 / 03 교민 / 04 에이전시 
+		String memGbn  = (String)paramMap.get("mem_gbn");
+
+		if("01".equals(memGbn)) {
+			paramMap.put("hdng_gbn", "28"); //숙박(멤버)
+			// 예약등록 상품 조회(멤버숙박)
+			Map<String, Object> prodMap = reservationMapper.getRoomProdInfo(paramMap);
+			if(prodMap == null || prodMap.size() == 0) {
+				return insertGbn;
+			}
+			// 숙박비
+			roomCharge = (long)Double.parseDouble(String.valueOf(prodMap.get("MEM_ROOM_CHARGE")));
+
+			paramMap.put("res_bas_yy"    , prodMap.get("BAS_YY"    ));
+			paramMap.put("res_bas_yy_seq", prodMap.get("BAS_YY_SEQ"));
+			paramMap.put("res_prod_seq"  , prodMap.get("PROD_SEQ"  ));
+			// 예약 테이블 등록
+			insertGbn = reservationMapper.insertTbReqBookingM(paramMap);
+
+			if(insertGbn == 0) return insertGbn;
+		} else {
+			// 패키지 상품 정보 조회
+			Map<String, Object> packageMap = reservationMapper.getPackageInfo(paramMap);
+			if(packageMap == null || packageMap.size() == 0) {
+				return insertGbn;
+			}
+			packageAmt = (long)Double.parseDouble(String.valueOf(packageMap.get("PACKAGE_AMT")));
+
+			// 예약 테이블 수정
+			insertGbn = reservationMapper.updateTbReqBookingM(paramMap);
+			if(insertGbn == 0) return insertGbn;
 		}
-		// 숙박비
-		roomCharge = (long)Double.parseDouble(String.valueOf(prodMap.get("MEM_ROOM_CHARGE")));
 
-		paramMap.put("res_bas_yy"    , prodMap.get("BAS_YY"    ));
-		paramMap.put("res_bas_yy_seq", prodMap.get("BAS_YY_SEQ"));
-		paramMap.put("res_prod_seq"  , prodMap.get("PROD_SEQ"  ));
-		// 예약 테이블 등록
-		insertGbn = reservationMapper.insertTbReqBookingM(paramMap);
-
-		if(insertGbn == 0) return insertGbn;
-
-		// 미팅센딩 상품 조회
-		String pickGbn   = (String)paramMap.get("pick_gbn");  // 미팅센딩 구분값 (01 미신청)
+		// 미팅샌딩 상품 조회
+		String pickGbn   = (String)paramMap.get("pick_gbn");  // 미팅샌딩 구분값 (01 미신청)
 		// 미신청 아닐때만
 		if(!"01".equals(pickGbn)) {
 			Map<String, Object> pickupMap = reservationMapper.getCarProdInfo(paramMap);
 			if(pickupMap != null) {
-				// 미팅센딩 total 가격
+				// 미팅샌딩 total 가격
 				sendingAmt = (long)Double.parseDouble(String.valueOf(pickupMap.get("SENDING_AMT")));
 
 				// 야간할증비행기 횟수
@@ -112,7 +134,7 @@ public class ReservationServiceImpl implements ReservationService {
 					}
 				}
 
-				// 미팅센딩 테이블 등록
+				// 미팅샌딩 테이블 등록
 				paramMap.put("car_num"     , pickupMap.get("CAR_NUM" ));
 				paramMap.put("use_amt"     , pickupMap.get("COM_AMT" ));
 				paramMap.put("car_prod_seq", pickupMap.get("PROD_SEQ"));
@@ -137,7 +159,7 @@ public class ReservationServiceImpl implements ReservationService {
 		}
 
 		// 총비용
-		totalAmt = roomCharge + sendingAmt + surchageAmt + roomupAmt + lateCheckOutAmt;
+		totalAmt = roomCharge + packageAmt + sendingAmt + surchageAmt + roomupAmt + lateCheckOutAmt;
 		paramMap.put("tot_amt", totalAmt);
 
 		// 비용테이블 등록
@@ -176,46 +198,63 @@ public class ReservationServiceImpl implements ReservationService {
 		return insertGbn;
 	}
 
-	// 멤버 예약수정
+	// 멤버 예약요청 수정, 일반 예약신청 수정
 	public int reservationUpdate_m(Map<String, Object> paramMap) throws Exception {
 		long totalAmt        = 0;  // 총액
 		long roomCharge      = 0;  // 숙박비
-		long sendingAmt      = 0;  // 미팅센딩비
+		long packageAmt      = 0;  // 패키지
+		long sendingAmt      = 0;  // 미팅샌딩비
 		long surchageAmt     = 0;  // 야간할증비
 		long roomupAmt       = 0;  // room업그레이드 가격
 		long lateCheckOutAmt = 0;  // lateCheckOut 가격
 		int updateGbn = 0;
 
-		paramMap.put("booking_seq", paramMap.get("seq"   ));
-		paramMap.put("today"      , paramMap.get("req_dt"));
-		paramMap.put("hdng_gbn"   , "28"               ); //숙박(멤버)
-		// 예약등록 상품 조회(멤버숙박)
-		Map<String, Object> prodMap = reservationMapper.getRoomProdInfo(paramMap);
-		if(prodMap == null || prodMap.size() == 0) {
-			return updateGbn;
-		}
-		// 숙박비
-		roomCharge = (long)Double.parseDouble(String.valueOf(prodMap.get("MEM_ROOM_CHARGE")));
+		// 회원구분 01 멤버 / 02 일반 / 03 교민 / 04 에이전시 
+		String memGbn  = (String)paramMap.get("mem_gbn");
+		if("01".equals(memGbn)) {  // 멤버
+			paramMap.put("hdng_gbn"   , "28"               ); //숙박(멤버)
+			// 예약등록 상품 조회(멤버숙박)
+			Map<String, Object> prodMap = reservationMapper.getRoomProdInfo(paramMap);
+			if(prodMap == null || prodMap.size() == 0) {
+				return updateGbn;
+			}
+			// 숙박비
+			roomCharge = (long)Double.parseDouble(String.valueOf(prodMap.get("MEM_ROOM_CHARGE")));
+			
+			paramMap.put("res_bas_yy"    , prodMap.get("BAS_YY"    ));
+			paramMap.put("res_bas_yy_seq", prodMap.get("BAS_YY_SEQ"));
+			paramMap.put("res_prod_seq"  , prodMap.get("PROD_SEQ"  ));
+			// 예약 테이블 수정
+		} else { // 일반
+			// 패키지 상품 정보 조회
+			Map<String, Object> packageMap = reservationMapper.getPackageInfo(paramMap);
+			if(packageMap == null || packageMap.size() == 0) {
+				return updateGbn;
+			}
 
-		paramMap.put("res_bas_yy"    , prodMap.get("BAS_YY"    ));
-		paramMap.put("res_bas_yy_seq", prodMap.get("BAS_YY_SEQ"));
-		paramMap.put("res_prod_seq"  , prodMap.get("PROD_SEQ"  ));
-		// 예약 테이블 수정
+			// 패키지비용
+			packageAmt = (long)Double.parseDouble(String.valueOf(packageMap.get("PACKAGE_AMT")));
+
+			paramMap.put("res_bas_yy"    , packageMap.get("BAS_YY"    ));
+			paramMap.put("res_bas_yy_seq", packageMap.get("BAS_YY_SEQ"));
+			paramMap.put("res_prod_seq"  , packageMap.get("PROD_SEQ"  ));
+		}
+
 		updateGbn = reservationMapper.updateTbReqBookingM(paramMap);
 
 		if(updateGbn == 0) return updateGbn;
 
-		// 미팅센딩 상품 조회
-		String pickGbn    = (String)paramMap.get("pick_gbn"    );  // 미팅센딩 구분값 (01 미신청)
+		// 미팅샌딩 상품 조회
+		String pickGbn    = (String)paramMap.get("pick_gbn"    );  // 미팅샌딩 구분값 (01 미신청)
 
 		// 이전 미팅샌딩 데이터 존재시 삭제
 		reservationMapper.deleteTbReqPickup(paramMap);
 
-		// 미팅센딩 미신청 아닐 때
+		// 미팅샌딩 미신청 아닐 때
 		if(!"01".equals(pickGbn)) {
 			Map<String, Object> pickupMap = reservationMapper.getCarProdInfo(paramMap);
 			if(pickupMap != null) {
-				// 미팅센딩 total 가격
+				// 미팅샌딩 total 가격
 				sendingAmt = (long)Double.parseDouble(String.valueOf(pickupMap.get("SENDING_AMT")));
 				
 				// 야간할증비행기 횟수
@@ -228,7 +267,7 @@ public class ReservationServiceImpl implements ReservationService {
 					}
 				}
 
-				// 미팅센딩 테이블 등록
+				// 미팅샌딩 테이블 등록
 				paramMap.put("car_num"     , pickupMap.get("CAR_NUM" ));
 				paramMap.put("use_amt"     , pickupMap.get("COM_AMT" ));
 				paramMap.put("car_prod_seq", pickupMap.get("PROD_SEQ"));
@@ -252,11 +291,17 @@ public class ReservationServiceImpl implements ReservationService {
 			}
 		}
 
+		System.out.println(roomCharge);
+		System.out.println(packageAmt);
+		System.out.println(sendingAmt);
+		System.out.println(surchageAmt);
+		System.out.println(roomupAmt);
+		System.out.println(lateCheckOutAmt);
 		// 총비용
-		totalAmt = roomCharge + sendingAmt + surchageAmt + roomupAmt + lateCheckOutAmt;
+		totalAmt = roomCharge + packageAmt + sendingAmt + surchageAmt + roomupAmt + lateCheckOutAmt;
 		paramMap.put("tot_amt", totalAmt);
-		
-		// 비용테이블 등록
+
+		// 비용테이블 업데이트
 		updateGbn = reservationMapper.updateTbReqFee(paramMap);
 		if(updateGbn == 0) return updateGbn;
 
@@ -276,9 +321,6 @@ public class ReservationServiceImpl implements ReservationService {
 	// 일반 예약수정
 	public int reservationUpdate(Map<String, Object> paramMap) throws Exception {
 		int updateGbn = 0;
-
-		paramMap.put("booking_seq", paramMap.get("seq"     ));
-		paramMap.put("today"      , paramMap.get("req_dt"  ));
 
 		// 패키지 상품 정보 조회
 		Map<String, Object> packageMap = reservationMapper.getPackageInfo(paramMap);

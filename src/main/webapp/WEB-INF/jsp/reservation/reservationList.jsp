@@ -36,16 +36,23 @@ function setEvent() {
 		<div class="panel panel-inverse">
 			<div class="panel-body">
 				<ul class="reserve-list">
-					<c:forEach items="${reservationList}" var = "list">
-						<fmt:parseDate var="reqDate" pattern="yyyyMMdd" value="${list.REQ_DT}"/>
-						<li class="active" data-req_dt="${list.REQ_DT}" data-seq=${list.SEQ}>
-							<a href="javascript:;">
-								<span class="date"><fmt:formatDate value="${reqDate}" pattern="yyyy-MM-dd"/></span>
-								<span>${list.PRC_STS_NM }</span>
-								<span><i class="fa fa-angle-right fa-lg"></i></span>
-							</a>
+					<c:if test="${empty reservationList}">
+						<li class="none">
+							<a href="javascript:;"><i class="fa fa-times"></i>예약내역이 없습니다.</a>
 						</li>
-					</c:forEach>
+					</c:if>
+					<c:if test="${not empty reservationList}">
+						<c:forEach items="${reservationList}" var = "list">
+							<fmt:parseDate var="reqDate" pattern="yyyyMMdd" value="${list.REQ_DT}"/>
+							<li class="active" data-req_dt="${list.REQ_DT}" data-seq=${list.SEQ}>
+								<a href="javascript:;">
+									<span class="date"><fmt:formatDate value="${reqDate}" pattern="yyyy-MM-dd"/></span>
+									<span>${list.PRC_STS_NM }</span>
+									<span><i class="fa fa-angle-right fa-lg"></i></span>
+								</a>
+							</li>
+						</c:forEach>
+					</c:if>
 				</ul>
 			</div>
 		</div>

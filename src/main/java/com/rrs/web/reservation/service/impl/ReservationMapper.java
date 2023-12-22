@@ -16,7 +16,7 @@ public interface ReservationMapper {
 	// 멤버 숙박비 계산
 	Map<String, Object> memRoomChargeCalc(Map<String, Object> paramMap) throws Exception;
 
-	// 미팅센딩비 계산
+	// 미팅샌딩비 계산
 	Map<String, Object> sendingCalc(Map<String, Object> paramMap) throws Exception;
 
 	// 야간할증비 계산
@@ -46,7 +46,7 @@ public interface ReservationMapper {
 	// 예약테이블 수정
 	int updateTbReqBookingM(Map<String, Object> paramMap) throws Exception;
 
-	// 미팅센딩 테이블 등록
+	// 미팅샌딩 테이블 등록
 	int insertTbReqPickup(Map<String, Object> paramMap) throws Exception;
 
 	// 미팅샌딩테이블 삭제

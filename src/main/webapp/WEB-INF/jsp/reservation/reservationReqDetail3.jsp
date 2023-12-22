@@ -9,32 +9,21 @@ $(document).ready(function() {
 	var isCal    = false;
 	var formData = new FormData();
 
-	setTitle("예약요청");
+	setTitle("예약신청");
 	setEvent();
 
 	<%-- 데이터 셋팅 --%>
 	var detailData = JSON.parse('${strReservationDetail}');
 	for(key in detailData) {
-		<%-- key값 대문자로 받아옴.. --%>
 		var objId = "#" + key.toLowerCase();
 		if($(objId).length >= 1) {
-			if(objId == "#chk_in_dt" || objId == "#chk_out_dt") {
-				$(objId).datepicker("setDate", detailData[key]);
-			} else if($(objId).hasClass("toNumber")) {
-				if(objId == "#tot_person") {  <%-- 총인원-1(본인) --%>
-					$(objId).val(numberComma(detailData[key] -1));
-				} else if(objId == "#r_person") { <%-- 멤버수 = DB라운딩인원 -1(본인) -DB비멤버인원 --%>
-					$(objId).val(numberComma(detailData[key] -1 -detailData["NR_PERSON"]));
-				} else {
-					$(objId).val(numberComma(detailData[key]));
-				}
+			if($(objId).hasClass("toNumber")) {
+				$(objId).val(numberComma(detailData[key]));
 			} else {
 				$(objId).val(detailData[key]);
 			}
 		}
 	}
-	<%-- datepicker에서 초기화해서 다시 셋팅 --%>
-	$("#cal_amt").val(numberComma(detailData["CAL_AMT"]));
 
 	<%-- 이미지 변경  --%>
 	function handleImgInput() {
@@ -124,29 +113,15 @@ $(document).ready(function() {
 
 	<%-- validate --%>
 	function isValidate() {
-		if($("#chk_in_dt").val() == "") {
-			alert("체크인 날짜를 선택하세요.");
-			return false;
-		}
-
-		if($("#chk_out_dt").val() == "") {
-			alert("체크아웃 날짜를 선택하세요.");
-			return false;
-		}
-
 		var inDate  = new Date($("#chk_in_dt" ).val());
 		var outDate = new Date($("#chk_out_dt").val());
 
 		// 숙박일
 		var stayDay = outDate.getTime() - inDate.getTime();
 		stayDay = Math.ceil(stayDay / (1000 * 60 * 60 * 24));
-		if(stayDay < 1) {
-			alert("체크아웃 날짜를 다시 선택하세요.");
-			return false;
-		}
 
 		var pickGbn   = $("#pick_gbn").val();
-		var totPerson= Number($("#tot_person").val().replace(/,/gi, "")) + 1; //(본인포함)
+		var totPerson= Number($("#tot_person").val().replace(/,/gi, ""));
 		var perNum    = $("#per_num").val().replace(/,/gi, "");
 		if(pickGbn != "01") {
 			if(totPerson < perNum) {
@@ -204,7 +179,6 @@ $(document).ready(function() {
 					  req_dt : $("#req_dt").val()
 					, seq    : $("#seq"   ).val()
 				}
-
 				$.ajax({
 					type : "POST",
 					url : "getPrcSts.do",
@@ -213,17 +187,12 @@ $(document).ready(function() {
 					success : function(data) {
 						if(data.result == "SUCCESS") {
 							if(data.prc_sts == "${reservationDetail.PRC_STS}") {
-								<%-- datepicker 버튼  이벤트--%>
-								$(".input-daterange .input-group").off("click");
-								$(".input-daterange .input-group").on("click", function() {
-									$(this).find("input").datepicker().focus();
-								});
-								$("#room_type, #flight_in, #flight_out, #pick_gbn, #late_check_out, #remark").removeClass("readonly");
-								$("#r_person, #nr_person, #k_person, #per_num, #add_r_s_per, #add_r_s_day, #add_r_p_per, #add_r_p_day, #fligthImage").removeAttr("readonly");
+								$("#flight_in, #flight_out, #pick_gbn, #late_check_out, #remark").removeClass("readonly");
+								$("#per_num, #add_r_s_per, #add_r_s_day, #add_r_p_per, #add_r_p_day, #fligthImage").removeAttr("readonly");
 								$("#calBtn").removeAttr("disabled");
 								$("#fligthImage").parent().show();
 								$("#fligth_image").parent().hide();
-	
+
 								$("#reservationUpdateBtn").text("수정 등록");
 							} else {
 								alert("상태값이 변경되어 수정할 수 없습니다.");
@@ -240,28 +209,31 @@ $(document).ready(function() {
 					alert("가계산을 확인해주세요.");
 					return;
 				}
+
 				var data = {
 						  req_dt         : $("#req_dt"        ).val()
 						, seq            : $("#seq"           ).val()
 						, chk_in_dt      : $("#chk_in_dt"     ).val().replace(/-/gi, "")
 						, chk_out_dt     : $("#chk_out_dt"    ).val().replace(/-/gi, "")
+						, room_type      : $("#room_type"     ).val()
 						, flight_in      : $("#flight_in"     ).val()
 						, flight_out     : $("#flight_out"    ).val()
-						, room_type      : $("#room_type"     ).val()
-						, tot_person     : Number($("#tot_person").val().replace(/,/gi, "")) + 1  //본인포함
-						, r_person       : Number($("#r_person"  ).val().replace(/,/gi, "")) + 1  //본인포함
-						, nr_person      : $("#nr_person"     ).val().replace(/,/gi, "")
-						, k_person       : $("#k_person"      ) .val().replace(/,/gi, "")
-						, pick_gbn       : $("#pick_gbn"      ).val().replace(/,/gi, "")
+						, pick_gbn       : $("#pick_gbn"      ).val()
 						, per_num        : $("#per_num"       ).val().replace(/,/gi, "")
-						, late_check_out : $("#late_check_out").val()
+						, tot_person     : $("#tot_person"    ).val().replace(/,/gi, "")
+						, r_person       : $("#r_person"      ).val().replace(/,/gi, "")
+						, n_person       : $("#n_person"      ).val().replace(/,/gi, "")
+						, k_person       : $("#k_person"      ).val().replace(/,/gi, "")
 						, add_r_s_per    : $("#add_r_s_per"   ).val().replace(/,/gi, "")
 						, add_r_s_day    : $("#add_r_s_day"   ).val().replace(/,/gi, "")
 						, add_r_p_per    : $("#add_r_p_per"   ).val().replace(/,/gi, "")
 						, add_r_p_day    : $("#add_r_p_day"   ).val().replace(/,/gi, "")
+						, late_check_out : $("#late_check_out").val()
 						, remark         : $("#remark"        ).val()
+						, package_       : $("#package_"      ).val()
 				};
 
+				var formData = new FormData();
 				formData.append("param", new Blob([JSON.stringify(data)], {type:"application/json"}));
 
 				dimOpen();
@@ -325,27 +297,18 @@ $(document).ready(function() {
 			})
 		});
 
-		<%-- datepicker setting --%>
-		$(".input-daterange").datepicker({
-			todayHighlight: true,
-			autoclose: true,
-			startDate: new Date()
-		}).on("changeDate", function(e) {
-			isCal = false;
-			$("#cal_amt").val(0);
-		});
-
 		<%-- 가계산 버튼 클릭 --%>
 		$("#calBtn").on("click", function() {
 			if(!isValidate()) {
 				return;
 			}
+
 			var data = {
 				  chk_in_dt      : $("#chk_in_dt" ).val().replace(/-/gi, "")
 				, chk_out_dt     : $("#chk_out_dt").val().replace(/-/gi, "")
 				, flight_in      : $("#flight_in" ).val()
 				, flight_out     : $("#flight_out").val()
-				, tot_person     : Number($("#tot_person").val().replace(/,/gi, "")) + 1
+				, tot_person     : $("#tot_person").val().replace(/,/gi, "")
 				, pick_gbn       : $("#pick_gbn").val()
 				, per_num        : $("#per_num").val().replace(/,/gi, "")
 				, late_check_out : $("#late_check_out").val()
@@ -353,6 +316,7 @@ $(document).ready(function() {
 				, add_r_s_day    : $("#add_r_s_day").val().replace(/,/gi, "")
 				, add_r_p_per    : $("#add_r_p_per").val().replace(/,/gi, "")
 				, add_r_p_day    : $("#add_r_p_day").val().replace(/,/gi, "")
+				, package_       : $("#package_"   ).val()
 			};
 
 			dimOpen();
@@ -366,7 +330,7 @@ $(document).ready(function() {
 					if(data.result == "SUCCESS") {
 						isCal = true;
 						$("#cal_amt").val(numberComma(data.totalAmt));
-						alert(`숙박비 : \${numberComma(data.roomCharge)},
+						alert(`패키지가격 : \${numberComma(data.packageAmt)},
 미팅샌딩비 : \${numberComma(data.sendingAmt)},
 SURCHAGE : \${numberComma(data.surchageAmt)},
 룸 추가 : \${numberComma(data.roomupAmt)},
@@ -415,8 +379,8 @@ lateCheckOut : \${numberComma(data.lateCheckOutAmt)}`);
 					this.value = "0";
 				}
 				var id = this.id;
-				if(id == "r_person" || id == "nr_person" || id == "k_person") {
-					var sum = strToNum($("#r_person").val()) + strToNum($("#nr_person").val()) + strToNum($("#k_person").val());
+				if(id == "r_person" || id == "n_person" || id == "k_person") {
+					var sum = strToNum($("#r_person").val()) + strToNum($("#n_person").val()) + strToNum($("#k_person").val());
 					$("#tot_person").val(numberComma(sum));
 				}
 			}
@@ -478,6 +442,18 @@ lateCheckOut : \${numberComma(data.lateCheckOutAmt)}`);
 					</div>
 				</div>
 				<div class="row mb-2">
+					<label class="form-label col-form-label col-md-3">한글이름</label>
+					<div class="col-sm-9">
+						<input type="text" class="form-control" value="${sessionScope.login.han_name}" readonly>
+					</div>
+				</div>
+				<div class="row mb-2">
+					<label class="form-label col-form-label col-md-3">영문이름</label>
+					<div class="col-sm-9">
+						<input type="text" class="form-control" value="${sessionScope.login.eng_name}" readonly>
+					</div>
+				</div>
+				<div class="row mb-2">
 					<label class="form-label col-form-label col-md-3">객실타입</label>
 					<div class="col-md-9">
 						<select id="room_type" name="room_type" class="form-select readonly">
@@ -485,6 +461,24 @@ lateCheckOut : \${numberComma(data.lateCheckOutAmt)}`);
 								<option value="${room.CODE}">${room.CODE_NM}</option>
 							</c:forEach>
 						</select>
+					</div>
+				</div>
+				<div class="total-people-wrap">
+					<div class="inline-flex">
+						<div class="col-form-label">총인원</div>
+						<input type="text" id="tot_person" name="tot_person" class="toNumber form-control text-end" readonly>명
+					</div>
+					<div class="inline-flex">
+						<div class="col-form-label">라운딩</div>
+						<input type="text" id="r_person" name="r_person" maxlength="3" class="toNumber form-control text-end" readonly>명
+					</div>
+					<div class="inline-flex">
+						<div class="col-form-label">비라운딩</div>
+						<input type="text" id="n_person" name="n_person" maxlength="3" class="toNumber form-control text-end" readonly>명
+					</div>
+					<div class="inline-flex">
+						<div class="col-form-label">소아</div>
+						<input type="text" id="k_person" name="k_person" maxlength="3" class="toNumber form-control text-end" readonly>명
 					</div>
 				</div>
 				<div class="row mb-2">
@@ -517,40 +511,20 @@ lateCheckOut : \${numberComma(data.lateCheckOutAmt)}`);
 						<input id="fligth_image" name="fligth_image" type="text" class="form-control" readonly>
 					</div>
 				</div>
-				<div class="row mb-2">
-					<label class="form-label col-form-label col-md-3">한글이름</label>
-					<div class="col-sm-9">
-						<input id="req_han_nm" name="req_han_nm" type="text" class="form-control" readonly>
-					</div>
-				</div>
-				<div class="row mb-2">
-					<label class="form-label col-form-label col-md-3">영문이름</label>
-					<div class="col-sm-9">
-						<input id="req_eng_nm" name="req_eng_nm" type="text" class="form-control" readonly>
-					</div>
-				</div>
-				<div class="total-people-wrap">
-					<div class="inline-flex">
-						<div class="col-form-label">총인원(추가인원)</div>
-						<input type="text" id="tot_person" name="tot_person" class="toNumber form-control text-end" readonly>명
-					</div>
-					<div class="inline-flex">
-						<div class="col-form-label">멤버</div>
-						<input type="text" id="r_person" name="r_person" maxlength="3" class="toNumber form-control text-end" readonly>명
-					</div>
-					<div class="inline-flex">
-						<div class="col-form-label">비멤버</div>
-						<input type="text" id="nr_person" name="nr_person" maxlength="3" class="toNumber form-control text-end" readonly>명
-					</div>
-					<div class="inline-flex">
-						<div class="col-form-label">소아</div>
-						<input type="text" id="k_person" name="k_person" maxlength="3" class="toNumber form-control text-end" readonly>명
-					</div>
-				</div>
 			</div>
 			<!-- END tab-pane -->
 			<!-- BEGIN tab-pane -->
 			<div class="tab-pane fade" id="default-tab-2">
+				<div class="row mb-2">
+					<label class="form-label col-form-label col-md-3">패키지</label>
+					<div class="col-sm-9">
+						<select id="package_" class="form-select readonly">
+							<c:forEach items="${packageList}" var="package_" varStatus="status">
+								<option value="${package_.CODE}">${package_.CODE_NM}</option>
+							</c:forEach>
+						</select>
+					</div>
+				</div>
 				<div class="row mb-2">
 					<label class="form-label col-form-label col-md-3">미팅샌딩</label>
 					<div class="col-md-9 inline-flex">
@@ -595,7 +569,7 @@ lateCheckOut : \${numberComma(data.lateCheckOutAmt)}`);
 				<div class="mb-2">
 					<div class="inline-flex calc">
 						<button id="calBtn" name="calBtn" type="button" class="btn btn-pink" disabled="disabled">가계산</button>
-						<input id="cal_amt" name="cal_amt" type="text" class="form-control text-end toNumber" readonly>원
+						<input id="cal_amt" name="cal_amt" type="text" class="form-control text-end toNumber" value="0" readonly>원
 					</div>
 					<small class="text-theme">
 						계산 금액은 정확한 금액이 아닙니다. 예약전송해 주시면 추후 정확한 금액을 안내 드립니다.
@@ -608,10 +582,10 @@ lateCheckOut : \${numberComma(data.lateCheckOutAmt)}`);
 
 	</div>
 	<!-- END content-container -->
-
+	
 	<!-- BEGIN #footer -->
 	<div id="footer" class="app-footer m-0">
-		<a href="javascript:;" id="reservationCancelBtn" class="btn btn-gray btn-lg">예약취소</a>
+		<a href="javascript:;" id="reservationCancelBtn" class="btn btn-gray btn-lg">예약 취소</a>
 		<a href="javascript:;" id="reservationUpdateBtn" class="btn btn-success btn-lg">수정</a>
 	</div>
 	<!-- END #footer -->

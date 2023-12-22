@@ -214,7 +214,7 @@ $(document).ready(function() {
 			dimOpen();
 			$.ajax({
 				type : "POST",
-				url : "reservationCal_m.do",
+				url : "reservationCal.do",
 				data : data,
 				dataType : "json",
 				success : function(data) {
@@ -223,9 +223,9 @@ $(document).ready(function() {
 						isCal = true;
 						$("#cal_amt").val(numberComma(data.totalAmt));
 						alert(`숙박비 : \${numberComma(data.roomCharge)},
-미팅센딩비 : \${numberComma(data.sendingAmt)},
+미팅샌딩비 : \${numberComma(data.sendingAmt)},
 SURCHAGE : \${numberComma(data.surchageAmt)},
-룸 업그레이드 : \${numberComma(data.roomupAmt)},
+룸 추가 : \${numberComma(data.roomupAmt)},
 lateCheckOut : \${numberComma(data.lateCheckOutAmt)}`);
 					} else {
 						isCal = false;
@@ -283,7 +283,7 @@ lateCheckOut : \${numberComma(data.lateCheckOutAmt)}`);
 			dimOpen();
 			$.ajax({
 				type : "POST",
-				url : "reservationInsert_m.do",
+				url : "reservationInsert.do",
 				data : formData,
 				dataType : "json",
 				processData: false,
