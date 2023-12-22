@@ -91,6 +91,7 @@ ul li {list-style:none;}
 
 
 /* 02. Layout ================================*/
+
 @media (max-width: 767.98px) {
 	.app-content .app-content-padding {padding:20px 20px 60px}
 	/* .app-content-full-height .app-content {min-height:calc(100vh - 120px);} */
@@ -107,6 +108,8 @@ ul li {list-style:none;}
 
 .dim-layer {position:fixed;top:0;left:0;right:0;bottom:0;z-index:1020;width:100%;height:100%;padding:0;border:0;margin:0;outline:0;display:none;}
 .dim-layer.show {display:block;background:rgba(32,37,42,.5);animation: appSidebarMobileBackdrop .2s ease;}
+.error-wrap {z-index:1021;position:relative;color:#fff;font-weight:900;font-size:40px;text-align:center;height:70vh;display:flex;flex-flow:column;justify-content: center;}
+.text-error {font-size:larger;text-transform:capitalize;}
 
 .table + .table {margin-top:25px;}
 /* .table.table-pk thead {position:sticky;top:60px;} */
@@ -168,6 +171,7 @@ ul li {list-style:none;}
 .reserve-list li a > span:last-child {margin-left:auto}
 .reserve-list li a > span.date {font-size:0.75rem}
 .reserve-list .active a {opacity:1}
+.reserve-list .none a {justify-content:center;cursor:default;}
 
 
 /* 06. Board ===================================*/
