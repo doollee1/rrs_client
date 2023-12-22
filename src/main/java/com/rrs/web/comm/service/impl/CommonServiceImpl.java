@@ -84,7 +84,7 @@ public class CommonServiceImpl implements CommonService {
 			realFile.setReadable  (true, false);
 		} catch(Exception e) {
 			e.printStackTrace();
-			return null;
+			return rMap;
 		}
 		return rMap;
 	}

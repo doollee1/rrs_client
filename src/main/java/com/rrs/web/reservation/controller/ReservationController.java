@@ -1,11 +1,10 @@
 package com.rrs.web.reservation.controller;
 
+import com.google.gson.Gson;
 import com.rrs.comm.util.EgovDateUtil;
 import com.rrs.web.comm.service.CommonService;
 import com.rrs.web.reservation.service.ReservationService;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 import javax.annotation.Resource;
@@ -33,9 +32,89 @@ public class ReservationController {
 	@Resource(name = "commonService")
 	CommonService commonService;
 
+	// 예약취소
+	@RequestMapping(value = "/reservationCancel.do", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> reservationCancel(@RequestParam Map<String, Object> param, HttpServletRequest req) throws Exception {
+		Map<String, Object> rMap = new HashMap<String, Object>();
+		// 상태값 체크 01 예약요청-일반 / 02 예약요청-멤버 / 03 예약가능 / 04 예약신청 / 05 입금대기 / 06 예약확정 / 07 예약취소 / 08환불요청
+		String prcSts  = reservationService.getPrcSts(param);
+		String pPrcSts = (String)param.get("prc_sts");
+		// 회원구분 01 멤버 / 02 일반 / 03 교민 / 04 에이전시 
+		// 예약요청, 예약신청, 입금대기
+		if(prcSts != null && !"".equals(prcSts) && prcSts.equals(pPrcSts)) {
+			if("01".equals(prcSts) || "02".equals(prcSts) || "04".equals(prcSts) || "05".equals(prcSts) || "06".equals(prcSts)) {
+				HttpSession session = req.getSession();
+				param.put("user_id" , session.getAttribute("user_id"));
+				String memGbn  = (String)session.getAttribute("mem_gbn");
+				String memGbn2 = "01".equals(memGbn) ? "멤버" : "일반";
+				int result = reservationService.reservationCancel(param);
+				if(result >= 1) {
+					String msg = memGbn2 + " 예약이 취소 되었습니다.";
+					if("06".equals(prcSts)) {
+						msg = memGbn2 + " 환불요청이 등록 되었습니다.";
+					}
+					commonService.telegramMsgSend(msg);
+					rMap.put("result", "SUCCESS");
+				}
+			}
+		}
+
+		return rMap;
+	}
+
+	// 업데이트 체크
+	@RequestMapping(value = "/getPrcSts.do", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> getPrcSts(@RequestParam Map<String, Object> param) throws Exception {
+		Map<String, Object> rMap = new HashMap<String, Object>();
+		// 상태값 체크 01 예약요청-일반 / 02 예약요청-멤버 / 03 예약가능 / 04 예약신청 / 05 입금대기 / 06 예약확정 / 07 예약취소
+		String prcSts = reservationService.getPrcSts(param);
+
+		rMap.put("result"  , "SUCCESS");
+		rMap.put("prc_sts" , prcSts   );
+
+		return rMap;
+	}
+
+	// 예약 수정
+	@RequestMapping(value = "/reservationUpdate.do", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> reservationUpdate(@RequestPart Map<String, Object> param, @RequestPart(required = false) MultipartFile file, HttpServletRequest req) throws Exception {
+		Map<String, Object> rMap = new HashMap<String, Object>();
+		HttpSession session = req.getSession();
+		// 상태값 체크 01 예약요청-일반 / 02 예약요청-멤버 / 03 예약가능 / 04 예약신청 / 05 입금대기 / 06 예약확정 / 07 예약취소
+		String prcSts = reservationService.getPrcSts(param);
+		// 회원구분 01 멤버 / 02 일반 / 03 교민 / 04 에이전시 
+		String memGbn = (String)session.getAttribute("mem_gbn");
+
+		// 멤버, 일반 예약요청일때만 수정가능 
+		if( ("01".equals(memGbn) && "02".equals(prcSts)) || ("02".equals(memGbn) && "01".equals(prcSts))) {
+			// 예약 등록 수정
+			param.put("user_id" , session.getAttribute("user_id" ));
+			param.put("mem_gbn" , memGbn                          );
+
+			int result = 0;
+			String msg = "";
+			if("01".equals(memGbn)) {
+				result = reservationService.reservationUpdate_m(param);
+				msg = "멤버 예약이 수정 되었습니다.";
+			} else {
+				result = reservationService.reservationUpdate(param);
+				msg = "일반 예약이 수정 되었습니다.";
+			}
+
+			if(result >= 1) {
+				commonService.telegramMsgSend(msg);
+				rMap.put("result", "SUCCESS");
+			}
+		}
+
+		return rMap;
+	}
+
 	@RequestMapping(value = "/reservationList.do", method = RequestMethod.GET)
 	public String reservationList(Model model, @RequestParam Map<String, Object> param, HttpServletRequest req) throws Exception {
-		Map<String, Object> rMap = new HashMap<String, Object>();
 		HttpSession session = req.getSession();
 
 		param.put("user_id" , session.getAttribute("user_id" ));
@@ -46,9 +125,16 @@ public class ReservationController {
 		return "reservation/reservationList.view";
 	}
 
-	@RequestMapping(value = "/reservationReq.do", method = RequestMethod.GET)
-	public String reservationReq(Model model, @RequestParam Map<String, Object> param, HttpServletRequest req) throws Exception {
-		param.put("HEAD_CD" , "500050"); // 미팅센딩
+	@RequestMapping(value = "/reservationDetail.do", method = RequestMethod.POST)
+	public String reservationDetail(Model model, @RequestParam Map<String, Object> param, HttpServletRequest req) throws Exception {
+		HttpSession session = req.getSession();
+
+		param.put("user_id" , session.getAttribute("user_id" ));
+
+		// 예약 상세
+		Map<String, Object> reservationDetail = reservationService.reservationDetail(param);
+		
+		param.put("HEAD_CD" , "500210"); // 미팅센딩
 		List<Map<String, Object>> pickupSvcList = commonService.commCodeList(param);
 
 		param.put("HEAD_CD" , "500060"); // late체크아웃
@@ -64,18 +150,102 @@ public class ReservationController {
 		param.put("HEAD_CD" , "500190"      );  // 도착항공편
 		List<Map<String, Object>> fligthOutList = commonService.commCodeList(param);
 
-		model.addAttribute("pickupSvcList", pickupSvcList);
-		model.addAttribute("lateOutYnList", lateOutYnList);
-		model.addAttribute("roomTypeList" , roomTypeList );
-		model.addAttribute("fligthInList" , fligthInList );
-		model.addAttribute("fligthOutList", fligthOutList);
+		Gson gson =  new Gson();
+		String strReservationDetail = gson.toJson(reservationDetail);
 
-		return "reservation/reservationReq_m.view";
+		String memGbn = (String)reservationDetail.get("MEM_GBN"); // 회원구분
+		String prcSts = (String)reservationDetail.get("PRC_STS"); // 예약상태
+
+		model.addAttribute("reservationDetail"   , reservationDetail   );
+		model.addAttribute("strReservationDetail", strReservationDetail);
+		model.addAttribute("pickupSvcList"       , pickupSvcList       );
+		model.addAttribute("lateOutYnList"       , lateOutYnList       );
+		model.addAttribute("roomTypeList"        , roomTypeList        );
+		model.addAttribute("fligthInList"        , fligthInList        );
+		model.addAttribute("fligthOutList"       , fligthOutList       );
+
+		if("01".equals(memGbn)) { // 멤버
+			if("02".equals(prcSts)) {  // 예약요청
+				return "reservation/reservationReqDetail_m.view";
+			} else {
+				return "reservation/reservationReqDetail_m2.view";
+			}
+		} else {  // 일반
+			List<Map<String, Object>> packageList = reservationService.packageList();
+			model.addAttribute("packageList", packageList);
+			if("01".equals(prcSts)) {  // 예약요청
+				return "reservation/reservationReqDetail.view";
+			}
+			return "reservation/reservationReqDetail.view";
+		}
 	}
 
-	@RequestMapping(value = "/reservationStep1_m.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/reservationReq.do", method = RequestMethod.GET)
+	public String reservationReq(Model model, @RequestParam Map<String, Object> param, HttpServletRequest req) throws Exception {
+		HttpSession session = req.getSession();
+		String memGbn = (String)session.getAttribute("mem_gbn");
+		// 회원구분 01 멤버 / 02 일반 / 03 교민 / 04 에이전시 
+		if("01".equals(memGbn)) {  // 멤버
+			param.put("HEAD_CD" , "500210"); // 미팅센딩
+			List<Map<String, Object>> pickupSvcList = commonService.commCodeList(param);
+
+			param.put("HEAD_CD" , "500060"); // late체크아웃
+			List<Map<String, Object>> lateOutYnList = commonService.commCodeList(param);
+
+			param.put("HEAD_CD" , "500070");  // 객실타입
+			List<Map<String, Object>> roomTypeList = commonService.commCodeList(param);
+
+			param.put("HEAD_CD" , "500180"      );  // 출발항공편
+			param.put("ORDER_BY", "REF_CHR3 ASC");
+			List<Map<String, Object>> fligthInList = commonService.commCodeList(param);
+
+			param.put("HEAD_CD" , "500190"      );  // 도착항공편
+			List<Map<String, Object>> fligthOutList = commonService.commCodeList(param);
+
+			model.addAttribute("pickupSvcList", pickupSvcList);
+			model.addAttribute("lateOutYnList", lateOutYnList);
+			model.addAttribute("roomTypeList" , roomTypeList );
+			model.addAttribute("fligthInList" , fligthInList );
+			model.addAttribute("fligthOutList", fligthOutList);
+
+			return "reservation/reservationReq_m.view";
+		}
+		// 일반 패키지 리스트
+		List<Map<String, Object>> packageList = reservationService.packageList();
+		model.addAttribute("packageList", packageList);
+
+		return "reservation/reservationReq.view";
+	}
+
+	@RequestMapping(value = "/reservationInsert1.do", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String, Object> reservationStep1_m(@RequestPart Map<String, Object> param, @RequestPart MultipartFile file, HttpServletRequest req) throws Exception {
+	public Map<String, Object> reservationInsert1(@RequestParam Map<String, Object> param, HttpServletRequest req) throws Exception {
+		Map<String, Object> rMap = new HashMap<String, Object>();
+		HttpSession session = req.getSession();
+
+		param.put("today"   , EgovDateUtil.getToday()         ); // 금일
+		param.put("user_id" , session.getAttribute("user_id" ));
+		param.put("han_name", session.getAttribute("han_name"));
+		param.put("eng_name", session.getAttribute("eng_name"));
+		param.put("tel_no"  , session.getAttribute("tel_no"  ));
+		param.put("mem_gbn" , session.getAttribute("mem_gbn" ));
+		param.put("prc_sts" , "01"                            ); // 예약요청-일반
+
+		// 일반 예약등록
+		int result = reservationService.reservationInsert1(param);
+		if(result >= 1) {
+			String msg = "일반 예약신청이 등록 되었습니다.";
+			commonService.telegramMsgSend(msg);
+			rMap.put("result", "SUCCESS");
+		} else {
+			rMap.put("result", "FAIL");
+		}
+		return rMap;
+	}
+
+	@RequestMapping(value = "/reservationInsert_m.do", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> reservationInsert_m(@RequestPart Map<String, Object> param, @RequestPart MultipartFile file, HttpServletRequest req) throws Exception {
 		Map<String, Object> rMap = new HashMap<String, Object>();
 		HttpSession session = req.getSession();
 
@@ -86,23 +256,16 @@ public class ReservationController {
 		param.put("tel_no"  , session.getAttribute("tel_no"  ));
 		param.put("mem_gbn" , session.getAttribute("mem_gbn" ));
 		param.put("prc_sts" , "02"                            ); // 예약요청-멤버
+		param.put("file"    , file                            );
 
 		// 멤버 예약등록 step1
-		int result = reservationService.reservationStep1_m(param);
+		int result = reservationService.reservationInsert_m(param);
 		if(result >= 1) {
-			// 이미지 업로드
-			Map<String, Object> imageMap = commonService.imageUpload(file);
-			if(imageMap != null) {
-				param.putAll(imageMap);
-				// 예약첨부파일(항공권) 등록
-				reservationService.insertTbReqAddFile(param);
-			}
-			String msg = "멤버 예약이 등록되었습니다.";
+			String msg = "멤버 예약이 등록 되었습니다.";
 			commonService.telegramMsgSend(msg);
 			rMap.put("result", "SUCCESS");
-		} else {
-			rMap.put("result", "FAIL");
 		}
+
 		return rMap;
 	}
 
@@ -165,79 +328,6 @@ public class ReservationController {
 
 		rMap.put("totalAmt", totalAmt );
 		rMap.put("result"  , "SUCCESS");
-		return rMap;
-	}
-
-	@RequestMapping(value = "/testImage3.do", method = RequestMethod.POST)
-	@ResponseBody
-	public Map<String, Object> testImage3(@RequestPart Map<String, Object> param, @RequestPart MultipartFile file) throws Exception {
-		Map<String, Object> rMap = new HashMap<String, Object>();
-		String savePath = "/opt/apache-tomcat-8.5.32/webapps/upload/";
-
-		String toDay   = EgovDateUtil.getToday();
-		String strYyyy = toDay.substring(0, 4) + "/";
-		String strMm   = toDay.substring(4, 6) + "/";
-		savePath = savePath + strYyyy;
-		if(!new File(savePath).exists()) {
-			try {
-				new File(savePath).mkdir();
-				savePath = savePath + strMm;
-				if(!new File(savePath).exists()) {
-					new File(savePath).mkdir();
-				}
-			} catch(Exception ex) {
-				ex.printStackTrace();
-			}
-		}
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmssSSS"); //SSS가 밀리세컨드 표시
-		Calendar calendar = Calendar.getInstance();
-		String filePath = savePath + dateFormat.format(calendar.getTime()).toString() + "." + file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".") + 1);
-		//file.getOriginalFilename();
-		File realFile = new File(filePath);
-		file.transferTo(realFile);
-		realFile.setExecutable(true);
-		realFile.setWritable  (true);
-		realFile.setReadable  (true);
-		rMap.put("result", "SUCCESS");
-		return rMap;
-	}
-
-	@RequestMapping(value = "/testImage.do", method = RequestMethod.POST)
-	@ResponseBody
-	public Map<String, Object> testImage(@RequestPart Map<String, Object> param, @RequestPart MultipartFile file) throws Exception {
-		logger.info("/testImage.do");
-		Map<String, Object> rMap = new HashMap<String, Object>();
-		System.out.println(param.toString());
-		if(!file.isEmpty()) {
-			System.out.println("file size : " + file.getSize());
-			System.out.println("file name : " + file.getName());
-			System.out.println("file OriginalFilename : " + file.getOriginalFilename());
-
-			Map<String, Object> paramMap = new HashMap<String, Object>();
-			paramMap.put("fileNm"  , file.getOriginalFilename());
-			paramMap.put("image"   , file.getBytes()           );
-			paramMap.put("filePath", ""                        );
-
-			reservationService.imageSave(paramMap);
-		} else {
-			System.out.println("File is Empty!!!!!!");
-		}
-		rMap.put("result", "SUCCESS");
-		return rMap;
-	}
-
-	@RequestMapping(value = "/testImage2.do", method = RequestMethod.POST)
-	@ResponseBody
-	public Map<String, Object> testImage2(@RequestParam Map<String, Object> param) throws Exception {
-		logger.info("/testImage2.do");
-		Map<String, Object> rMap = new HashMap<String, Object>();
-		System.out.println(param.toString());
-		rMap = reservationService.imageLoad(param);
-		String fileNm  = (String)rMap.get("ADD_FILE_NM");
-		String fileExt =  fileNm.substring(fileNm.lastIndexOf(".") + 1);
-		String addPath = "data:image/" + ((fileExt == null || "".equals(fileExt)) ? "png" : fileExt) + ";base64,";
-		rMap.put("ADD_PATH", addPath);
-		rMap.put("result", "SUCCESS");
 		return rMap;
 	}
 }
