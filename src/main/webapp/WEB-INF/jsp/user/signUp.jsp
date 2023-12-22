@@ -139,11 +139,11 @@ function signUpChk(){
 		alert("이메일 형식이 올바르지 않습니다.");
 		return;
 	}
-	<%//일반적인 전화번호에 하이픈 삽입 : 010xxxxyyyy > 010-xxxx-yyyy%>
+	/* 
 	if(tel_no.length == 11) {
 		tel_no = tel_no.replace(/^(\d{2,3})(\d{3,4})(\d{4})$/, `$1-$2-$3`);
 	}
-	
+	 */
 	$.ajax({
 			type:"POST",
 			url:"/signUp.do",
