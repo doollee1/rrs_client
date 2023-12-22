@@ -19,9 +19,13 @@ public interface ReservationService {
 
 	Map<String, Object> lateCheckOutCalc(Map<String, Object> param) throws Exception;
 
+	int reservationInsert1(Map<String, Object> param) throws Exception;
+
 	int reservationInsert_m(Map<String, Object> param) throws Exception;
 
 	int reservationUpdate_m(Map<String, Object> param) throws Exception;
+
+	int reservationUpdate(Map<String, Object> param) throws Exception;
 
 	int reservationCancel(Map<String, Object> param) throws Exception;
 
@@ -29,6 +33,7 @@ public interface ReservationService {
 
 	List<Map<String, Object>> reservationList(Map<String, Object> param) throws Exception;
 
-	Map<String, Object> reservationDetail(Map<String, Object> param) throws Exception;
+	List<Map<String, Object>> packageList() throws Exception;
 
+	Map<String, Object> reservationDetail(Map<String, Object> param) throws Exception;
 }

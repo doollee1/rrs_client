@@ -16,6 +16,11 @@ public class ReservationServiceImpl implements ReservationService {
 	@Resource(name = "commonService")
 	CommonService commonService;
 
+	// 패키지 리스트
+	public List<Map<String, Object>> packageList() throws Exception {
+		return reservationMapper.packageList();
+	}
+
 	// 예약 리스트
 	public List<Map<String, Object>> reservationList(Map<String, Object> paramMap) throws Exception {
 		return reservationMapper.reservationList(paramMap);
@@ -149,6 +154,28 @@ public class ReservationServiceImpl implements ReservationService {
 		return insertGbn;
 	}
 
+	// 일반 예약요청
+	public int reservationInsert1(Map<String, Object> paramMap) throws Exception {
+		int insertGbn = 0;
+
+		// 패키지 상품 정보 조회
+		Map<String, Object> packageMap = reservationMapper.getPackageInfo(paramMap);
+		if(packageMap == null || packageMap.size() == 0) {
+			return insertGbn;
+		}
+
+		paramMap.put("res_bas_yy"    , packageMap.get("BAS_YY"    ));
+		paramMap.put("res_bas_yy_seq", packageMap.get("BAS_YY_SEQ"));
+		paramMap.put("res_prod_seq"  , packageMap.get("PROD_SEQ"  ));
+
+		// 예약 테이블 등록
+		insertGbn = reservationMapper.insertTbReqBookingM(paramMap);
+		
+		if(insertGbn == 0) return insertGbn;
+
+		return insertGbn;
+	}
+
 	// 멤버 예약수정
 	public int reservationUpdate_m(Map<String, Object> paramMap) throws Exception {
 		long totalAmt        = 0;  // 총액
@@ -242,6 +269,31 @@ public class ReservationServiceImpl implements ReservationService {
 			updateGbn = reservationMapper.insertTbReqAddFile(paramMap);
 			if(updateGbn == 0) return updateGbn;
 		}
+
+		return updateGbn;
+	}
+
+	// 일반 예약수정
+	public int reservationUpdate(Map<String, Object> paramMap) throws Exception {
+		int updateGbn = 0;
+
+		paramMap.put("booking_seq", paramMap.get("seq"     ));
+		paramMap.put("today"      , paramMap.get("req_dt"  ));
+
+		// 패키지 상품 정보 조회
+		Map<String, Object> packageMap = reservationMapper.getPackageInfo(paramMap);
+		if(packageMap == null || packageMap.size() == 0) {
+			return updateGbn;
+		}
+
+		paramMap.put("res_bas_yy"    , packageMap.get("BAS_YY"    ));
+		paramMap.put("res_bas_yy_seq", packageMap.get("BAS_YY_SEQ"));
+		paramMap.put("res_prod_seq"  , packageMap.get("PROD_SEQ"  ));
+
+		// 예약 테이블 수정
+		updateGbn = reservationMapper.updateTbReqBookingM(paramMap);
+
+		if(updateGbn == 0) return updateGbn;
 
 		return updateGbn;
 	}

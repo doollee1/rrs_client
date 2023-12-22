@@ -198,7 +198,7 @@ $(document).ready(function() {
 					</div>
 					<div class="inline-flex">
 						<div class="col-form-label">멤버</div>
-						<input type="tel" id="r_person" name="r_person" maxlength="3" class="toNumber form-control text-end" readonly>명
+						<input type="text" id="r_person" name="r_person" maxlength="3" class="toNumber form-control text-end" readonly>명
 					</div>
 					<div class="inline-flex">
 						<div class="col-form-label">비멤버</div>

@@ -296,10 +296,7 @@ lateCheckOut : \${numberComma(data.lateCheckOutAmt)}`);
 					} else {
 						alert("상품이 없습니다. 관리자에게 문의 하세요.");
 					}
-			 	},
-			 	error : function(request, status, error) {
-			 		alert("code : " + request.status + "\n" + "message : " + request.responseText + "\n" + "error : " + error);
-				}
+			 	}
 			});
 		});
 
@@ -448,7 +445,7 @@ lateCheckOut : \${numberComma(data.lateCheckOutAmt)}`);
 					</div>
 					<div class="inline-flex">
 						<div class="col-form-label">멤버</div>
-						<input type="tel" id="r_person" name="r_person" maxlength="3" class="toNumber form-control text-end" value="0">명
+						<input type="text" id="r_person" name="r_person" maxlength="3" class="toNumber form-control text-end" value="0">명
 					</div>
 					<div class="inline-flex">
 						<div class="col-form-label">비멤버</div>

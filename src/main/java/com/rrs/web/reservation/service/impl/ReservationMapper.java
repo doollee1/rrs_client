@@ -7,6 +7,9 @@ import java.util.Map;
 
 @Mapper("reservationMapper")
 public interface ReservationMapper {
+	// 패키지 리스트
+	List<Map<String, Object>> packageList() throws Exception;
+
 	// 멤버 숙박비 계산
 	List<Map<String, Object>> reservationList(Map<String, Object> paramMap) throws Exception;
 
@@ -27,6 +30,9 @@ public interface ReservationMapper {
 
 	// 예약등록 상품 조회(멤버숙박)
 	Map<String, Object> getRoomProdInfo(Map<String, Object> paramMap) throws Exception;
+
+	// 패키지 상품 정보 조회
+	Map<String, Object> getPackageInfo(Map<String, Object> paramMap) throws Exception;
 
 	// 예약등록 픽업 상품 조회
 	Map<String, Object> getCarProdInfo(Map<String, Object> paramMap) throws Exception;

@@ -40,17 +40,19 @@ public class ReservationController {
 		// 상태값 체크 01 예약요청-일반 / 02 예약요청-멤버 / 03 예약가능 / 04 예약신청 / 05 입금대기 / 06 예약확정 / 07 예약취소 / 08환불요청
 		String prcSts  = reservationService.getPrcSts(param);
 		String pPrcSts = (String)param.get("prc_sts");
-
+		// 회원구분 01 멤버 / 02 일반 / 03 교민 / 04 에이전시 
 		// 예약요청, 예약신청, 입금대기
 		if(prcSts != null && !"".equals(prcSts) && prcSts.equals(pPrcSts)) {
 			if("01".equals(prcSts) || "02".equals(prcSts) || "04".equals(prcSts) || "05".equals(prcSts) || "06".equals(prcSts)) {
 				HttpSession session = req.getSession();
 				param.put("user_id" , session.getAttribute("user_id"));
+				String memGbn  = (String)session.getAttribute("mem_gbn");
+				String memGbn2 = "01".equals(memGbn) ? "멤버" : "일반";
 				int result = reservationService.reservationCancel(param);
 				if(result >= 1) {
-					String msg = "예약이 취소 되었습니다.";
+					String msg = memGbn2 + " 예약이 취소 되었습니다.";
 					if("06".equals(prcSts)) {
-						msg = "환불요청이 등록 되었습니다.";
+						msg = memGbn2 + " 환불요청이 등록 되었습니다.";
 					}
 					commonService.telegramMsgSend(msg);
 					rMap.put("result", "SUCCESS");
@@ -76,9 +78,9 @@ public class ReservationController {
 	}
 
 	// 예약 수정
-	@RequestMapping(value = "/reservationUpdate_m.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/reservationUpdate.do", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String, Object> reservationUpdate_m(@RequestPart Map<String, Object> param, @RequestPart(required = false) MultipartFile file, HttpServletRequest req) throws Exception {
+	public Map<String, Object> reservationUpdate(@RequestPart Map<String, Object> param, @RequestPart(required = false) MultipartFile file, HttpServletRequest req) throws Exception {
 		Map<String, Object> rMap = new HashMap<String, Object>();
 		HttpSession session = req.getSession();
 		// 상태값 체크 01 예약요청-일반 / 02 예약요청-멤버 / 03 예약가능 / 04 예약신청 / 05 입금대기 / 06 예약확정 / 07 예약취소
@@ -91,10 +93,18 @@ public class ReservationController {
 			// 예약 등록 수정
 			param.put("user_id" , session.getAttribute("user_id" ));
 			param.put("mem_gbn" , memGbn                          );
-			int result = reservationService.reservationUpdate_m(param);
+
+			int result = 0;
+			String msg = "";
+			if("01".equals(memGbn)) {
+				result = reservationService.reservationUpdate_m(param);
+				msg = "멤버 예약이 수정 되었습니다.";
+			} else {
+				result = reservationService.reservationUpdate(param);
+				msg = "일반 예약이 수정 되었습니다.";
+			}
 
 			if(result >= 1) {
-				String msg = "멤버 예약이 수정 되었습니다.";
 				commonService.telegramMsgSend(msg);
 				rMap.put("result", "SUCCESS");
 			}
@@ -158,38 +168,79 @@ public class ReservationController {
 			if("02".equals(prcSts)) {  // 예약요청
 				return "reservation/reservationReqDetail_m.view";
 			} else {
-				return "reservation/reservationReqDetail2_m.view";
+				return "reservation/reservationReqDetail_m2.view";
 			}
-		} else {
+		} else {  // 일반
+			List<Map<String, Object>> packageList = reservationService.packageList();
+			model.addAttribute("packageList", packageList);
+			if("01".equals(prcSts)) {  // 예약요청
+				return "reservation/reservationReqDetail.view";
+			}
 			return "reservation/reservationReqDetail.view";
 		}
 	}
 
 	@RequestMapping(value = "/reservationReq.do", method = RequestMethod.GET)
 	public String reservationReq(Model model, @RequestParam Map<String, Object> param, HttpServletRequest req) throws Exception {
-		param.put("HEAD_CD" , "500210"); // 미팅센딩
-		List<Map<String, Object>> pickupSvcList = commonService.commCodeList(param);
+		HttpSession session = req.getSession();
+		String memGbn = (String)session.getAttribute("mem_gbn");
+		// 회원구분 01 멤버 / 02 일반 / 03 교민 / 04 에이전시 
+		if("01".equals(memGbn)) {  // 멤버
+			param.put("HEAD_CD" , "500210"); // 미팅센딩
+			List<Map<String, Object>> pickupSvcList = commonService.commCodeList(param);
 
-		param.put("HEAD_CD" , "500060"); // late체크아웃
-		List<Map<String, Object>> lateOutYnList = commonService.commCodeList(param);
+			param.put("HEAD_CD" , "500060"); // late체크아웃
+			List<Map<String, Object>> lateOutYnList = commonService.commCodeList(param);
 
-		param.put("HEAD_CD" , "500070");  // 객실타입
-		List<Map<String, Object>> roomTypeList = commonService.commCodeList(param);
+			param.put("HEAD_CD" , "500070");  // 객실타입
+			List<Map<String, Object>> roomTypeList = commonService.commCodeList(param);
 
-		param.put("HEAD_CD" , "500180"      );  // 출발항공편
-		param.put("ORDER_BY", "REF_CHR3 ASC");
-		List<Map<String, Object>> fligthInList = commonService.commCodeList(param);
+			param.put("HEAD_CD" , "500180"      );  // 출발항공편
+			param.put("ORDER_BY", "REF_CHR3 ASC");
+			List<Map<String, Object>> fligthInList = commonService.commCodeList(param);
 
-		param.put("HEAD_CD" , "500190"      );  // 도착항공편
-		List<Map<String, Object>> fligthOutList = commonService.commCodeList(param);
+			param.put("HEAD_CD" , "500190"      );  // 도착항공편
+			List<Map<String, Object>> fligthOutList = commonService.commCodeList(param);
 
-		model.addAttribute("pickupSvcList", pickupSvcList);
-		model.addAttribute("lateOutYnList", lateOutYnList);
-		model.addAttribute("roomTypeList" , roomTypeList );
-		model.addAttribute("fligthInList" , fligthInList );
-		model.addAttribute("fligthOutList", fligthOutList);
+			model.addAttribute("pickupSvcList", pickupSvcList);
+			model.addAttribute("lateOutYnList", lateOutYnList);
+			model.addAttribute("roomTypeList" , roomTypeList );
+			model.addAttribute("fligthInList" , fligthInList );
+			model.addAttribute("fligthOutList", fligthOutList);
 
-		return "reservation/reservationReq_m.view";
+			return "reservation/reservationReq_m.view";
+		}
+		// 일반 패키지 리스트
+		List<Map<String, Object>> packageList = reservationService.packageList();
+		model.addAttribute("packageList", packageList);
+
+		return "reservation/reservationReq.view";
+	}
+
+	@RequestMapping(value = "/reservationInsert1.do", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> reservationInsert1(@RequestParam Map<String, Object> param, HttpServletRequest req) throws Exception {
+		Map<String, Object> rMap = new HashMap<String, Object>();
+		HttpSession session = req.getSession();
+
+		param.put("today"   , EgovDateUtil.getToday()         ); // 금일
+		param.put("user_id" , session.getAttribute("user_id" ));
+		param.put("han_name", session.getAttribute("han_name"));
+		param.put("eng_name", session.getAttribute("eng_name"));
+		param.put("tel_no"  , session.getAttribute("tel_no"  ));
+		param.put("mem_gbn" , session.getAttribute("mem_gbn" ));
+		param.put("prc_sts" , "01"                            ); // 예약요청-일반
+
+		// 일반 예약등록
+		int result = reservationService.reservationInsert1(param);
+		if(result >= 1) {
+			String msg = "일반 예약신청이 등록 되었습니다.";
+			commonService.telegramMsgSend(msg);
+			rMap.put("result", "SUCCESS");
+		} else {
+			rMap.put("result", "FAIL");
+		}
+		return rMap;
 	}
 
 	@RequestMapping(value = "/reservationInsert_m.do", method = RequestMethod.POST)
@@ -213,9 +264,8 @@ public class ReservationController {
 			String msg = "멤버 예약이 등록 되었습니다.";
 			commonService.telegramMsgSend(msg);
 			rMap.put("result", "SUCCESS");
-		} else {
-			rMap.put("result", "FAIL");
 		}
+
 		return rMap;
 	}
 
