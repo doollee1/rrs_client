@@ -11,8 +11,8 @@
 	FROM
 		tb_qna_board
 	WHERE
-		qna_seq = up_seq
-		AND reg_sts NOT IN (0)
+		reg_sts NOT IN (0)
+		AND up_seq = '0'
 	ORDER BY
 		qna_seq DESC
 	LIMIT
@@ -21,15 +21,13 @@
 </select>
 
 <select id="qnaListCnt" resultType="int">
-<![CDATA[
 	SELECT 
 		count(*)
 	FROM 
 		tb_qna_board
 	WHERE
-		qna_seq = up_seq
-		AND reg_sts NOT IN (0)
-]]>
+		reg_sts NOT IN (0)
+		AND up_seq = '0'
 </select>
 
 <select id="myQnaList" parameterType="hashMap" resultType="hashMap">
