@@ -44,7 +44,7 @@ function setEvent() {
 					<c:if test="${not empty reservationList}">
 						<c:forEach items="${reservationList}" var = "list">
 							<fmt:parseDate var="reqDate" pattern="yyyyMMdd" value="${list.REQ_DT}"/>
-							<li class="active" data-req_dt="${list.REQ_DT}" data-seq=${list.SEQ}>
+							<li class="active" data-req_dt="${list.REQ_DT}" data-seq="${list.SEQ}">
 								<a href="javascript:;">
 									<span class="date"><fmt:formatDate value="${reqDate}" pattern="yyyy-MM-dd"/></span>
 									<span>${list.PRC_STS_NM }</span>

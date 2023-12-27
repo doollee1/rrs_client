@@ -285,6 +285,8 @@ $(document).ready(function() {
 										if(retData2.result == "SUCCESS") {
 											alert("예약이 취소되었습니다.");
 											location.replace("/main.do");
+										} else if(retData2.msg != ""){
+											alert(retData2.msg);
 										} else {
 											alert("상태값이 변경되어 수정할 수 없습니다.");
 										}

@@ -92,13 +92,18 @@ $(document).ready(function() {
 											<td colspan="2"><span>${fn:replace(list.CNTN1, '\\n', '</br>')}</span></td>
 										</tr>
 									</c:when>
+									<c:when test="${(headerSize eq 2) and ((list.CNTN1 eq list.CNTN2))}">
+										<tr class="bg">
+											<td colspan="2"><span>${fn:replace(list.CNTN1, '\\n', '</br>')}</span></td>
+										</tr>
+									</c:when>
 									<c:when test="${(headerSize eq 2) or (list.CNTN1 eq list.CNTN2)}">
 										<tr class="bg">
 											<c:if test = "${headerSize eq 2}">
 												<td><span>${fn:replace(list.CNTN1, '\\n', '</br>')}</span></td>
 												<td><span>${fn:replace(list.CNTN2, '\\n', '</br>')}</span></td>
 											</c:if>
-											<c:if test="${list.CNTN1 eq list.CNTN2}">
+											<c:if test="${(headerSize ne 2) and (list.CNTN1 eq list.CNTN2)}">
 												<td><span>${fn:replace(list.CNTN1, '\\n', '</br>')}</span></td>
 												<td><span>${fn:replace(list.CNTN3, '\\n', '</br>')}</span></td>
 											</c:if>
@@ -138,7 +143,6 @@ $(document).ready(function() {
 								<c:set var="headerSize" value="3"/>
 							</c:otherwise>
 						</c:choose>
-
 						<table class="table table-pk">
 						<colgroup>
 							<col style="width:50%">
@@ -181,13 +185,18 @@ $(document).ready(function() {
 											<td colspan="2"><span>${fn:replace(list.CNTN1, '\\n', '</br>')}</span></td>
 										</tr>
 									</c:when>
+									<c:when test="${(headerSize eq 2) and ((list.CNTN1 eq list.CNTN2))}">
+										<tr class="bg">
+											<td colspan="2"><span>${fn:replace(list.CNTN1, '\\n', '</br>')}</span></td>
+										</tr>
+									</c:when>
 									<c:when test="${(headerSize eq 2) or (list.CNTN1 eq list.CNTN2)}">
 										<tr class="bg">
 											<c:if test = "${headerSize eq 2}">
 												<td><span>${fn:replace(list.CNTN1, '\\n', '</br>')}</span></td>
 												<td><span>${fn:replace(list.CNTN2, '\\n', '</br>')}</span></td>
 											</c:if>
-											<c:if test="${list.CNTN1 eq list.CNTN2}">
+											<c:if test="${(headerSize ne 2) and (list.CNTN1 eq list.CNTN2)}">
 												<td><span>${fn:replace(list.CNTN1, '\\n', '</br>')}</span></td>
 												<td><span>${fn:replace(list.CNTN3, '\\n', '</br>')}</span></td>
 											</c:if>

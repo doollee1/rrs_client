@@ -37,6 +37,9 @@ public interface ReservationMapper {
 	// 예약등록 픽업 상품 조회
 	Map<String, Object> getCarProdInfo(Map<String, Object> paramMap) throws Exception;
 
+	// 환불여부 정보
+	Map<String, Object> getReFundInfo(Map<String, Object> paramMap) throws Exception;
+
 	// 예약 취소
 	int reservationCancel(Map<String, Object> paramMap) throws Exception;
 

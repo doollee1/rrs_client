@@ -325,11 +325,17 @@ $(document).ready(function() {
 			})
 		});
 
+		var curDate     = new Date();
+		var startDate = new Date();
+		var endDate   = new Date();
+		startDate.setDate(curDate.getDate() + 1);
+		endDate.setFullYear(curDate.getFullYear() + 1);
 		<%-- datepicker setting --%>
 		$(".input-daterange").datepicker({
 			todayHighlight: true,
 			autoclose: true,
-			startDate: new Date()
+			startDate: startDate,
+			endDate: endDate
 		}).on("changeDate", function(e) {
 			isCal = false;
 			$("#cal_amt").val(0);

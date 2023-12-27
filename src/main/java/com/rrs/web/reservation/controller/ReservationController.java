@@ -45,6 +45,21 @@ public class ReservationController {
 			if("01".equals(prcSts) || "02".equals(prcSts) || "04".equals(prcSts) || "05".equals(prcSts) || "06".equals(prcSts)) {
 				HttpSession session = req.getSession();
 				param.put("user_id" , session.getAttribute("user_id"));
+				// 예약확정일때는 환불요청
+				if("06".equals(prcSts)) {
+					// 환불가능 여부
+					Map<String, Object> refundMap = reservationService.getReFundInfo(param);
+					if(refundMap == null) {
+						return rMap; 
+					}
+					String refundYn  = (String)refundMap.get("REFUND_YN" );  // 환불여부
+					String refundDay = (String)refundMap.get("REFUND_DAY");  // 환불가능일
+					if(!"Y".equals(refundYn)) {
+						rMap.put("msg", "환불은 체크인일자로부터 " + refundDay + "일 이내 가능합니다.");
+						return rMap; 
+					}
+				}
+
 				// 회원구분 01 멤버 / 02 일반 / 03 교민 / 04 에이전시 
 				String memGbn  = (String)session.getAttribute("mem_gbn");
 				String memGbn2 = "01".equals(memGbn) ? "멤버" : "일반";
@@ -188,8 +203,9 @@ public class ReservationController {
 				return "reservation/reservationReqDetail2.view";
 			} else if("04".equals(prcSts)) { // 일반 예약신청
 				return "reservation/reservationReqDetail3.view";
+			} else {  // 그외(입금대기, 예약확정, 예약취소, 환불요청)
+				return "reservation/reservationReqDetail4.view";
 			}
-			return "reservation/reservationReqDetail.view";
 		}
 	}
 
@@ -250,7 +266,7 @@ public class ReservationController {
 		// 일반 예약등록
 		int result = reservationService.reservationInsert1(param);
 		if(result >= 1) {
-			String msg = "일반 예약신청이 등록 되었습니다.";
+			String msg = "일반 예약요청이 등록 되었습니다.";
 			commonService.telegramMsgSend(msg);
 			rMap.put("result", "SUCCESS");
 		} else {

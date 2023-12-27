@@ -140,6 +140,17 @@
            AND SEQ    = #{seq   }
 	</select>
 
+	<select id="getReFundInfo" parameterType="hashMap" resultType="hashMap">
+        SELECT CASE WHEN DATEDIFF(CAST(chk_in_dt AS DATE), NOW()) >= IFNULL((SELECT REF_CHR1 FROM bc_comm_l WHERE HEAD_CD = '500230' AND CODE = '01'), 0)
+                    THEN 'Y'
+                    ELSE 'N'
+               END AS REFUND_YN
+             , (SELECT REF_CHR1 FROM bc_comm_l WHERE HEAD_CD = '500230' AND CODE = '01') AS REFUND_DAY
+          FROM tb_req_booking_m
+         WHERE REQ_DT = #{req_dt}
+           AND SEQ    = #{seq   }
+	</select>
+
 	<update id="reservationCancel" parameterType="hashMap">
         UPDATE tb_req_booking_m 
            SET PRC_STS = CASE WHEN #{prc_sts} = '06' /* 예약확정 */
@@ -489,6 +500,10 @@
              , IFNULL(C.DEP_AMT, 0) AS DEP_AMT
              , IFNULL(C.BAL_AMT, 0) AS BAL_AMT
              , ( SELECT HDNG_GBN FROM tb_prod_info WHERE BAS_YY = A.BAS_YY AND PROD_SEQ = A.PROD_SEQ) AS PACKAGE_
+             , CASE WHEN DATEDIFF(CAST(chk_in_dt AS DATE), NOW()) >= IFNULL((SELECT REF_CHR1 FROM bc_comm_l WHERE HEAD_CD = '500230' AND CODE = '01'), 0)
+                    THEN 'Y'
+                    ELSE 'N'
+                END AS REFUND_YN /* 환불요청가능 */
           FROM tb_req_booking_m A
      LEFT JOIN tb_req_fee       C
             ON A.REQ_DT   = C.REQ_DT

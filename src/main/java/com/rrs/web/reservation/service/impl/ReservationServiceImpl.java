@@ -111,6 +111,10 @@ public class ReservationServiceImpl implements ReservationService {
 			packageAmt = (long)Double.parseDouble(String.valueOf(packageMap.get("PACKAGE_AMT")));
 
 			// 예약 테이블 수정
+			paramMap.put("res_bas_yy"    , packageMap.get("BAS_YY"    ));
+			paramMap.put("res_bas_yy_seq", packageMap.get("BAS_YY_SEQ"));
+			paramMap.put("res_prod_seq"  , packageMap.get("PROD_SEQ"  ));
+
 			insertGbn = reservationMapper.updateTbReqBookingM(paramMap);
 			if(insertGbn == 0) return insertGbn;
 		}
@@ -353,5 +357,10 @@ public class ReservationServiceImpl implements ReservationService {
 	// 예약상태 확인
 	public String getPrcSts(Map<String, Object> paramMap) throws Exception {
 		return reservationMapper.getPrcSts(paramMap);
+	}
+
+	// 환불가능여부
+	public Map<String, Object> getReFundInfo(Map<String, Object> paramMap) throws Exception {
+		return reservationMapper.getReFundInfo(paramMap);
 	}
 }

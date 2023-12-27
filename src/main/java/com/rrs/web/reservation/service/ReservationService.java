@@ -5,6 +5,8 @@ import java.util.*;
 public interface ReservationService {
 	String getPrcSts (Map<String, Object> param) throws Exception;
 
+	Map<String, Object> getReFundInfo(Map<String, Object> param) throws Exception;
+
 	Map<String, Object> memRoomChargeCalc(Map<String, Object> param) throws Exception;
 
 	Map<String, Object> getRoomProdInfo(Map<String, Object> param) throws Exception;

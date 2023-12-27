@@ -6,15 +6,15 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <script>
 <c:set var="msg"  value="" />
-<c:set var="msg2" value="" />
-<c:if test="${reservationDetail.PRC_STS eq '05'}">
-	<c:set var="msg"  value="예약을 취소 하시겠습니까?" />
-	<c:set var="msg2" value="예약이 취소 되었습니다." />
-</c:if>
-<c:if test="${reservationDetail.PRC_STS eq '06'}">
-	<c:set var="msg"  value="환불요청을 하시겠습니까?" />
-	<c:set var="msg2" value="환불요청이 등록 되었습니다." />
-</c:if>
+	<c:set var="msg2" value="" />
+	<c:if test="${reservationDetail.PRC_STS eq '05'}">
+		<c:set var="msg"  value="예약을 취소 하시겠습니까?" />
+		<c:set var="msg2" value="예약이 취소 되었습니다." />
+	</c:if>
+	<c:if test="${reservationDetail.PRC_STS eq '06'}">
+		<c:set var="msg"  value="환불요청을 하시겠습니까?" />
+		<c:set var="msg2" value="환불요청이 등록 되었습니다." />
+	</c:if>
 
 $(document).ready(function() {
 	<c:if test="${reservationDetail.PRC_STS eq '05'}">
@@ -30,26 +30,14 @@ $(document).ready(function() {
 		setTitle("환불요청");
 	</c:if>
 	setEvent();
-	if($("#footer").length == 0) {
-		$(".app-content-padding").addClass("none-footer");
-	}
 
 	<%-- 데이터 셋팅 --%>
 	var detailData = JSON.parse('${strReservationDetail}');
 	for(key in detailData) {
-		<%-- key값 대문자로 받아옴.. --%>
 		var objId = "#" + key.toLowerCase();
 		if($(objId).length >= 1) {
-			if(objId == "#chk_in_dt" || objId == "#chk_out_dt") {
-				$(objId).datepicker("setDate", detailData[key]);
-			} else if($(objId).hasClass("toNumber")) {
-				if(objId == "#tot_person") {  <%-- 총인원-1(본인) --%>
-					$(objId).val(numberComma(detailData[key] -1));
-				} else if(objId == "#r_person") { <%-- 멤버수 = DB라운딩인원 -1(본인) -DB비멤버인원 --%>
-					$(objId).val(numberComma(detailData[key] -1 -detailData["NR_PERSON"]));
-				} else {
-					$(objId).val(numberComma(detailData[key]));
-				}
+			if($(objId).hasClass("toNumber")) {
+				$(objId).val(numberComma(detailData[key]));
 			} else {
 				$(objId).val(detailData[key]);
 			}
@@ -65,6 +53,7 @@ $(document).ready(function() {
 				, seq     : $("#seq"   ).val()
 				, prc_sts : "${reservationDetail.PRC_STS}"
 			}
+
 			$.ajax({
 				type : "POST",
 				url : "getPrcSts.do",
@@ -74,12 +63,14 @@ $(document).ready(function() {
 					if(retData.result == "SUCCESS") {
 						if(retData.prc_sts == "${reservationDetail.PRC_STS}") {
 							if(confirm("${msg}")) {
+								dimOpen();
 								$.ajax({
 									type : "POST",
 									url : "reservationCancel.do",
 									data : data,
 									dataType : "json",
 									success : function(retData2) {
+										dimClose();
 										if(retData2.result == "SUCCESS") {
 											alert("${msg2}");
 											location.replace("/main.do");
@@ -146,6 +137,18 @@ $(document).ready(function() {
 					</div>
 				</div>
 				<div class="row mb-2">
+					<label class="form-label col-form-label col-md-3">한글이름</label>
+					<div class="col-sm-9">
+						<input type="text" class="form-control" value="${sessionScope.login.han_name}" readonly>
+					</div>
+				</div>
+				<div class="row mb-2">
+					<label class="form-label col-form-label col-md-3">영문이름</label>
+					<div class="col-sm-9">
+						<input type="text" class="form-control" value="${sessionScope.login.eng_name}" readonly>
+					</div>
+				</div>
+				<div class="row mb-2">
 					<label class="form-label col-form-label col-md-3">객실타입</label>
 					<div class="col-md-9">
 						<select id="room_type" name="room_type" class="form-select readonly">
@@ -153,6 +156,24 @@ $(document).ready(function() {
 								<option value="${room.CODE}">${room.CODE_NM}</option>
 							</c:forEach>
 						</select>
+					</div>
+				</div>
+				<div class="total-people-wrap">
+					<div class="inline-flex">
+						<div class="col-form-label">총인원</div>
+						<input type="text" id="tot_person" name="tot_person" class="toNumber form-control text-end" readonly>명
+					</div>
+					<div class="inline-flex">
+						<div class="col-form-label">라운딩</div>
+						<input type="text" id="r_person" name="r_person" maxlength="3" class="toNumber form-control text-end" readonly>명
+					</div>
+					<div class="inline-flex">
+						<div class="col-form-label">비라운딩</div>
+						<input type="text" id="n_person" name="n_person" maxlength="3" class="toNumber form-control text-end" readonly>명
+					</div>
+					<div class="inline-flex">
+						<div class="col-form-label">소아</div>
+						<input type="text" id="k_person" name="k_person" maxlength="3" class="toNumber form-control text-end" readonly>명
 					</div>
 				</div>
 				<div class="row mb-2">
@@ -177,44 +198,28 @@ $(document).ready(function() {
 				</div>
 				<div class="row mb-2">
 					<label class="form-label col-form-label col-md-3">항공권 첨부</label>
+					<div class="col-sm-9" style="display:none;">
+						<input id="fligthImage" name="fligthImage" type="file" accept="image/*" class="form-control" readonly/>
+						수정 시 필수 사항이 아닙니다.
+					</div>
 					<div class="col-sm-9">
 						<input id="fligth_image" name="fligth_image" type="text" class="form-control" readonly>
-					</div>
-				</div>
-				<div class="row mb-2">
-					<label class="form-label col-form-label col-md-3">한글이름</label>
-					<div class="col-sm-9">
-						<input id="req_han_nm" name="req_han_nm" type="text" class="form-control" readonly>
-					</div>
-				</div>
-				<div class="row mb-2">
-					<label class="form-label col-form-label col-md-3">영문이름</label>
-					<div class="col-sm-9">
-						<input id="req_eng_nm" name="req_eng_nm" type="text" class="form-control" readonly>
-					</div>
-				</div>
-				<div class="total-people-wrap">
-					<div class="inline-flex">
-						<div class="col-form-label">총인원(추가인원)</div>
-						<input type="text" id="tot_person" name="tot_person" class="toNumber form-control text-end" readonly>명
-					</div>
-					<div class="inline-flex">
-						<div class="col-form-label">멤버</div>
-						<input type="text" id="r_person" name="r_person" maxlength="3" class="toNumber form-control text-end" readonly>명
-					</div>
-					<div class="inline-flex">
-						<div class="col-form-label">비멤버</div>
-						<input type="text" id="nr_person" name="nr_person" maxlength="3" class="toNumber form-control text-end" readonly>명
-					</div>
-					<div class="inline-flex">
-						<div class="col-form-label">소아</div>
-						<input type="text" id="k_person" name="k_person" maxlength="3" class="toNumber form-control text-end" readonly>명
 					</div>
 				</div>
 			</div>
 			<!-- END tab-pane -->
 			<!-- BEGIN tab-pane -->
 			<div class="tab-pane fade" id="default-tab-2">
+				<div class="row mb-2">
+					<label class="form-label col-form-label col-md-3">패키지</label>
+					<div class="col-sm-9">
+						<select id="package_" class="form-select readonly">
+							<c:forEach items="${packageList}" var="package_" varStatus="status">
+								<option value="${package_.CODE}">${package_.CODE_NM}</option>
+							</c:forEach>
+						</select>
+					</div>
+				</div>
 				<div class="row mb-2">
 					<label class="form-label col-form-label col-md-3">미팅샌딩</label>
 					<div class="col-md-9 inline-flex">
@@ -256,24 +261,29 @@ $(document).ready(function() {
 						<textarea id="remark" name="remark" class="form-control readonly" rows="3"></textarea>
 					</div>
 				</div>
-				
-				
-				<div class="mb-2">
-					<div class="inline-flex calc">
-						<label class="form-label col-form-label">계약금</label>
-						<input id="dep_amt" name="dep_amt" type="text" class="toNumber form-control text-end" readonly>원
+					<div class="mb-2">
+						<div class="inline-flex calc">
+							<label class="form-label col-form-label">계약금</label>
+							<input type="text" id="dep_amt" name="dep_amt" class="toNumber form-control text-end" readonly>원
+						</div>
 					</div>
-				</div>
-				<div class="mb-2">
-					<div class="inline-flex calc">
-						<label class="form-label col-form-label">잔금</label>
-						<input id="bal_amt" name="bal_amt" type="text" class="toNumber form-control text-end" readonly>원
+					<div class="mb-2">
+						<div class="inline-flex calc">
+							<label class="form-label col-form-label">잔금</label>
+							<input type="text" id="bal_amt" name="bal_amt" class="toNumber form-control text-end" value="1800000" readonly>원
+						</div>
 					</div>
-				</div>
+					<div class="mb-2">
+						<div class="inline-flex calc">
+							<label class="form-label col-form-label">총액</label>
+							<input type="text" id="cal_amt" name="cal_amt" class="toNumber form-control text-end" value="" readonly>원
+						</div>
+					</div>
 			</div>
 			<!-- END tab-pane -->
 		</div>
 		<!-- END tab-content -->
+
 	</div>
 	<!-- END content-container -->
 

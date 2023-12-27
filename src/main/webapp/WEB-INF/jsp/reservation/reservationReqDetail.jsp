@@ -57,12 +57,18 @@ $(document).ready(function() {
 
 	<%-- 이벤트 함수 --%>
 	function setEvent() {
+		var curDate     = new Date();
+		var startDate = new Date();
+		var endDate   = new Date();
+		startDate.setDate(curDate.getDate() + 1);
+		endDate.setFullYear(curDate.getFullYear() + 1);
 		<%-- datepicker setting --%>
 		$(".input-daterange").datepicker({
 			todayHighlight: true,
 			autoclose: true,
-			startDate: new Date()
-		});
+			startDate: startDate,
+			endDate: endDate
+		})
 
 		<%-- 수정버튼 클릭 --%>
 		$("#reservationUpdateBtn").on("click", function() {
@@ -166,6 +172,8 @@ $(document).ready(function() {
 										if(retData2.result == "SUCCESS") {
 											alert("예약이 취소되었습니다.");
 											location.replace("/main.do");
+										} else if(retData2.msg != ""){
+											alert(retData2.msg);
 										} else {
 											alert("상태값이 변경되어 수정할 수 없습니다.");
 										}

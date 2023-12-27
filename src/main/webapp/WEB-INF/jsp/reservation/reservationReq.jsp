@@ -42,11 +42,18 @@ $(document).ready(function() {
 	<%-- 이벤트 함수 --%>
 	function setEvent() {
 		<%-- datepicker setting --%>
+		var curDate     = new Date();
+		var startDate = new Date();
+		var endDate   = new Date();
+		startDate.setDate(curDate.getDate() + 1);
+		endDate.setFullYear(curDate.getFullYear() + 1);
+		<%-- datepicker setting --%>
 		$(".input-daterange").datepicker({
 			todayHighlight: true,
 			autoclose: true,
-			startDate: new Date()
-		});
+			startDate: startDate,
+			endDate: endDate
+		})
 
 		<%-- datepicker 버튼  이벤트--%>
 		$(".input-daterange .input-group").on("click", function() {
