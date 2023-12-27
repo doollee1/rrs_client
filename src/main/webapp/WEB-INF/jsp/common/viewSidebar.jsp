@@ -23,7 +23,7 @@
 					<div class="menu-header">Navigation</div>
 
 					<div class="menu-item">
-						<a href="#" class="menu-link">
+						<a href="/reservationReq.do" class="menu-link">
 							<div class="menu-icon">
 								<i class="fas fa-calendar-check"></i>
 							</div>
@@ -31,7 +31,7 @@
 						</a>
 					</div>
 					<div class="menu-item ">
-						<a href="#" class="menu-link">
+						<a href="/reservationList.do" class="menu-link">
 							<div class="menu-icon">
 								<i class="fas fa-calendar-days"></i>
 							</div>
