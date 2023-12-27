@@ -83,7 +83,8 @@
 		)
 		VALUES (
 			(SELECT IFNULL(MAX(qna_seq) + 1, 1) FROM tb_qna_board a)
-			, (SELECT IFNULL(MAX(qna_seq) + 1, 1) FROM tb_qna_board a)
+			<!-- , (SELECT IFNULL(MAX(qna_seq) + 1, 1) FROM tb_qna_board a) -->
+			, '0'
 			, DATE_FORMAT(NOW(),'%Y%m%d')
 			, #{title}
 			, #{content}
