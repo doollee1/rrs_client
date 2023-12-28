@@ -63,7 +63,8 @@
 	FROM
 		tb_qna_board
 	WHERE 
-		up_seq = #{qna_seq}
+		qna_seq = #{qna_seq}
+		OR up_seq = #{qna_seq}
 ]]>
 </select>
 
