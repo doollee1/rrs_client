@@ -64,7 +64,9 @@ public class ProductController {
 				String stDt = (String)data.get("ST_DT" + dtNum2);
 				while(stDt != null && !"".equals(stDt)) {
 					if(dtNum1 == 4) {
-						newData.put("TITLE" , data.get("TITLE"));
+						newData.put("PROD_COND", data.get("PROD_COND"));
+						newData.put("HDNG_GBN" , data.get("HDNG_GBN" ));
+						newData.put("TITLE"    , data.get("TITLE"    ));
 						tableList.add(newData);
 						newData = new HashMap<String, Object>();
 						dtNum1 = 1;
@@ -86,7 +88,9 @@ public class ProductController {
 						continue;
 					}
 				}
-				newData.put("TITLE" , data.get("TITLE"));
+				newData.put("PROD_COND", data.get("PROD_COND"));
+				newData.put("HDNG_GBN" , data.get("HDNG_GBN" ));
+				newData.put("TITLE"    , data.get("TITLE"    ));
 				tableList.add(newData);
 				break;
 			}
@@ -101,10 +105,17 @@ public class ProductController {
 		int tableSize = table.size() > 0 ? table.size() : 0;
 		List<List<Map<String, Object>>> tableLists = new ArrayList<List<Map<String, Object>>>(tableSize);
 
+		Map<String, List<Map<String, Object>>> tmp = new HashMap<String, List<Map<String, Object>>>();
+		int i = 0; // 키중복될수있어서.. + i
 		for(String key : table.keySet()) {
-			tableLists.add(table.get(key));
+			tmp.put((String)table.get(key).get(0).get("HDNG_GBN") + (String)table.get(key).get(0).get("PROD_COND") + i, table.get(key));  
+			i++;
 		}
-
+		List<String> keySet = new ArrayList<>(tmp.keySet());
+		Collections.sort(keySet);  // 맨처음 항목구분으로 sorting
+		for(String key : keySet) {
+			tableLists.add(tmp.get(key));
+		}
 		return tableLists;
 	}
 }

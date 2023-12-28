@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.rrs.web.reservation.service.impl.ReservationMapper">
-	<!--
-	<select id="memRoomChargeCalc" parameterType="hashMap" resultType="hashMap">
-        SELECT REF_NUM1 * DATEDIFF(CAST(#{chk_out_dt} AS DATE), CAST(#{chk_in_dt} AS DATE)) * #{tot_person} AS MEM_ROOM_CHARGE
-          FROM bc_comm_l
-         WHERE HEAD_CD = '500080'
-           AND SUBSTR(#{chk_in_dt}, 5) BETWEEN REF_CHR1 AND REF_CHR2
-	</select>
-	-->
 	<select id="getRoomProdInfo" parameterType="hashMap" resultType="hashMap">
         SELECT A.BAS_YY /* 기준년도 */
              , A.BAS_YY_SEQ /* 기간년도순번 */
@@ -347,6 +339,7 @@
 	<update id="updateTbReqFee" parameterType="hashMap">
         UPDATE tb_req_fee 
            SET TOT_AMT = #{tot_amt}
+             , BAL_AMT = #{tot_amt}
              , UPD_DTM = NOW()
              , UPD_ID  = #{user_id}
          WHERE REQ_DT  = #{req_dt }
@@ -411,7 +404,7 @@
          , #{seq        }
          , ''
          , 0
-         , 0
+         , #{tot_amt    }
          , 0
          , 0
          , #{tot_amt    }
