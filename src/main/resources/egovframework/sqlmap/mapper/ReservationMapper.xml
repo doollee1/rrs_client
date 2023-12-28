@@ -141,7 +141,7 @@
 	</select>
 
 	<select id="getReFundInfo" parameterType="hashMap" resultType="hashMap">
-        SELECT CASE WHEN DATEDIFF(CAST(chk_in_dt AS DATE), NOW()) >= IFNULL((SELECT REF_CHR1 FROM bc_comm_l WHERE HEAD_CD = '500230' AND CODE = '01'), 0)
+        SELECT CASE WHEN DATEDIFF(CAST(chk_in_dt AS DATE), NOW()) >= IFNULL((SELECT REF_CHR1 FROM bc_comm_l WHERE HEAD_CD = '500230' AND CODE = '01'), 1)
                     THEN 'Y'
                     ELSE 'N'
                END AS REFUND_YN
@@ -500,7 +500,7 @@
              , IFNULL(C.DEP_AMT, 0) AS DEP_AMT
              , IFNULL(C.BAL_AMT, 0) AS BAL_AMT
              , ( SELECT HDNG_GBN FROM tb_prod_info WHERE BAS_YY = A.BAS_YY AND PROD_SEQ = A.PROD_SEQ) AS PACKAGE_
-             , CASE WHEN DATEDIFF(CAST(chk_in_dt AS DATE), NOW()) >= IFNULL((SELECT REF_CHR1 FROM bc_comm_l WHERE HEAD_CD = '500230' AND CODE = '01'), 0)
+             , CASE WHEN DATEDIFF(CAST(chk_in_dt AS DATE), NOW()) >= IFNULL((SELECT REF_CHR1 FROM bc_comm_l WHERE HEAD_CD = '500230' AND CODE = '01'), 1)
                     THEN 'Y'
                     ELSE 'N'
                 END AS REFUND_YN /* 환불요청가능 */
