@@ -33,7 +33,7 @@ $(window).ready( function() {
 					
 					<!-- BEGIN 공지사항 내용 -->
 					<p>
-						${content }
+						${contents }
 					</p>
 					<!-- END 공지사항 내용 -->
 					

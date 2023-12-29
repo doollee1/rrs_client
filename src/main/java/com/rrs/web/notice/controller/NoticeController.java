@@ -116,9 +116,9 @@ public class NoticeController {
 		
 		ModelAndView mav = new ModelAndView();
 		
-		NoticeVO vo = this.noticeService.noticeView((String)map.get("notice_seq"));
+		NoticeVO vo = this.noticeService.noticeView((String)map.get("notice_no"));
 		mav.addObject("title", vo.getTitle());
-		mav.addObject("content", vo.getContent());
+		mav.addObject("contents", vo.getContents());
 		mav.setViewName("notice/noticeView.view");
 		
 		return mav;

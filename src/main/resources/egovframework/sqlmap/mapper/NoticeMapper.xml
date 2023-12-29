@@ -7,15 +7,15 @@
 <select id="noticeList" parameterType="hashMap" resultType="hashMap">
 <![CDATA[
 	SELECT
-		notice_seq, title, DATE_FORMAT(st_dt, '%Y-%m-%d') AS st_dt
+		notice_no, title, DATE_FORMAT(fromDate, '%Y-%m-%d') AS fromDate
 	FROM
-		tb_notice_board
+		bc_notice
 	WHERE 
-		reg_sts = '2'
-		AND st_dt <= NOW()
-		AND ed_dt >= NOW()
+		notice_tp = '02'
+		AND fromDate <= NOW()
+		AND toDate >= NOW()
 	ORDER BY
-		notice_seq DESC
+		notice_no DESC
 	LIMIT
 		#{page}, 10
 ]]>
@@ -26,23 +26,22 @@
 	SELECT 
 		count(*)
 	FROM 
-		tb_notice_board
+		bc_notice
 	WHERE
-		reg_sts = '2'
-		AND st_dt <= NOW();
+		notice_tp = '02'
+		AND fromDate <= NOW();
 ]]>
 </select>
 
 <select id="noticeView" parameterType="String" resultType="com.rrs.web.notice.service.vo.NoticeVO">
 <![CDATA[
 	SELECT
-		title, content
+		title, contents, file_uid
 	FROM
-		tb_notice_board
+		bc_notice
 	WHERE 
-		notice_seq = #{notice_seq}
+		notice_no = #{notice_no}
 ]]>
 </select>
-
 
 </mapper>

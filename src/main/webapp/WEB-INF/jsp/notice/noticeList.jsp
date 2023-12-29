@@ -23,8 +23,8 @@ function setEvent(){
 }
 
 <%//공지사항 상세보기%>
-function goDetail(notice_seq){
-	location.href="/noticeView.do?notice_seq="+notice_seq;
+function goDetail(notice_no){
+	location.href="/noticeView.do?notice_no="+notice_no;
 }
 
 <%//무한 스크롤%>
@@ -59,8 +59,8 @@ function nextPage(){
 		page++;
 		var html = "";
 		for(var i = 0; i < data.length; i++) {
-			html += '<tr onclick="goDetail(' + data[i].notice_seq + ')">';
-			html += '	<td class="date"><span>' + data[i].st_dt + '</span></td>';
+			html += '<tr onclick="goDetail(' + data[i].notice_no + ')">';
+			html += '	<td class="date"><span>' + data[i].fromDate + '</span></td>';
 			html += '	<td><span>' + data[i].title + '</span></td>';
 			html += '</tr>';
 		}
@@ -85,8 +85,8 @@ function nextPage(){
 					</colgroup>
 					<tbody>
 						<c:forEach var="list" items="${list}">
-							<tr onclick="goDetail('${list.notice_seq}')">
-								<td class="date"><span>${list.st_dt }</span></td>
+							<tr onclick="goDetail('${list.notice_no}')">
+								<td class="date"><span>${list.fromDate }</span></td>
 								<td><span>${list.title }</span></td>
 							</tr>
 						</c:forEach>
