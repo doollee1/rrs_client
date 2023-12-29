@@ -331,12 +331,12 @@ public class ReservationController {
 
 		if("01".equals(memGbn)) {  // 가계산시 멤버는 숙박
 			param.put("hdng_gbn", "28"); // 조건 멤버(숙박)
-			Map<String, Object> memRoomChargeMap =  reservationService.getRoomProdInfo(param);
+			Map<String, Object> memRoomChargeMap =  reservationService.memRoomChargeCalc(param);
 			if(memRoomChargeMap != null) {
 				roomCharge = (long)Double.parseDouble(String.valueOf(memRoomChargeMap.get("MEM_ROOM_CHARGE")));
 			}
 		} else {  // 일반은 패키지
-			Map<String, Object> packageMap =  reservationService.getPackageInfo(param);
+			Map<String, Object> packageMap =  reservationService.packageCharge(param);
 			if(packageMap != null) {
 				packageAmt = (long)Double.parseDouble(String.valueOf(packageMap.get("PACKAGE_AMT")));
 			}

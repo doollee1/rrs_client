@@ -31,6 +31,11 @@ public class ReservationServiceImpl implements ReservationService {
 		return reservationMapper.memRoomChargeCalc(paramMap);
 	}
 
+	// 패키지 가겨 계산
+	public Map<String, Object> packageCharge(Map<String, Object> paramMap) throws Exception {
+		return reservationMapper.packageCharge(paramMap);
+	}
+
 	// 예약등록 상품 조회(멤버숙박)
 	public Map<String, Object> getRoomProdInfo(Map<String, Object> paramMap) throws Exception {
 		return reservationMapper.getRoomProdInfo(paramMap);
@@ -93,14 +98,17 @@ public class ReservationServiceImpl implements ReservationService {
 				return insertGbn;
 			}
 			// 숙박비
-			roomCharge = (long)Double.parseDouble(String.valueOf(prodMap.get("MEM_ROOM_CHARGE")));
+			Map<String, Object> memRoomChargeMap =  reservationMapper.memRoomChargeCalc(paramMap);
+			if(memRoomChargeMap != null) {
+				roomCharge = (long)Double.parseDouble(String.valueOf(memRoomChargeMap.get("MEM_ROOM_CHARGE")));
+			}
 
 			paramMap.put("res_bas_yy"    , prodMap.get("BAS_YY"    ));
 			paramMap.put("res_bas_yy_seq", prodMap.get("BAS_YY_SEQ"));
 			paramMap.put("res_prod_seq"  , prodMap.get("PROD_SEQ"  ));
+
 			// 예약 테이블 등록
 			insertGbn = reservationMapper.insertTbReqBookingM(paramMap);
-
 			if(insertGbn == 0) return insertGbn;
 		} else {
 			// 패키지 상품 정보 조회
@@ -108,7 +116,10 @@ public class ReservationServiceImpl implements ReservationService {
 			if(packageMap == null || packageMap.size() == 0) {
 				return insertGbn;
 			}
-			packageAmt = (long)Double.parseDouble(String.valueOf(packageMap.get("PACKAGE_AMT")));
+			Map<String, Object> packageChageMap =  reservationMapper.packageCharge(paramMap);
+			if(packageChageMap != null) {
+				packageAmt = (long)Double.parseDouble(String.valueOf(packageChageMap.get("PACKAGE_AMT")));
+			}
 
 			// 예약 테이블 수정
 			paramMap.put("res_bas_yy"    , packageMap.get("BAS_YY"    ));
@@ -295,12 +306,6 @@ public class ReservationServiceImpl implements ReservationService {
 			}
 		}
 
-		System.out.println(roomCharge);
-		System.out.println(packageAmt);
-		System.out.println(sendingAmt);
-		System.out.println(surchageAmt);
-		System.out.println(roomupAmt);
-		System.out.println(lateCheckOutAmt);
 		// 총비용
 		totalAmt = roomCharge + packageAmt + sendingAmt + surchageAmt + roomupAmt + lateCheckOutAmt;
 		paramMap.put("tot_amt", totalAmt);

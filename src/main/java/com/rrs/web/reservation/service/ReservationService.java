@@ -13,6 +13,8 @@ public interface ReservationService {
 
 	Map<String, Object> getPackageInfo(Map<String, Object> param) throws Exception;
 
+	Map<String, Object> packageCharge(Map<String, Object> param) throws Exception;
+
 	Map<String, Object> getCarProdInfo(Map<String, Object> param) throws Exception;
 
 	Map<String, Object> sendingCalc(Map<String, Object> param) throws Exception;

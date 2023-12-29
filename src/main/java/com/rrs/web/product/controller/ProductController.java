@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller("productController")
@@ -47,6 +48,27 @@ public class ProductController {
 		mav.addObject("tableLists" , tableLists );  // 성수기
 		mav.addObject("tableLists2", tableLists2);  // 비수기
 		mav.setViewName("product/product.view1");
+		return mav;
+	}
+
+	@RequestMapping(value = "/productInfoView.do", method = RequestMethod.GET) 
+	public ModelAndView productInfoView(@RequestParam Map<String, Object> param) throws Exception {
+		logger.info("productInfoView.do");
+		ModelAndView mav = new ModelAndView();
+		param.put("currentYear", param.get("year"));
+
+		// 성수기
+		List<Map<String, Object>> productListTmp  = productService.productList(param);
+
+		// 리스트 merge
+		List<Map<String, Object>> tableList  = makeList(productListTmp );
+
+		// 리스트 날짜별로 그룹핑
+		List<List<Map<String, Object>>> tableLists  = listGroupBy(tableList );
+
+		mav.addObject("tableLists" , tableLists          );
+		mav.addObject("ssnGbn"     , param.get("ssnGbn") );  // 시즌구분
+		mav.setViewName("product/productView.view1");
 		return mav;
 	}
 

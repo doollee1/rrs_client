@@ -18,6 +18,7 @@ public class AuthenticInterceptor extends HandlerInterceptorAdapter {
 		String requestURI = request.getRequestURI(); // 요청 URI
 		List<String> excludeList = Arrays.asList("/main.do"  // 메인 페이지
 												, "/productInfo.do" // 상품소개
+												, "/productInfoView.do" // 상품소개(관리자에서 호출)
 												, "/resortInfo.do"	// 리조트&골프장 소개
 												, "/signIn.do"      // 로그인
 												, "/signOut.do"     // 로그아웃
