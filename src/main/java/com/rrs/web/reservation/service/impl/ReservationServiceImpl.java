@@ -234,7 +234,10 @@ public class ReservationServiceImpl implements ReservationService {
 				return updateGbn;
 			}
 			// 숙박비
-			roomCharge = (long)Double.parseDouble(String.valueOf(prodMap.get("MEM_ROOM_CHARGE")));
+			Map<String, Object> memRoomChargeMap =  reservationMapper.memRoomChargeCalc(paramMap);
+			if(memRoomChargeMap != null) {
+				roomCharge = (long)Double.parseDouble(String.valueOf(memRoomChargeMap.get("MEM_ROOM_CHARGE")));
+			}
 			
 			paramMap.put("res_bas_yy"    , prodMap.get("BAS_YY"    ));
 			paramMap.put("res_bas_yy_seq", prodMap.get("BAS_YY_SEQ"));
@@ -246,9 +249,10 @@ public class ReservationServiceImpl implements ReservationService {
 			if(packageMap == null || packageMap.size() == 0) {
 				return updateGbn;
 			}
-
-			// 패키지비용
-			packageAmt = (long)Double.parseDouble(String.valueOf(packageMap.get("PACKAGE_AMT")));
+			Map<String, Object> packageChageMap =  reservationMapper.packageCharge(paramMap);
+			if(packageChageMap != null) {
+				packageAmt = (long)Double.parseDouble(String.valueOf(packageChageMap.get("PACKAGE_AMT")));
+			}
 
 			paramMap.put("res_bas_yy"    , packageMap.get("BAS_YY"    ));
 			paramMap.put("res_bas_yy_seq", packageMap.get("BAS_YY_SEQ"));
