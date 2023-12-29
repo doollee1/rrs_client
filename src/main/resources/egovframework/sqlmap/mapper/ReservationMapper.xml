@@ -95,7 +95,6 @@
                                   THEN 'DU10'
                                   WHEN PROD_COND != '0' AND DATEDIFF(CAST(#{chk_out_dt} AS DATE), CAST(#{chk_in_dt} AS DATE)) < 10
                                   THEN 'DD10'
-                                  ELSE A.PROD_COND
                               END
     ]]>
 	</select>
@@ -203,8 +202,8 @@
 	<update id="reservationCancel" parameterType="hashMap">
         UPDATE tb_req_booking_m 
            SET PRC_STS = CASE WHEN #{prc_sts} = '06' /* 예약확정 */
-                              THEN '08' /* 환불요청 */
-                              ELSE '07' /* 예약취소 */
+                              THEN '07' /* 환불요청 */
+                              ELSE '09' /* 예약취소 */
                           END
              , UPD_DTM = NOW()
              , UPD_ID  = #{user_id       }
