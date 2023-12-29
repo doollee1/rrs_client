@@ -1,0 +1,5 @@
+톰캣 context.xml에
+<Context allowCasualMultipartParsing="true" path="/">
+	<Resources cachingAllowed="true" cacheMaxSize="100000" />
+
+추가(로컬, 도커톰캣 둘 다)
