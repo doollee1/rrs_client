@@ -24,10 +24,13 @@ $(document).ready(function() {
 		setTitle("예약확정");
 	</c:if>
 	<c:if test="${reservationDetail.PRC_STS eq '07'}">
-		setTitle("예약취소");
+		setTitle("환불요청");
 	</c:if>
 	<c:if test="${reservationDetail.PRC_STS eq '08'}">
-		setTitle("환불요청");
+		setTitle("환불완료");
+	</c:if>
+	<c:if test="${reservationDetail.PRC_STS eq '09'}">
+		setTitle("예약취소");
 	</c:if>
 	setEvent();
 	if($("#footer").length == 0) {

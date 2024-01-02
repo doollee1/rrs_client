@@ -37,7 +37,7 @@ public class ReservationController {
 	@ResponseBody
 	public Map<String, Object> reservationCancel(@RequestParam Map<String, Object> param, HttpServletRequest req) throws Exception {
 		Map<String, Object> rMap = new HashMap<String, Object>();
-		// 상태값 체크 01 예약요청-일반 / 02 예약요청-멤버 / 03 예약가능 / 04 예약신청 / 05 입금대기 / 06 예약확정 / 07 예약취소 / 08환불요청
+		// 상태값 체크 01 예약요청-일반 / 02 예약요청-멤버 / 03 예약가능 / 04 예약신청 / 05 입금대기 / 06 예약확정 / 07 환불요청 / 08 환불완료 / 09 예약취소
 		String prcSts  = reservationService.getPrcSts(param);
 		String pPrcSts = (String)param.get("prc_sts");
 		// 예약요청, 예약신청, 입금대기
@@ -331,12 +331,12 @@ public class ReservationController {
 
 		if("01".equals(memGbn)) {  // 가계산시 멤버는 숙박
 			param.put("hdng_gbn", "28"); // 조건 멤버(숙박)
-			Map<String, Object> memRoomChargeMap =  reservationService.getRoomProdInfo(param);
+			Map<String, Object> memRoomChargeMap =  reservationService.memRoomChargeCalc(param);
 			if(memRoomChargeMap != null) {
 				roomCharge = (long)Double.parseDouble(String.valueOf(memRoomChargeMap.get("MEM_ROOM_CHARGE")));
 			}
 		} else {  // 일반은 패키지
-			Map<String, Object> packageMap =  reservationService.getPackageInfo(param);
+			Map<String, Object> packageMap =  reservationService.packageCharge(param);
 			if(packageMap != null) {
 				packageAmt = (long)Double.parseDouble(String.valueOf(packageMap.get("PACKAGE_AMT")));
 			}

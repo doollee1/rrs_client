@@ -16,6 +16,12 @@ public interface ReservationMapper {
 	// 멤버 숙박비 계산
 	Map<String, Object> memRoomChargeCalc(Map<String, Object> paramMap) throws Exception;
 
+	// 멤버 숙박비 계산
+	Map<String, Object> getRoomCharge(Map<String, Object> paramMap) throws Exception;
+
+	// 패키지 가격 계산
+	Map<String, Object> packageCharge(Map<String, Object> paramMap) throws Exception;
+
 	// 미팅샌딩비 계산
 	Map<String, Object> sendingCalc(Map<String, Object> paramMap) throws Exception;
 
