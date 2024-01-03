@@ -14,18 +14,29 @@ function setEvent() {
 	$(".reserve-list > li").on("click", function() {
 		var form = document.createElement("form");
 		var data = $(this).data();
-		for(key in data) {
-			var inputData = document.createElement("input");
-			inputData.setAttribute("type" , "hidden" );
-			inputData.setAttribute("name" , key      );
-			inputData.setAttribute("value", data[key]);
-			form.appendChild(inputData);
+		<%//예약 현황이 존재하지 않을 경우 에러 대응 20240103 이민구%>
+		if(!isEmpty(data)){
+			for(key in data) {
+				var inputData = document.createElement("input");
+				inputData.setAttribute("type" , "hidden" );
+				inputData.setAttribute("name" , key      );
+				inputData.setAttribute("value", data[key]);
+				form.appendChild(inputData);
+			}
+			form.setAttribute("method", "POST");
+			form.setAttribute("action", "reservationDetail.do");
+			document.body.appendChild(form);
+			form.submit();
 		}
-		form.setAttribute("method", "POST");
-		form.setAttribute("action", "reservationDetail.do");
-		document.body.appendChild(form);
-		form.submit();
 	});
+}
+
+function isEmpty(value) {
+	if( value == "" || value == null || value == undefined || ( value != null && typeof value == "object" && !Object.keys(value).length ) ){
+		return true
+	}else{
+		return false
+	}
 }
 </script>
 
@@ -38,7 +49,7 @@ function setEvent() {
 				<ul class="reserve-list">
 					<c:if test="${empty reservationList}">
 						<li class="none">
-							<a href="javascript:;"><i class="fa fa-times"></i>예약내역이 없습니다.</a>
+							<a href="#"><i class="fa fa-times"></i>예약내역이 없습니다.</a>
 						</li>
 					</c:if>
 					<c:if test="${not empty reservationList}">
