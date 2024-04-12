@@ -71,6 +71,9 @@ public class SignController {
 	 * @param request
 	 */
 	public void initRsa(HttpServletRequest req) {
+		
+		logger.info("========= RSA 공개키, 개인키 생성 ===========");
+		
 		HttpSession session = req.getSession();
 
 		KeyPairGenerator generator;
@@ -131,6 +134,9 @@ public class SignController {
 	// 로그인 화면 진입
 	@RequestMapping(value = {"/signIn.do"}, method = {RequestMethod.GET})
 	public String signInPage(HttpServletRequest req) throws Exception {
+		
+		logger.info("========= 로그인화면 진입 ===========");
+		
 		initRsa(req);
 		return "user/signIn.view1";
 	}

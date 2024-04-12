@@ -77,7 +77,8 @@ public class LoginController {
 	 * @param request
 	 */
 	public void initRsa(HttpServletRequest req) {
-		logger.info("===== 공개키, 개인키 생성 =====");
+		
+		logger.info("===== RSA 공개키, 개인키 생성 =====");
 		HttpSession session = req.getSession();
 
 		KeyPairGenerator generator;
