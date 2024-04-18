@@ -1,12 +1,5 @@
 package com.rrs.web.sign.controller;
 
-import com.rrs.web.sign.service.SignService;
-import com.rrs.web.sign.service.vo.SignVO;
-import com.rrs.comm.util.EgovFileScrty;
-import com.rrs.web.comm.service.MailSendService;
-import com.rrs.web.sign.controller.SignController;
-
-import java.nio.charset.StandardCharsets;
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -19,17 +12,20 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.crypto.Cipher;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.rrs.comm.util.EgovFileScrty;
+import com.rrs.web.comm.service.MailSendService;
+import com.rrs.web.sign.service.SignService;
+import com.rrs.web.sign.service.vo.SignVO;
 
 /**
  * @author 이민구
@@ -256,12 +252,9 @@ public class SignController {
 	// 아이디 찾기 처리
 	 @RequestMapping(value = {"/findId.do"}, method = {RequestMethod.POST})
 	 @ResponseBody
-	 public String findId(@ModelAttribute("SignVO") SignVO vo, HttpServletRequest req, HttpServletResponse response) throws Exception {
+	 public String findId(@ModelAttribute("SignVO") SignVO vo, HttpServletRequest req) throws Exception {
 		logger.info("======= 아이디찾기 처리 =======");
-		
-		response.setCharacterEncoding("UTF-8");
-		response.setContentType("text/html;charset=utf-8");
-		
+				
 		String result = "";
 		String find = this.signService.findId(vo);
 		logger.debug("find ::::: " + find);
@@ -278,8 +271,8 @@ public class SignController {
 			param.put("to", req.getParameter("email"));
 			param.put("title", title);
 			param.put("content", content);
-			//param.put("title", new String(title.getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8));
-			//param.put("content", new String(content.getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8));
+			//param.put("title", new String(title.getBytes("utf-8"), "euc-kr"));
+			//param.put("content", new String(content.getBytes("utf-8"), "euc-kr"));
 			mailSendService.sendMail(param);
 			result = "Y";
 		}

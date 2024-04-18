@@ -51,6 +51,7 @@ public class MailSendService {
 	public boolean sendMail(Map<String, Object> param) throws Exception {
 		try {
 			Email email = new SimpleEmail();
+			email.setCharset("euc-kr");// 한글 인코딩
 			email.setHostName(properties.getProperty("EMAIL.HOST"));
 			email.setSmtpPort(Integer.parseInt(properties.getProperty("EMAIL.PORT")));
 			email.setSslSmtpPort(properties.getProperty("EMAIL.PORT"));
