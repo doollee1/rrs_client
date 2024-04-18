@@ -18,6 +18,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.crypto.Cipher;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -252,9 +253,9 @@ public class SignController {
 	}
 	
 	// 아이디 찾기 처리
-	 @RequestMapping(value = {"/findId.do"}, method = {RequestMethod.POST}, produces="application/json;charset=UTF-8")
+	 @RequestMapping(value = {"/findId.do"}, method = {RequestMethod.POST}, produces="text/html;charset=UTF-8")
 	 @ResponseBody
-	 public String findId(@ModelAttribute("SignVO") SignVO vo, HttpServletRequest req) throws Exception {
+	 public String findId(@ModelAttribute("SignVO") SignVO vo, HttpServletRequest req, HttpServletResponse response) throws Exception {
 		logger.info("findId");
 		
 		String result = "";
