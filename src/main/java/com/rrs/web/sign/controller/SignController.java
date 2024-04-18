@@ -252,7 +252,7 @@ public class SignController {
 	}
 	
 	// 아이디 찾기 처리
-	 @RequestMapping(value = {"/findId.do"}, method = {RequestMethod.POST})
+	 @RequestMapping(value = {"/findId.do"}, method = {RequestMethod.POST}, produces="application/text;charset=utf-8")
 	 @ResponseBody
 	 public String findId(@ModelAttribute("SignVO") SignVO vo, HttpServletRequest req) throws Exception {
 		logger.info("findId");
