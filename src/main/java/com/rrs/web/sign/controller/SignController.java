@@ -259,6 +259,9 @@ public class SignController {
 	 public String findId(@ModelAttribute("SignVO") SignVO vo, HttpServletRequest req, HttpServletResponse response) throws Exception {
 		logger.info("======= 아이디찾기 처리 =======");
 		
+		response.setCharacterEncoding("UTF-8");
+		response.setContentType("text/html;charset=utf-8");
+		
 		String result = "";
 		String find = this.signService.findId(vo);
 		logger.debug("find ::::: " + find);
@@ -273,8 +276,10 @@ public class SignController {
 					+ System.lineSeparator() + "회원님의 아이디 : " + find
 					+ System.lineSeparator() + "해당 아이디로 로그인 후 이용해주세요.";
 			param.put("to", req.getParameter("email"));
-			param.put("title", new String(title.getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8));
-			param.put("content", new String(content.getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8));
+			param.put("title", title);
+			param.put("content", content);
+			//param.put("title", new String(title.getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8));
+			//param.put("content", new String(content.getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8));
 			mailSendService.sendMail(param);
 			result = "Y";
 		}
