@@ -17,7 +17,7 @@ $(window).ready( function() {
 });
 
 function userOut(){
-	if(confirm("정말 회원탈퇴를 진행하시곘습니까? 회원탈퇴 후에는 사용중인 계정으로 접속이 불가능해집니다.")){
+	if(confirm("정말 회원탈퇴를 진행하시겠습니까? 회원탈퇴 후에는 사용중인 계정으로 접속이 불가능해집니다.")){
 		$.ajax({
 			type: "GET",
 			url : "/userOut.do",
