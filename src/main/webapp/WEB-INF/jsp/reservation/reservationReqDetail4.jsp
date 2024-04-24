@@ -5,6 +5,17 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <script>
+
+function fn_comma(num) {
+	num = String(num);
+	var arrNumber = num.split('.');
+	num = arrNumber[0].replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
+	if (arrNumber.length > 1) {
+		num = num + '.' + arrNumber[1];
+	}
+	return num;
+}
+
 <c:set var="msg"  value="" />
 	<c:set var="msg2" value="" />
 	<c:if test="${reservationDetail.PRC_STS eq '05'}">
@@ -42,7 +53,11 @@ $(document).ready(function() {
 			if($(objId).hasClass("toNumber")) {
 				$(objId).val(numberComma(detailData[key]));
 			} else {
-				$(objId).val(detailData[key]);
+				if(objId == "#bal_amt") {
+					$(objId).val(fn_comma(detailData[key]));	
+				} else{
+					$(objId).val(detailData[key]);	
+				}
 			}
 		}
 	}
@@ -273,7 +288,7 @@ $(document).ready(function() {
 					<div class="mb-2">
 						<div class="inline-flex calc">
 							<label class="form-label col-form-label">잔금</label>
-							<input type="text" id="bal_amt" name="bal_amt" class="toNumber form-control text-end" value="1800000" readonly>원
+							<input type="text" id="bal_amt" name="bal_amt" class="form-control text-end" readonly>원
 						</div>
 					</div>
 					<div class="mb-2">

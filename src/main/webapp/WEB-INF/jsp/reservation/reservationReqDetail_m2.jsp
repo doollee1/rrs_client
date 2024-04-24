@@ -5,6 +5,17 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <script>
+
+function fn_comma(num) {
+	num = String(num);
+	var arrNumber = num.split('.');
+	num = arrNumber[0].replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
+	if (arrNumber.length > 1) {
+		num = num + '.' + arrNumber[1];
+	}
+	return num;
+}
+
 <c:set var="msg"  value="" />
 <c:set var="msg2" value="" />
 <c:if test="${reservationDetail.PRC_STS eq '05'}">
@@ -54,11 +65,15 @@ $(document).ready(function() {
 					$(objId).val(numberComma(detailData[key]));
 				}
 			} else {
-				$(objId).val(detailData[key]);
+				if(objId == "#bal_amt") {
+					$(objId).val(fn_comma(detailData[key]));	
+				} else{
+					$(objId).val(detailData[key]);	
+				}
 			}
 		}
 	}
-
+	
 	<%-- 이벤트 함수 --%>
 	function setEvent() {
 		<%-- 예약취소 버튼 --%>
@@ -270,7 +285,7 @@ $(document).ready(function() {
 				<div class="mb-2">
 					<div class="inline-flex calc">
 						<label class="form-label col-form-label">잔금</label>
-						<input id="bal_amt" name="bal_amt" type="text" class="toNumber form-control text-end" readonly>원
+						<input id="bal_amt" name="bal_amt" type="text" class="form-control text-end" readonly>원
 					</div>
 				</div>
 			</div>
