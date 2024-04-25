@@ -182,9 +182,14 @@ public class QnaController {
 			logger.debug(":::::텔레그램 메세지 전송 시도:::::");
 			logger.debug("msg :: " + sb.toString());
 			
-			this.commonService.telegramMsgSend(sb.toString());
+			String telgramResult = this.commonService.telegramMsgSend(sb.toString());
+			logger.debug("텔리그램결과 : "+telgramResult);;
 			
-			logger.debug(":::::텔레그램 메세지 전송 완료:::::");
+			if("Y".equals(telgramResult)) {
+				logger.debug(":::::텔레그램 메세지 전송 완료:::::");				
+			} else {
+				logger.debug(":::::텔레그램 메세지 전송 실패:::::");				
+			}
 			
 		} catch (Exception e) {
 			// TODO: handle exception
