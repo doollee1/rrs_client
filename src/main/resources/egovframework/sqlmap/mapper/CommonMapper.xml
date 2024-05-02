@@ -12,10 +12,11 @@
          </if>
     </select>
     
-    <select id="getChatIdList" resultType="String">
-        SELECT CHAT_ID
+    <select id="getChatIdList" resultType="HashMap">
+        SELECT CHAT_ID, TELEGRAM_TOKEN
           FROM bc_user
          WHERE STATUS = 'A'
            AND NULLIF(CHAT_ID, '') IS NOT NULL
+           AND NULLIF(TELEGRAM_TOKEN, '') IS NOT NULL
     </select>
 </mapper>

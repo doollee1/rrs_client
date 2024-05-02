@@ -46,51 +46,60 @@ public class CommonServiceImpl implements CommonService {
 		
 		BufferedReader in = null;
 		try {
-			List<String> chatIdList = commonMapper.getChatIdList();
+			List<Map<String, Object>> chatIdList = commonMapper.getChatIdList();
 			if(chatIdList != null && (chatIdList.size() > 0)) {
-				String token = properties.getProperty("TELEGRAM.TOKEN");
+				
+				//String token = properties.getProperty("TELEGRAM.TOKEN");
 				String message = "";
 				if(msg != null && !"".equals(msg)) {
 					message = URLEncoder.encode(msg, "UTF-8");
 				}
 				
-				//채팅방 확인
-				URL url = new URL("https://api.telegram.org/bot" + token + "/getUpdates"); // 호출할 url
-				HttpURLConnection con = (HttpURLConnection)url.openConnection();
-				con.setRequestMethod("GET");
-				in = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8"));
-				
-				String contents="";
-				String input;
-				while((input = in.readLine()) != null) {
-					contents += input;
-				}
-						
-				
-				JSONParser jsonParser = new JSONParser();
-				JSONObject jsonObj = (JSONObject) jsonParser.parse(contents);
-				logger.info("채팅방 결과 : "+jsonObj.toJSONString());
-				
-				boolean okJson = (boolean) jsonObj.get("ok");
-				logger.info("ok : "+okJson);
-				
-				//응답결과 false
-				if(!okJson) {
-					return "N";
-				}
-				
-				JSONArray jsonArray = (JSONArray) jsonObj.get("result");
-				int size = jsonArray.size();
-				logger.info("채팅방 갯수 : "+size);
-				
-				
-				//채팅방이 없을 경우
-				if(size < 1) {
-					return "N";
-				}
-				
+								
 				//텔리그램 전송
-				for(String chatId : chatIdList) {
+				for(Map<String, Object> map : chatIdList) {
+					
+					logger.info("map : "+map.toString());
+					
+					String token  = map.get("TELEGRAM_TOKEN").toString().trim();
+					String chatId = map.get("CHAT_ID").toString();
+					
+					//채팅방 확인
+					URL url = new URL("https://api.telegram.org/bot" + token + "/getUpdates"); // 호출할 url
+					HttpURLConnection con = (HttpURLConnection)url.openConnection();
+					con.setRequestMethod("GET");
+					in = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8"));
+					
+					String contents="";
+					String input;
+					while((input = in.readLine()) != null) {
+						contents += input;
+					}
+							
+					
+					JSONParser jsonParser = new JSONParser();
+					JSONObject jsonObj = (JSONObject) jsonParser.parse(contents);
+					logger.info("채팅방 결과 : "+jsonObj.toJSONString());
+					
+					boolean okJson = (boolean) jsonObj.get("ok");
+					logger.info("ok : "+okJson);
+					
+					//응답결과 false
+					if(!okJson) {
+						return "N";
+					}
+					
+					JSONArray jsonArray = (JSONArray) jsonObj.get("result");
+					int size = jsonArray.size();
+					logger.info("채팅방 갯수 : "+size);
+					
+					
+					//채팅방이 없을 경우
+					if(size < 1) {
+						return "N";
+					}
+					
+					//텔리그램 전송
 					url = new URL("https://api.telegram.org/bot" + token + "/sendmessage?chat_id=" + chatId + "&text=" + message); // 호출할 url
 					con = (HttpURLConnection)url.openConnection();
 					con.setRequestMethod("GET");

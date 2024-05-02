@@ -7,5 +7,5 @@ import java.util.*;
 public interface CommonMapper {
 	List<Map<String, Object>> commCodeList(Map<String, Object> paramMap) throws Exception;
 
-	List<String> getChatIdList() throws Exception;
+	List<Map<String, Object>> getChatIdList() throws Exception;
 }
