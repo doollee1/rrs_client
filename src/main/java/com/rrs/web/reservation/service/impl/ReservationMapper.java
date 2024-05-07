@@ -54,7 +54,13 @@ public interface ReservationMapper {
 
 	// 예약테이블 수정
 	int updateTbReqBookingM(Map<String, Object> paramMap) throws Exception;
-
+	
+	// 예약테이블 최대 seq 조회
+	String getMaxSeqTbReqBookingM(Map<String, Object> paramMap) throws Exception;
+	
+	// 예약추가테이블 등록
+	int insertTbReqBookingMAdd(Map<String, Object> paramMap) throws Exception;
+	
 	// 미팅샌딩 테이블 등록
 	int insertTbReqPickup(Map<String, Object> paramMap) throws Exception;
 
