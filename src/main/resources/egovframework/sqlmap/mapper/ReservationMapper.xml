@@ -676,7 +676,7 @@
                    FROM tb_req_add_file
                   WHERE REQ_DT  = A.REQ_DT
                     AND REQ_SEQ  = A.SEQ
-                    AND (SELECT MAX(ADD_FILE_SEQ) FROM tb_req_add_file WHERE REQ_DT = A.REQ_DT AND REQ_SEQ = A.SEQ)
+                    AND ADD_FILE_SEQ = (SELECT MAX(ADD_FILE_SEQ) FROM tb_req_add_file WHERE REQ_DT = A.REQ_DT AND REQ_SEQ = A.SEQ)
                ) AS FLIGTH_IMAGE
              , A.PICK_GBN
              , ( SELECT IFNULL(SUM(PER_NUM), 0) FROM tb_req_pickup WHERE REQ_DT = A.REQ_DT AND REQ_SEQ = A.SEQ ) AS PER_NUM
