@@ -36,6 +36,9 @@ public class ReservationController {
 	@RequestMapping(value = "/reservationCancel.do", method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String, Object> reservationCancel(@RequestParam Map<String, Object> param, HttpServletRequest req) throws Exception {
+		
+		logger.info("========= 예약취소 =========");
+		
 		Map<String, Object> rMap = new HashMap<String, Object>();
 		// 상태값 체크 01 예약요청-일반 / 02 예약요청-멤버 / 03 예약가능 / 04 예약신청 / 05 입금대기 / 06 예약확정 / 07 환불요청 / 08 환불완료 / 09 예약취소
 		String prcSts  = reservationService.getPrcSts(param);
