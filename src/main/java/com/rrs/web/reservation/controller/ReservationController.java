@@ -251,45 +251,6 @@ public class ReservationController {
 		return "reservation/reservationReq.view";
 	}
 	
-	
-	// 예약요청(일반, 멤버)
-	@RequestMapping(value = "/reservationReq1.do", method = RequestMethod.GET)
-	public String reservationReq1(Model model, @RequestParam Map<String, Object> param, HttpServletRequest req) throws Exception {
-		HttpSession session = req.getSession();
-		// 회원구분 01 멤버 / 02 일반 / 03 교민 / 04 에이전시 
-		String memGbn = (String)session.getAttribute("mem_gbn");
-
-		param.put("HEAD_CD" , "500070");  // 객실타입
-		List<Map<String, Object>> roomTypeList = commonService.commCodeList(param);
-		model.addAttribute("roomTypeList" , roomTypeList );
-
-		if("01".equals(memGbn)) {  // 멤버
-			param.put("HEAD_CD" , "500210"); // 미팅샌딩
-			List<Map<String, Object>> pickupSvcList = commonService.commCodeList(param);
-
-			param.put("HEAD_CD" , "500060"); // late체크아웃
-			List<Map<String, Object>> lateOutYnList = commonService.commCodeList(param);
-
-			param.put("HEAD_CD" , "500180"      );  // 출발항공편
-			param.put("ORDER_BY", "REF_CHR3 ASC");
-			List<Map<String, Object>> fligthInList = commonService.commCodeList(param);
-
-			param.put("HEAD_CD" , "500190"      );  // 도착항공편
-			List<Map<String, Object>> fligthOutList = commonService.commCodeList(param);
-
-			model.addAttribute("pickupSvcList", pickupSvcList);
-			model.addAttribute("lateOutYnList", lateOutYnList);
-			model.addAttribute("fligthInList" , fligthInList );
-			model.addAttribute("fligthOutList", fligthOutList);
-			
-			return "reservation/reservationReq_m2.view";
-		}
-		// 일반 패키지 리스트
-		List<Map<String, Object>> packageList = reservationService.packageList();
-		model.addAttribute("packageList", packageList);
-
-		return "reservation/reservationReq.view";
-	}
 
 	// 일반 예약요청
 	@RequestMapping(value = "/reservationInsert1.do", method = RequestMethod.POST)
@@ -356,61 +317,7 @@ public class ReservationController {
 		return rMap;
 	}
 
-	
-	// 멤버 예약요청, 일반 예약신청 다중 등록
-	@RequestMapping(value = "/reservationInsert2.do", method = RequestMethod.POST)
-	@ResponseBody
-	public Map<String, Object> reservationInsert2(@RequestPart List<Map<String, Object>> list, @RequestPart List<MultipartFile> file, HttpServletRequest req) throws Exception {
-		
-		logger.info("=============== 멤버예약요청, 일반예약신청 다중 등록 ==============");
-		
-		logger.info("list : "+list.toString());
-		logger.info("file : "+file.toString());
-
-		Map<String, Object> rMap = new HashMap<String, Object>();
-		HttpSession session = req.getSession();
-		// 회원구분 01 멤버 / 02 일반 / 03 교민 / 04 에이전시 
-		String memGbn  = (String)session.getAttribute("mem_gbn");
-		String msg     = "";
-
-		int i = 0;
-		for(Map<String, Object> param : list) {
-			
-			param.put("user_id" , session.getAttribute("user_id" ));
-			
-			param.put("tel_no"  , session.getAttribute("tel_no"  ));
-			param.put("mem_gbn" , memGbn                          );
-			
-			if("01".equals(memGbn)) {
-				param.put("today"   , EgovDateUtil.getToday()         ); // 금일
-				param.put("prc_sts" , "02"                            ); // 예약요청-멤버			
-			} else {
-				param.put("prc_sts" , "04"                            ); // 예약신청(일반)			
-			}
-			param.put("file"    , file.get(i)                            );
-						
-			i++;
-		}
-
-		if("01".equals(memGbn)) {
-			msg = "멤버 예약요청이 등록 되었습니다.";
-		} else {
-			msg = "일반 예약신청이 등록 되었습니다.";
-		}
-		
-		// 멤버일때 예약요청, 일반일때 예약신청
-		int result = reservationService.reservationInsert2(list);
-
-		
-		if(result >= 1) {
-			commonService.telegramMsgSend(msg);
-			rMap.put("result", "SUCCESS");
-		}
-		
-
-		return rMap;
-	}
-		
+				
 	// 가계산
 	@RequestMapping(value = "/reservationCal.do", method = RequestMethod.POST)
 	@ResponseBody

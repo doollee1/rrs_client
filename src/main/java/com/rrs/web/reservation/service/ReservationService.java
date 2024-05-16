@@ -28,8 +28,6 @@ public interface ReservationService {
 	int reservationInsert1(Map<String, Object> param) throws Exception;
 
 	int reservationInsert(Map<String, Object> param) throws Exception;
-
-	int reservationInsert2(List<Map<String, Object>> param) throws Exception;
 	
 	int reservationUpdate_m(Map<String, Object> param) throws Exception;
 
