@@ -104,8 +104,11 @@ function signIn(){
 			</div>
 			<input type="hidden" id="RSAModulus" name="RSAModulus" value="${RSAModulus }"/>
 			<input type="hidden" id="RSAExponent" name="RSAExponent" value="${RSAExponent}"/>
+			<label>
+                  <input type="checkbox" name="useCookie"> 자동로그인
+            </label>
 			<div class="mb-15px">
-				<button type="button" class="btn btn-theme h-45px w-100 btn-lg fs-14px" onclick="signIn()">로그인</button>
+				<button type="button" class="btn btn-theme h-45px w-100 btn-lg fs-14px" onclick="signIn()">로그인</button>				
 			</div>
 			<div class="mb-40px pb-40px text-dark btn-links">
 				<a href="/findId.do">아이디찾기</a>
