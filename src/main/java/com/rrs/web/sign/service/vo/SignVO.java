@@ -12,6 +12,9 @@ public class SignVO {
 	private String email;			//이메일
 	private String passwd;			//비밀번호
 	private String ret_yn;			//탈퇴여부
+	private String sessionId;		//세션ID
+	private String sessionLimit;	//세션limit
+	private String useCookie;		//쿠키사용여부
 	private String reg_dtm;			//등록일시
 	private String upd_dtm;			//수정일시
 	
@@ -75,5 +78,30 @@ public class SignVO {
 	public void setUpd_dtm(String upd_dtm) {
 		this.upd_dtm = upd_dtm;
 	}
-
+	public String getSessionId() {
+		return sessionId;
+	}
+	public void setSessionId(String sessionId) {
+		this.sessionId = sessionId;
+	}
+	public String getSessionLimit() {
+		return sessionLimit;
+	}
+	public void setSessionLimit(String sessionLimit) {
+		this.sessionLimit = sessionLimit;
+	}
+	public String getUseCookie() {
+		return useCookie;
+	}
+	public void setUseCookie(String useCookie) {
+		this.useCookie = useCookie;
+	}
+	@Override
+	public String toString() {
+		return "SignVO [user_id=" + user_id + ", mem_gbn=" + mem_gbn + ", han_name=" + han_name + ", eng_name="
+				+ eng_name + ", tel_no=" + tel_no + ", email=" + email + ", passwd=" + passwd + ", ret_yn=" + ret_yn
+				+ ", sessionId=" + sessionId + ", sessionLimit=" + sessionLimit + ", useCookie=" + useCookie
+				+ ", reg_dtm=" + reg_dtm + ", upd_dtm=" + upd_dtm + "]";
+	}
+		
 }

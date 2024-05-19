@@ -28,11 +28,19 @@ function setEvent(){
 <%// 로그인 이벤트%>
 function signIn(){
 	
+	console.log("======== 로그인 진행 ========");
+	
 	var rsa = new RSAKey();
 	rsa.setPublic($('#RSAModulus').val(),$('#RSAExponent').val());
 	
 	var user_id = $("#user_id").val();
 	var passwd = rsa.encrypt($("#password").val());
+	var useCookie = $("input[name=useCookie]:checked").val();
+	
+	console.log("=== user_id : "+user_id);
+	console.log("=== passwd : "+passwd);
+	console.log("=== useCookie : "+useCookie);
+	
 	
 	if(user_id == null || user_id == ''){
 		 $("#user_id").focus();
@@ -51,7 +59,8 @@ function signIn(){
 		url : "/signIn.do",
 		data: 
 			{ "user_id":user_id
-			, "passwd":passwd 
+			, "passwd":passwd
+			, "useCookie":useCookie 
 			},
 		dataType:"json",
 		success:function(data){

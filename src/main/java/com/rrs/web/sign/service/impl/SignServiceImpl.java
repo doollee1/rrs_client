@@ -5,6 +5,9 @@ import java.util.Date;
 import java.util.Map;
 
 import javax.annotation.Resource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.rrs.web.sign.service.SignService;
@@ -14,6 +17,9 @@ import com.rrs.web.sign.service.vo.SignVO;
 
 @Service("signService")
 public class SignServiceImpl implements SignService {
+	
+	private static final Logger logger = LoggerFactory.getLogger(SignServiceImpl.class);
+			
 	@Resource(name = "signMapper")
 	private SignMapper signMapper;
 	
@@ -82,4 +88,29 @@ public class SignServiceImpl implements SignService {
 	public int userOut(String id) throws Exception {
 		return this.signMapper.userOut(id);
 	}
+	
+	
+	/**
+	 * 로그인 유지
+	 */
+	@Override
+	public int keepLogin(Map<String, Object> paramMap) throws Exception {
+		// TODO Auto-generated method stub
+		logger.info("======== 로그인유지 서비스 ========");
+		
+		return this.signMapper.keepLogin(paramMap);
+	}
+	
+	
+	/**
+	 * 세션키 검증
+	 */
+	@Override
+	public SignVO checkUserWithSessionKey(String sessionId) throws Exception {
+		// TODO Auto-generated method stub
+		logger.info("======== 세션키검증 서비스 ========");
+		
+		return this.signMapper.checkUserWithSessionKey(sessionId);
+	}
+	
 }

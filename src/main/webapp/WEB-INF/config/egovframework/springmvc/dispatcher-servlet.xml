@@ -37,9 +37,20 @@
         <mvc:interceptor>
             <mvc:mapping path="/*.do"/>
             <bean class="com.rrs.comm.intercepter.AuthenticInterceptor" />
-        </mvc:interceptor>
+        </mvc:interceptor>              
     </mvc:interceptors>
 
+
+	<!-- 자동로그인 체크한다. -->
+	<bean id="rememberInterceptor" class="com.rrs.comm.intercepter.RememberInterceptor" />
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/**/" />
+			<ref bean="rememberInterceptor" />
+		</mvc:interceptor> 	
+	</mvc:interceptors>
+    
+	
 	<mvc:resources mapping="/upload/**" location="file:/web/rrs_webapps/upload/"/>
 
     <bean id="tilesViewResolver" class="org.springframework.web.servlet.view.UrlBasedViewResolver"

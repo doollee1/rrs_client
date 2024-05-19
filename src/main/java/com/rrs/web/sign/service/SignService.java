@@ -18,4 +18,10 @@ public interface SignService {
 	void changeInfo(SignVO vo) throws Exception;
 	public String getRandomPassword(int size) throws Exception;
 	int userOut(String id) throws Exception;
+	
+	// 로그인 유지 처리
+	int keepLogin(Map<String, Object> paramMap) throws Exception;
+		
+	//세션키 검증
+	SignVO checkUserWithSessionKey(String sessionId) throws Exception;
 }

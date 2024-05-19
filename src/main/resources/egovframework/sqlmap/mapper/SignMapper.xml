@@ -132,4 +132,22 @@ WHERE user_id = #{user_id}
 		user_id = #{user_id}
 </update>
 
+
+<!-- 로그인 유지 -->
+<update id="keepLogin" parameterType="hashmap">
+	UPDATE tb_member
+	SET session_key = #{sessionId},
+		session_limit = #{sessionLimit}
+	WHERE user_id = #{user_id}
+</update>
+
+
+<!-- 세션키 검증 -->
+<select id="checkUserWithSessionKey" parameterType="string" resultType="com.rrs.web.sign.service.vo.SignVO">
+	SELECT
+	*
+	FROM tb_member
+	WHERE session_key = #{value}
+</select>
+
 </mapper>
