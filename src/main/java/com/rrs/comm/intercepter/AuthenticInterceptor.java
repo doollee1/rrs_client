@@ -10,6 +10,7 @@ import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.ui.ModelMap;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -68,36 +69,49 @@ public class AuthenticInterceptor extends HandlerInterceptorAdapter {
 		
 		logger.info("======== 인증 인터셋터 postHandle ========");
 		
-		HttpSession httpSession = request.getSession();
-        SignVO signVo = (SignVO)httpSession.getAttribute("login");
-       logger.info("===== signVo : "+signVo);
-        
-		//signVO가 null이 아닐시
-        if(!ObjectUtils.isEmpty(signVo)) {
-        	
-        	logger.info("===== new Login Process");
-        	httpSession.setAttribute("login", signVo);
-             
-        	logger.info("===== useCookie : "+request.getParameter("useCookie"));
-        	if(request.getParameter("useCookie")!=null) {
-             	
-        		logger.info("====== remember me....");
-        		
-        		//쿠키생성
-        		String sessionId = httpSession.getId();
-             	Cookie loginCookie = new Cookie("loginCookie", sessionId);
-             	logger.info("===== sessionId : "+sessionId);
-             	
-             	loginCookie.setPath("/");
-             	loginCookie.setMaxAge(60*60*24*1);   //자동로그인 1일
-             	
-             	//전송
-             	response.addCookie(loginCookie);
-             }
-        	
-        	//루트로 이동
-        	//response.sendRedirect("/");        	
-        }
+		String requestURI = request.getRequestURI(); // 요청 URI
+		logger.info("===== requestURI : "+requestURI);
+		
+		//로그인시 처리
+		if("/signIn.do".equals(requestURI) && "POST".equals(request.getMethod())) {
+			
+			HttpSession httpSession = request.getSession();
+			//ModelMap modelMap = modelAndView.getModelMap();
+			//Object signVo = modelMap.get("login");
+	        SignVO signVo = (SignVO)httpSession.getAttribute("login");		
+			
+	        logger.info("===== signVo : "+signVo);
+	        
+			//signVO가 null이 아닐시
+	        if(!ObjectUtils.isEmpty(signVo)) {
+	        	
+	        	logger.info("===== new Login Process");
+	        	httpSession.setAttribute("login", signVo);
+	             
+	        	logger.info("===== useCookie : "+request.getParameter("useCookie"));
+	        	if(request.getParameter("useCookie")!=null) {
+	             	
+	        		logger.info("====== remember me....");
+	        		
+	        		//쿠키생성
+	        		String sessionId = httpSession.getId();
+	             	Cookie loginCookie = new Cookie("loginCookie", sessionId);
+	             	logger.info("===== sessionId : "+sessionId);
+	             	
+	             	loginCookie.setPath("/");
+	             	loginCookie.setMaxAge(60*60*24*1);   //자동로그인 1일
+	             	
+	             	//전송
+	             	response.addCookie(loginCookie);
+	             }
+	        	
+	        	//루트로 이동
+	        	//response.sendRedirect("/");        	
+	        }
+	        
+		}
+		
+		
 	}
 	
 	
