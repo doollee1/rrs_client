@@ -365,7 +365,7 @@ public class SignController {
 	@RequestMapping(value = {"/policy.do"}, method = {RequestMethod.GET})
 	public String policyPage(HttpServletRequest req) throws Exception {
 		logger.info("policyPage");
-		return "user/policy.view";
+		return "user/policy.view1";
 	}
 	
 	// 개인정보 변경 화면 진입

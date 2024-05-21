@@ -46,6 +46,7 @@ public class AuthenticInterceptor extends HandlerInterceptorAdapter {
 												, "/signUpIdChk.do" // 중복체크
 												, "/findPw.do"      // 비밀번호 찾기
 												, "/signUp.do"      // 회원가입
+												, "/policy.do"     // 개인정보정책 
 												);
 		if (excludeList.indexOf(requestURI) < 0) {
 			if(login == null) {
