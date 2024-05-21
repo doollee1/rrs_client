@@ -28,26 +28,33 @@ public class ProductController {
 		ModelAndView mav = new ModelAndView();
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		paramMap.put("currentYear", EgovDateUtil.getNowYear());
-		paramMap.put("ssnGbn"     , "1"                      );  // 성수기
-
+		
 		// 성수기
+		paramMap.put("ssnGbn", "1"); // 성수기
 		List<Map<String, Object>> productListTmp  = productService.productList(paramMap);
 
+		// 준성수기
+		paramMap.put("ssnGbn", "3"); // 준성수기
+		List<Map<String, Object>> productListTmp2 = productService.productList(paramMap);
+		
 		// 비수기
 		paramMap.put("ssnGbn", "2"); // 비수기
-		List<Map<String, Object>> productListTmp2 = productService.productList(paramMap);
+		List<Map<String, Object>> productListTmp3 = productService.productList(paramMap);
 
 		// 리스트 merge
 		List<Map<String, Object>> tableList  = makeList(productListTmp );
 		List<Map<String, Object>> tableList2 = makeList(productListTmp2);
+		List<Map<String, Object>> tableList3 = makeList(productListTmp3);
 
 		// 리스트 날짜별로 그룹핑
 		List<List<Map<String, Object>>> tableLists  = listGroupBy(tableList );
 		List<List<Map<String, Object>>> tableLists2 = listGroupBy(tableList2);
+		List<List<Map<String, Object>>> tableLists3 = listGroupBy(tableList3);
 
 		mav.addObject("tableLists" , tableLists );  // 성수기
-		mav.addObject("tableLists2", tableLists2);  // 비수기
-		mav.setViewName("product/product.view");
+		mav.addObject("tableLists2", tableLists2);  // 준성수기
+		mav.addObject("tableLists3", tableLists3);  // 비수기
+		mav.setViewName("product/product.view1");
 		return mav;
 	}
 
