@@ -62,6 +62,14 @@
 							<div class="menu-text">개인설정</div>
 						</a>
 					</div>
+					<div class="menu-item">
+						<a href="/resortInfo.do" class="menu-link">
+							<div class="menu-icon">
+								<i class="fa fa-calendar-check"></i>
+							</div>
+							<div class="menu-text">리조트&골프장</div>
+						</a>
+					</div>
 					<div class="menu-item logout">
 						<a href="/signOut.do" class="menu-link">
 							<div class="menu-icon">
