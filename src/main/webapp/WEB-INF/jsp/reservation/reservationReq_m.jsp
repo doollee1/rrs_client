@@ -1,20 +1,122 @@
-﻿﻿<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+﻿<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ page import="java.sql.*,java.text.SimpleDateFormat,java.util.Date"%>
 <%@ page import="java.security.*"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+
 <script>
 $(document).ready(function() {
 	var isCal    = false;
 	var formData = new FormData();
-
+	var partnerSeq = 1;
+	var chkReqDt = "";
+	var chkSeq = "";
+	
 	setTitle("예약요청");
 	setEvent();
 
 	$("#late_check_out").val("3"); // 부 default
 	$("#pick_gbn").change();
+	$(document).on("keyup", "input[onlyEng]", function() {$(this).val( $(this).val().replace(/[^A-Za-z]/ig,"") );});
+	$(document).on("keyup", "input[onlyNum]", function() {$(this).val( $(this).val().replace(/[^0-9]/gi,"") );});
+	$(document).on("keyup", "input[onlyKor]", function() {$(this).val( $(this).val().replace(/[a-z0-9]|[ \[\]{}()<>?|`~!@#$%^&*-_+=,.;:\"'\\]/g,"") );});
+	
+	// 동반자목록 삭제
+	$("#list_table").on("click", ".part-delete", function () {
+		partnerSeq-- ;
+		$(this).parent().parent().remove();
+	});
 
+	// 동반자목록 추가
+	$("#append_row").on("click", function() {
+		partnerSeq++;
+		$("#list_table").append(
+			$("<tr id=part_board>").append(
+				$("<td>").append( partnerSeq ),
+				$("<td style=display:none>").append( $("#add_user_id").val() ),
+				$("<td>").append(setPeopleGbn($("#add_gbn").val()) ),
+				$("<td>").append( $("#add_han_name").val() ),
+				$("<td>").append( $("#add_eng_name").val() ),
+				$("<td>").append( $("#add_telno").val() ),
+				$("<td>").append($("<a>").prop("href", "#").addClass("part-delete").append("삭제"))		
+			)	
+		);	
+	});
+	
+	// 동반자 목록 내 구분추가
+	function setPeopleGbn(s_data) {
+		var $combo = $('<select/>');
+		    $combo.append($('<option/>',{'value':'01'}).text('멤버')); //여기는 value 없는 그냥 기본 셋팅 값
+		    $combo.append($('<option/>',{'value':'02'}).text('일반')); //여기는 value 없는 그냥 기본 셋팅 값
+		    $combo.append($('<option/>',{'value':'05'}).text('소아')); //여기는 value 없는 그냥 기본 셋팅 값
+		    $combo.append($('<option/>',{'value':'11'}).text('라운딩')); //여기는 value 없는 그냥 기본 셋팅 값
+		    $combo.append($('<option/>',{'value':'12'}).text('비라운딩')); //여기는 value 없는 그냥 기본 셋팅 값
+		  $combo.val(s_data); //여기서 seleted하고 싶은 값을 넣어줌.
+		  return $combo; //리턴
+	}
+	
+	// 동반자목록 등록
+	function addPartnar() {
+    	 // 객체 담을 배열
+        let tableArr = new Array();
+        $("tr#part_board").each(function (index, item) {
+            let td = $(this).children();
+            // 테이블 객체
+            let td_obj = {
+            	req_dt : chkReqDt,
+            	seq : chkSeq,
+            	part_seq : td.eq(0).text(),
+            	part_userid: td.eq(1).text(),
+                part_gbn: td.eq(2).text(),
+                part_han_name : td.eq(3).text(),
+                part_eng_name : td.eq(4).text(),
+                part_telno : td.eq(5).text()
+            };
+            // 배열에 객체를 저장
+            tableArr.push(td_obj);
+        });
+        
+		alert(JSON.stringify(tableArr));
+		$.ajax({
+			type : "POST",
+			url : "reservationPartnarInsert.do",
+			data : JSON.stringify(tableArr),
+			dataType : "json",
+			contentType: "application/json; charset=UTF-8",
+			
+			success : function(data) {
+				if(data.result == "SUCCESS") {
+					chkReqDt = "";
+					chkSeq = "";
+				} else {
+					alert("통신 실패.");
+				}
+		 	}
+		});
+    }
+	
+	// 동반자 등록 된 ReqDt/Seq 검토
+    $("#chkBtn").on("click", function () {
+		var data = { user_id : "${sessionScope.login.user_id}"	};
+		$.ajax({
+			type : "POST",
+			url : "reservationChk.do",
+			data : data,
+			dataType : "json",
+			success : function(data) {
+				dimClose();
+				if(data.result == "SUCCESS") {
+					chkReqDt = data.chkReqDt;
+					chkSeq = data.chkSeq;
+					addPartnar(); // 동반자목록 등록
+				} else {
+					alert("예약자체크 실패");
+				}
+		 	}
+		});
+    });
+    
 	<%-- 이미지 변경  --%>
 	function handleImgInput() {
 		var file = this.files[0];
@@ -229,10 +331,10 @@ $(document).ready(function() {
 						isCal = true;
 						$("#cal_amt").val(numberComma(data.totalAmt));
 						alert(`숙박비 : \${numberComma(data.roomCharge)},
-미팅샌딩비 : \${numberComma(data.sendingAmt)},
-SURCHAGE : \${numberComma(data.surchageAmt)},
-룸 추가 : \${numberComma(data.roomupAmt)},
-lateCheckOut : \${numberComma(data.lateCheckOutAmt)}`);
+						미팅샌딩비 : \${numberComma(data.sendingAmt)},
+						SURCHAGE : \${numberComma(data.surchageAmt)},
+						룸 추가 : \${numberComma(data.roomupAmt)},
+						lateCheckOut : \${numberComma(data.lateCheckOutAmt)}`);
 					} else {
 						isCal = false;
 						$("#cal_amt").val(0);
@@ -284,7 +386,7 @@ lateCheckOut : \${numberComma(data.lateCheckOutAmt)}`);
 					, remark         : $("#remark"     ).val()
 			};
 
-			formData.append("param", new Blob([JSON.stringify(data)], {type:"application/json"}));
+			formData.append("param", new Blob([JSON.stringify(data)], {type:"application/json;charset=UTF-8"}));
 
 			dimOpen();
 			$.ajax({
@@ -348,9 +450,15 @@ lateCheckOut : \${numberComma(data.lateCheckOutAmt)}`);
 			$("#cal_amt").val(0);
 			this.value = numberComma(this.value);
 		});
+		
+		$(".addgbn").on("propertychange change keyup paste input", function() {
+		    var gbn = $(this).val();
+		    this.value ="멤버";
+		});
 	}
 });
 </script>
+
 
 <div id="content" class="app-content d-flex flex-column p-0">
 	<!-- BEGIN content-container -->
@@ -369,8 +477,15 @@ lateCheckOut : \${numberComma(data.lateCheckOutAmt)}`);
 					<span class="d-sm-block d-none">Default 옵션</span>
 				</a>
 			</li>
+			<li class="nav-item">
+				<a href="#default-tab-3" data-bs-toggle="tab" class="nav-link">
+					<span class="d-sm-none">동반자</span>
+					<span class="d-sm-block d-none">Default 동반자</span>
+				</a>
+			</li>
 		</ul>
 		<!-- END nav-tabs -->
+		
 		<!-- BEGIN tab-content -->
 		<div class="tab-content panel rounded-0 p-3 m-0">
 			<!-- BEGIN tab-pane -->
@@ -464,6 +579,8 @@ lateCheckOut : \${numberComma(data.lateCheckOutAmt)}`);
 				</div>
 			</div>
 			<!-- END tab-pane -->
+			
+			
 			<!-- BEGIN tab-pane -->
 			<div class="tab-pane fade" id="default-tab-2">
 				<div class="row mb-2">
@@ -518,12 +635,98 @@ lateCheckOut : \${numberComma(data.lateCheckOutAmt)}`);
 				</div>
 			</div>
 			<!-- END tab-pane -->
-		</div>
-		<!-- END tab-content -->
+			
+			<!-- BEGIN tab-pane -->
+			<div class="tab-pane fade" id="default-tab-3">
+				<div class="total-people-wrap">
+					<div class="container2">
+						<table border="1" id="list_table" class="table table-striped">
+							<thead>
+								<tr>
+									<th>번호</th>
+									<th style="display:none">등록자</th>
+									<th>인원구분</th>
+									<th>한글이름</th>
+									<th>영문이름</th>
+									<th>전화번호</th>
+									<th>정정</th>
+								</tr>
+							</thead>
+							
+							<tbody>
+								<tr id="part_board" >
+									<td>1</td>
+									<td style="display:none">${sessionScope.login.user_id}</td>
+									
+									<td >
+										<select id="memberGbn${status.count }" name="memberGbn">
+											<option value="01" <c:if test="${sessionScope.login.mem_gbn eq '01' }">selected</c:if>>멤버</option>
+											<option value="02" <c:if test="${sessionScope.login.mem_gbn eq '02' }">selected</c:if>>일반</option>
+											<option value="05" <c:if test="${sessionScope.login.mem_gbn eq '05' }">selected</c:if>>비라운딩</option>
+											<option value="11" <c:if test="${sessionScope.login.mem_gbn eq '11' }">selected</c:if>>소아</option>
+											<option value="12" <c:if test="${sessionScope.login.mem_gbn eq '12' }">selected</c:if>>영유아</option>
+										</select>
+									</td>
+									<td>${sessionScope.login.han_name}</td>
+									<td>${sessionScope.login.eng_name}</td>
+									<td>${sessionScope.login.tel_no}</td>
+									<td><a href="#" class="part-delete">삭제</a></td>
+								</tr>
+							</tbody>
+						</table>
+						<button type="button" id="chkBtn" class="btn btn-primary">검토</button>
+						<br><br>
 
-	</div>
+						<h3 align="center">동반자 추가 입력</h3>
+						<table border="1" id="append_table" align="center">
+							<colgroup>
+								<col style="width: 220px">
+								<col style="width: 200px">
+								<col style="width: 200px">
+								<col style="width: 230px">
+								<col style="width: 110px">
+							</colgroup>
+							<thead>
+								<tr>
+									<th>인원구분</th>
+									<th>한글이름</th>
+									<th>영문이름</th>
+									<th>전화번호</th>
+								</tr>
+							</thead>
+
+							<tbody>
+								<tr>
+									<td><!--  회원구분 01 멤버 / 02 일반 / 05 소아 / 11 라운딩 / 12 비라운딩 -->
+										<select id="add_gbn" name="add_gbn" class="form-select" style="text-align: center">
+											<c:forEach items="${peopleGbnList}" var="add_gbn" varStatus="status">
+												<option value="${add_gbn.CODE}">${add_gbn.CODE_NM}</option>
+											</c:forEach>
+										</select>
+									</td>
+									<td><input type="text" id="add_han_name" placeholder="한글로 입력해주세요."></td>
+									<td><input type="text" id="add_eng_name" placeholder="영어로 입력해주세요."></td>
+									<td><input type="text" id="add_telno" placeholder="숫자로 입력해주세요."></td>
+									<td><button type="button" style="width:100px;height:38px;" class="btn btn-success btn-lg" id="append_row">추가</button></td>
+									<td><input type="hidden" id="add_user_id" value=${sessionScope.login.user_id}></td>
+								</tr>
+							</tbody>
+						</table>
+					</div> <!-- /.container -->
+				</div>
+			</div>
+			<!-- END tab-pane -->
+			
+			
+			
+			
+			
+			
+			
+			
+		</div>
 	<!-- END content-container -->
-	
+	</div>
 	<!-- BEGIN #footer -->
 	<div id="footer" class="app-footer m-0">
 		<a href="javascript:;" id="reservationBtn" class="btn btn-success btn-lg">등록</a>

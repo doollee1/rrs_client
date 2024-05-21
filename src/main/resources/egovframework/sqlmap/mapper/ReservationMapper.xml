@@ -392,141 +392,6 @@
            AND USER_ID = #{user_id       }
 	</update>
 
-	<select id = "getMaxSeqTbReqBookingM" parameterType="hashMap" resultType="String">
-		SELECT IFNULL(MAX(SEQ)+1, 1) 
-	       FROM tb_req_booking_m  
-	      WHERE REQ_DT = #{today}
-	</select>
-
-	<insert id="insertTbReqBookingMAdd" parameterType="hashMap">
-		<selectKey resultType="hashMap" keyProperty="seq_add,req_dt" order="BEFORE">
-            SELECT IFNULL(MAX(SEQ_ADD)+1, 1) 	AS seq_add
-                 , #{today}     				AS req_dt
-              FROM tb_req_booking_m_add /* 예약 테이블 */
-             WHERE REQ_DT = #{today}                  
-			   AND  SEQ = #{seq}			 
-		</selectKey>
-        INSERT INTO tb_req_booking_m_add
-        (
-           REQ_DT          /* 예약일자 */
-         , SEQ             /* 일련번호 */
-         , SEQ_ADD		   /* 추가일련번호 */
-         , USER_ID         /* 사용자ID */
-         , REQ_HAN_NM      /* 예약자한글명 */
-         , REQ_ENG_NM      /* 예약자영문명 */
-         , REQ_TEL_NO      /* 예약자전화번호 */
-         , MEM_GBN         /* 회원구분 */
-         , AGN_CD          /* 에이전시코드 */
-         , PRC_STS         /* 예약상태 */
-         , CHK_IN_DT       /* 체크인일자 */
-         , CHK_OUT_DT      /* 체크아웃일자 */
-         , ROOM_TYPE       /* 객실타입 */
-         , FLIGHT_IN       /* 도착항공기편 */
-         , FLIGHT_OUT      /* 출발항공기편 */
-         , TOT_PERSON      /* 총인원 */
-         , R_PERSON        /* 라운딩인원 */
-         , N_PERSON        /* 비라운딩인원 */
-         , NR_PERSON       /* 비멤버인원(클라이언트 멤버예약 비멤버인원) */
-         , K_PERSON        /* 소아인원 */
-         , BAS_YY          /* 기준년도 */
-         , BAS_YY_SEQ      /* 기준년도순번 */
-         , PROD_SEQ        /* 상품순번 */
-         , PICK_GBN        /* 미팅샌딩구분 */
-         , ADD_R_S_PER     /* 싱글룸추가인원수 */
-         , ADD_R_S_DAY     /* 싱글룸추가일수 */
-         , ADD_R_S_CNT     /* 싱글룸추가갯수 */
-         , ADD_R_P_PER     /* 프리미엄룸추가인원수 */
-         , ADD_R_P_DAY     /* 프리미엄룸추가일수 */
-         , ADD_R_P_CNT     /* 프리미엄추가갯수 */
-         , CNT_D1          /* 트윈갯수 */
-         , CNT_D2          /* 더블갯수 */
-         , CNT_P1          /* 프리미엄트윈갯수 */
-         , CNT_P2          /* 프리미엄킹갯수 */
-         , PICK_IN         /* 픽업차량-도착 */
-         , PICK_OUT        /* 픽업차량-출발 */
-         , LATE_CHECK_OUT  /* Late체크아웃 */
-         , REMARK          /* 비고(추가요구사항) */
-         , INV_REG_DT      /* 인보이스발행일자 */
-         , CONFIRM_NO      /* 리조트confirm번호 */
-         , RND_CHG_YN1     /* 라운딩변경(토오전)여부 */
-         , RND_CHG_YN2     /* 라운딩변경(일오전)여부 */
-         , REG_DTM         /* 등록일시 */
-         , REG_ID          /* 등록자ID */
-         , UPD_DTM         /* 수정일시 */
-         , UPD_ID          /* 수정자ID */
-        ) VALUES
-        (
-           #{req_dt        }
-         , #{seq           }
-         , #{seq_add       }
-         , #{user_id       }
-         , #{han_name      }
-         , #{eng_name      }
-         , #{tel_no        }
-         , #{mem_gbn       }
-         , ''
-         , #{prc_sts       }
-         , #{chk_in_dt     }
-         , #{chk_out_dt    }
-         , #{room_type     }
-         , #{flight_in     }
-         , #{flight_out    }
-         , #{tot_person    }
-         , CASE WHEN '01' = #{mem_gbn       }
-                THEN #{r_person      } + #{nr_person     }
-                ELSE #{r_person      }
-            END /* 멤버 라운딩인원 = 멤버 + 비멤버 */
-         , CASE WHEN '01' = #{mem_gbn       }
-                THEN 0
-                ELSE #{n_person      }
-            END /* 멤버일때 노라운딩 0 */
-         , CASE WHEN '01' = #{mem_gbn       }
-                THEN #{nr_person     }
-                ELSE 0
-            END
-         , #{k_person      }
-         , #{res_bas_yy    }
-         , #{res_bas_yy_seq}
-         , #{res_prod_seq  }
-         , #{pick_gbn      }
-         , IFNULL(#{add_r_s_per   }, 0)
-         , IFNULL(#{add_r_s_day   }, 0)
-         , CASE WHEN ISNULL(#{add_r_s_per   }) OR #{add_r_s_per   } = 0
-                THEN 0
-                ELSE IF( FLOOR(#{add_r_s_per   } / 2) = 0, 1, FLOOR(#{add_r_s_per   } / 2) )
-            END
-         , IFNULL(#{add_r_p_per   }, 0)
-         , IFNULL(#{add_r_p_day   }, 0)
-         , CASE WHEN ISNULL(#{add_r_p_per   }) OR #{add_r_p_per   } = 0
-                THEN 0
-                ELSE IF( FLOOR(#{add_r_p_per   } / 2) = 0, 1, FLOOR(#{add_r_p_per   } / 2) )
-            END
-         , CASE WHEN #{room_type      } = '01'
-                THEN IF( FLOOR(#{tot_person    } / 2) = 0, 1, FLOOR(#{tot_person    } / 2) )
-                ELSE 0
-            END
-         , CASE WHEN #{room_type      } = '02'
-                THEN IF( FLOOR(#{tot_person    } / 2) = 0, 1, FLOOR(#{tot_person    } / 2) )
-                ELSE 0
-            END
-         , 0
-         , 0
-         , ''
-         , ''
-         , #{late_check_out}
-         , #{remark        }
-         , ''
-         , ''
-         , ''
-         , ''
-         , NOW()
-         , #{user_id       }
-         , NOW()
-         , #{user_id       }
-        )
-	</insert>
-	
-	
 	<update id="updateTbReqFee" parameterType="hashMap">
         UPDATE tb_req_fee 
            SET TOT_AMT = #{tot_amt}
@@ -676,7 +541,7 @@
                    FROM tb_req_add_file
                   WHERE REQ_DT  = A.REQ_DT
                     AND REQ_SEQ  = A.SEQ
-                    AND ADD_FILE_SEQ = (SELECT MAX(ADD_FILE_SEQ) FROM tb_req_add_file WHERE REQ_DT = A.REQ_DT AND REQ_SEQ = A.SEQ)
+                    AND (SELECT MAX(ADD_FILE_SEQ) FROM tb_req_add_file WHERE REQ_DT = A.REQ_DT AND REQ_SEQ = A.SEQ)
                ) AS FLIGTH_IMAGE
              , A.PICK_GBN
              , ( SELECT IFNULL(SUM(PER_NUM), 0) FROM tb_req_pickup WHERE REQ_DT = A.REQ_DT AND REQ_SEQ = A.SEQ ) AS PER_NUM
@@ -706,5 +571,68 @@
            AND CODE NOT IN('28', '29') /* 숙박제외 */
            AND STATUS   = 'Y'
          ORDER BY CODE ASC
+	</select>
+	
+	<insert id="reservationPartnarInsert" parameterType="list" flushCache="true">
+		INSERT INTO TB_PARTNAR
+		(
+			 REQ_DT
+			,SEQ
+			,PARTNAR_SEQ
+			,PARTNAR_USERID
+			,PARTNAR_GBN
+			,PARTNAR_HAN_NAME
+			,PARTNAR_ENG_NAME
+			,PARTNAR_TEL_NO
+			,REG_DTM
+			,UPD_DTM
+		)
+		
+		VALUES 
+		<foreach collection="list" item="item" index="index" separator=",">
+		(
+			 #{item.req_dt}
+			,#{item.seq}
+			,#{item.part_seq}
+			,#{item.part_userid}
+			,#{item.part_gbn}
+			,#{item.part_han_name}
+			,#{item.part_eng_name}
+			,#{item.part_telno}
+			,NOW()
+			,NOW()
+		)
+        </foreach>
+	</insert>
+	
+	<delete id="reservationPartnarDelete" parameterType="hashMap">
+        DELETE
+          FROM TB_PARTNAR
+         WHERE REQ_DT   = #{req_dt}
+           AND REQ_SEQ  = #{seq}
+	</delete>
+	
+	<select id="reservationChk" parameterType="hashMap" resultType="hashMap">
+		SELECT   REQ_DT
+				,SEQ
+		FROM tb_req_booking_m /* 예약 테이블 */
+	   WHERE USER_ID  = #{user_id}
+	     AND REQ_DT = (SELECT MAX(REQ_DT) FROM tb_req_booking_m WHERE USER_ID = #{user_id})
+	</select>
+	
+	<select id="reservationPartnarList" parameterType="hashMap" resultType="hashMap">
+		SELECT REQ_DT,
+				SEQ,
+				PARTNAR_SEQ,
+				PARTNAR_USERID,
+				PARTNAR_GBN,
+				PARTNAR_HAN_NAME,
+				PARTNAR_ENG_NAME,
+				PARTNAR_TEL_NO
+		   FROM TB_PARTNAR
+		 WHERE REQ_DT   = #{req_dt }
+		   AND SEQ      = #{seq    }
+		   AND PARTNAR_USERID  = #{user_id}
+		 ORDER BY PARTNAR_SEQ ASC
 	</select>
 </mapper>

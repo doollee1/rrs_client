@@ -1,5 +1,6 @@
 package com.rrs.comm.intercepter;
 
+import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.List;
 
@@ -10,7 +11,6 @@ import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.ui.ModelMap;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -37,8 +37,8 @@ public class AuthenticInterceptor extends HandlerInterceptorAdapter {
 		SignVO login = (SignVO)session.getAttribute("login");
 		String requestURI = request.getRequestURI(); // 요청 URI
 		List<String> excludeList = Arrays.asList("/main.do"  // 메인 페이지
-												, "/productInfo.do" // 상품소개
-												, "/productInfoView.do" // 상품소개(관리자에서 호출)
+												, "/noticeList.do" // 공지사항
+												, "/noticeView.do" // 공지사항 상세
 												, "/resortInfo.do"	// 리조트&골프장 소개
 												, "/signIn.do"      // 로그인
 												, "/signOut.do"     // 로그아웃
@@ -54,8 +54,11 @@ public class AuthenticInterceptor extends HandlerInterceptorAdapter {
 					response.sendError(999);
 					result = false;
 				} else {
-					response.sendRedirect("/main.do");
-					result = false;
+					response.setContentType("text/html; charset=UTF-8");
+		            PrintWriter out = response.getWriter();
+		            out.println("<script>alert('로그인을 해 주세요.'); location.href='/main.do';</script>");
+		            out.flush();
+		            result = false;
 				}
 			}
 		}

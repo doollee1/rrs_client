@@ -74,7 +74,65 @@ $(document).ready(function() {
 			formData.append("file", file);
 		}
 	}
-
+	
+	// 동반자목록 삭제
+	$("#list_table").on("click", ".part-delete", function () {
+		partnerSeq-- ;
+		$(this).parent().parent().remove();
+	});
+	
+	// 동반자목록 추가
+	$("#append_row").on("click", function() {
+		$("#list_table").append(
+			$("<tr id=part_board>").append(
+				$("<td>").append( ${list.PARTNAR_SEQ} + 1 ),
+				$("<td style=display:none>").append( $("#add_user_id").val() ),
+				$("<td>").append(setPeopleGbn($("#add_gbn").val()) ),
+				$("<td>").append( $("#add_han_name").val() ),
+				$("<td>").append( $("#add_eng_name").val() ),
+				$("<td>").append( $("#add_telno").val() ),
+				$("<td>").append($("<a>").prop("href", "#").addClass("part-delete").append("삭제"))		
+			)	
+		);	
+	});
+	
+	// 동반자 목록 내 구분추가
+	function setPeopleGbn(s_data) {
+		var $combo = $('<select/>');
+		    $combo.append($('<option/>',{'value':'01'}).text('멤버')); //여기는 value 없는 그냥 기본 셋팅 값
+		    $combo.append($('<option/>',{'value':'02'}).text('일반')); //여기는 value 없는 그냥 기본 셋팅 값
+		    $combo.append($('<option/>',{'value':'05'}).text('소아')); //여기는 value 없는 그냥 기본 셋팅 값
+		    $combo.append($('<option/>',{'value':'11'}).text('라운딩')); //여기는 value 없는 그냥 기본 셋팅 값
+		    $combo.append($('<option/>',{'value':'12'}).text('비라운딩')); //여기는 value 없는 그냥 기본 셋팅 값
+		  $combo.val(s_data); //여기서 seleted하고 싶은 값을 넣어줌.
+		  return $combo; //리턴
+	}
+	
+	// 동반자등록 삭제
+	function deletePartnar() {
+		var data = {
+				  req_dt : $("#req_dt").val()
+				, seq    : $("#seq"   ).val()
+			}
+		
+		$.ajax({
+			type : "POST",
+			url : "reservationPartnarDelete.do",
+			data : data,
+			dataType : "json",
+			success : function(data) {
+				dimClose();
+				if(data.result == "SUCCESS") {
+					chkReqDt = data.chkReqDt;
+					chkSeq = data.chkSeq;
+					addPartnar();
+				} else {
+					alert("예약자체크 실패");
+				}
+		 	}
+		});
+	}	
+	
 	<%-- 이미지 rezise --%>
 	function resizeImage(settings) {
 		var file = settings.file;
@@ -277,6 +335,9 @@ $(document).ready(function() {
 						if(data.result == "SUCCESS") {
 							alert("수정이 완료되었습니다.");
 							location.replace("/main.do");
+							
+							
+							
 						} else {
 							alert("상태값이 변경되어 수정할 수 없습니다.");
 						}
@@ -455,6 +516,12 @@ lateCheckOut : \${numberComma(data.lateCheckOutAmt)}`);
 					<span class="d-sm-block d-none">Default 옵션</span>
 				</a>
 			</li>
+			<li class="nav-item">
+				<a href="#default-tab-3" data-bs-toggle="tab" class="nav-link">
+					<span class="d-sm-none">동반자</span>
+					<span class="d-sm-block d-none">Default 동반자</span>
+				</a>
+			</li>
 		</ul>
 		<!-- END nav-tabs -->
 		<!-- BEGIN tab-content -->
@@ -609,6 +676,99 @@ lateCheckOut : \${numberComma(data.lateCheckOutAmt)}`);
 				</div>
 			</div>
 			<!-- END tab-pane -->
+			
+			
+			
+			
+						<!-- BEGIN tab-pane -->
+			<div class="tab-pane fade" id="default-tab-3">
+				<div class="total-people-wrap">
+					<div class="container2">
+						<table border="1" id="list_table" class="table table-striped">
+							<thead>
+								<tr>
+									<th>번호</th>
+									<th style="display:none">등록자</th>
+									<th>인원구분</th>
+									<th>한글이름</th>
+									<th>영문이름</th>
+									<th>전화번호</th>
+									<th>정정</th>
+								</tr>
+							</thead>
+							
+							<tbody>
+								<c:forEach items="${reservationPartnarList}" var = "list" varStatus="status">
+									<tr id="part_board">
+										<td>${list.PARTNAR_SEQ}</td>
+										<td >
+											<select id="memberGbn${status.count }" name="memberGbn">
+												<option value="01" <c:if test="${list.PARTNAR_GBN eq '01' }">selected</c:if>>멤버</option>
+												<option value="02" <c:if test="${list.PARTNAR_GBN eq '02' }">selected</c:if>>일반</option>
+												<option value="05" <c:if test="${list.PARTNAR_GBN eq '05' }">selected</c:if>>비라운딩</option>
+												<option value="06" <c:if test="${list.PARTNAR_GBN eq '06' }">selected</c:if>>소아</option>
+												<option value="07" <c:if test="${list.PARTNAR_GBN eq '07' }">selected</c:if>>영유아</option>
+												
+											</select>
+										</td>
+										<td>${list.PARTNAR_HAN_NAME}</td>
+	               						<td>${list.PARTNAR_ENG_NAME}</td>
+	                					<td>${list.PARTNAR_TEL_NO}</td>
+										<td><a href="#" class="part-delete">삭제</a></td>
+									</tr>
+								</c:forEach>
+
+							</tbody>
+						</table>
+						<button type="button" id="chkBtn" class="btn btn-primary">검토</button>
+						<br><br>
+
+						<h3 align="center">동반자 추가 입력</h3>
+						<table border="1" id="append_table" align="center">
+							<colgroup>
+								<col style="width: 220px">
+								<col style="width: 200px">
+								<col style="width: 200px">
+								<col style="width: 230px">
+								<col style="width: 110px">
+							</colgroup>
+							<thead>
+								<tr>
+									<th>인원구분</th>
+									<th>한글이름</th>
+									<th>영문이름</th>
+									<th>전화번호</th>
+								</tr>
+							</thead>
+
+							<tbody>
+								<tr>
+									<td><!--  회원구분 01 멤버 / 02 일반 / 03 교민 / 04 에이전시 -->
+										<select id="add_gbn" name="add_gbn" class="form-select" style="text-align: center">
+											<option value=none>-선택-</option>
+											<option value="01">멤버</option>
+											<option value="02">일반</option>
+											<option value="05">비라운딩</option>
+											<option value="06">소아</option>
+											<option value="07">영아</option>
+										</select>
+									</td>
+									<td><input type="text" id="add_han_name" placeholder="한글로 입력해주세요."></td>
+									<td><input type="text" id="add_eng_name" placeholder="영어로 입력해주세요."></td>
+									<td><input type="text" id="add_telno" placeholder="숫자로 입력해주세요."></td>
+									<td><button type="button" style="width:100px;height:38px;" class="btn btn-success btn-lg" id="append_row">추가</button></td>
+									<td><input type="hidden" id="add_user_id" value=${sessionScope.login.user_id}></td>
+								</tr>
+							</tbody>
+						</table>
+					</div> <!-- /.container -->
+				</div>
+			</div>
+			<!-- END tab-pane -->
+			
+			
+			
+			
 		</div>
 		<!-- END tab-content -->
 

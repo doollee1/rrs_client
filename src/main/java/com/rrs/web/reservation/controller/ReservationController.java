@@ -1,5 +1,6 @@
 package com.rrs.web.reservation.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.rrs.comm.util.EgovDateUtil;
 import com.rrs.web.comm.service.CommonService;
@@ -15,6 +16,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+
+import org.springframework.web.bind.annotation.RequestBody;
+
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -36,9 +40,6 @@ public class ReservationController {
 	@RequestMapping(value = "/reservationCancel.do", method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String, Object> reservationCancel(@RequestParam Map<String, Object> param, HttpServletRequest req) throws Exception {
-		
-		logger.info("========= 예약취소 =========");
-		
 		Map<String, Object> rMap = new HashMap<String, Object>();
 		// 상태값 체크 01 예약요청-일반 / 02 예약요청-멤버 / 03 예약가능 / 04 예약신청 / 05 입금대기 / 06 예약확정 / 07 환불요청 / 08 환불완료 / 09 예약취소
 		String prcSts  = reservationService.getPrcSts(param);
@@ -182,7 +183,11 @@ public class ReservationController {
 
 		String memGbn = (String)reservationDetail.get("MEM_GBN"); // 회원구분
 		String prcSts = (String)reservationDetail.get("PRC_STS"); // 예약상태
-
+		
+		// 동반자 리스트
+		List<Map<String, Object>> reservationPartnarList = reservationService.reservationPartnarList(param);
+		model.addAttribute("reservationPartnarList", reservationPartnarList);
+				
 		model.addAttribute("reservationDetail"   , reservationDetail   );
 		model.addAttribute("strReservationDetail", strReservationDetail);
 		model.addAttribute("pickupSvcList"       , pickupSvcList       );
@@ -236,13 +241,17 @@ public class ReservationController {
 
 			param.put("HEAD_CD" , "500190"      );  // 도착항공편
 			List<Map<String, Object>> fligthOutList = commonService.commCodeList(param);
+			
+			param.put("HEAD_CD" , "500040"      );  // 인원구분
+			List<Map<String, Object>> peopleGbnList = commonService.commCodeList(param);
 
 			model.addAttribute("pickupSvcList", pickupSvcList);
 			model.addAttribute("lateOutYnList", lateOutYnList);
 			model.addAttribute("fligthInList" , fligthInList );
 			model.addAttribute("fligthOutList", fligthOutList);
+			model.addAttribute("peopleGbnList", peopleGbnList);
 
-			return "reservation/reservationReq_m.view";			
+			return "reservation/reservationReq_m.view";
 		}
 		// 일반 패키지 리스트
 		List<Map<String, Object>> packageList = reservationService.packageList();
@@ -250,7 +259,6 @@ public class ReservationController {
 
 		return "reservation/reservationReq.view";
 	}
-	
 
 	// 일반 예약요청
 	@RequestMapping(value = "/reservationInsert1.do", method = RequestMethod.POST)
@@ -283,9 +291,6 @@ public class ReservationController {
 	@RequestMapping(value = "/reservationInsert.do", method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String, Object> reservationInsert(@RequestPart Map<String, Object> param, @RequestPart MultipartFile file, HttpServletRequest req) throws Exception {
-		
-		logger.info("=============== 멤버예약요청, 일반예약신청 대표 등록 ==============");
-		
 		Map<String, Object> rMap = new HashMap<String, Object>();
 		HttpSession session = req.getSession();
 		// 회원구분 01 멤버 / 02 일반 / 03 교민 / 04 에이전시 
@@ -317,7 +322,6 @@ public class ReservationController {
 		return rMap;
 	}
 
-				
 	// 가계산
 	@RequestMapping(value = "/reservationCal.do", method = RequestMethod.POST)
 	@ResponseBody
@@ -390,6 +394,43 @@ public class ReservationController {
 		rMap.put("lateCheckOutAmt", lateCheckOutAmt);
 
 		rMap.put("totalAmt", totalAmt );
+		rMap.put("result"  , "SUCCESS");
+		return rMap;
+	}
+	
+	
+	// 예약자 동반자 등록
+	@RequestMapping(value = "/reservationPartnarInsert.do", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> reservationPartnarInsert(@RequestBody List<Map<String, Object>> param, HttpServletRequest req) throws Exception {
+		Map<String, Object> rMap = new HashMap<String, Object>();
+		try {
+				reservationService.reservationPartnarInsert(param);
+				rMap.put("result"  , "SUCCESS");
+				rMap.put("msg", "성공");
+			} catch (Exception e) {
+				rMap.put("msg", "실패");
+				e.printStackTrace();
+			}
+		return rMap;
+	}
+	
+
+	@RequestMapping(value = "/reservationChk.do", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> reservationChk(@RequestParam Map<String, Object> param, HttpServletRequest req) throws Exception {
+		Map<String, Object> rMap = new HashMap<String, Object>();
+		String chkReqDt        = "";
+		String chkSeq        = "";
+		Map<String, Object> reservationChkMap =  reservationService.reservationChk(param);
+		
+		if(reservationChkMap != null) {
+			chkReqDt = String.valueOf(reservationChkMap.get("req_dt"));
+			chkSeq = String.valueOf(reservationChkMap.get("seq"));
+		}
+
+		rMap.put("chkReqDt", chkReqDt );
+		rMap.put("chkSeq", chkSeq );
 		rMap.put("result"  , "SUCCESS");
 		return rMap;
 	}

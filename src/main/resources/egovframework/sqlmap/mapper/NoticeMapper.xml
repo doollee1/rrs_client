@@ -12,8 +12,10 @@
 		bc_notice
 	WHERE 
 		notice_tp = '02'
-		AND fromDate <= NOW()
+	/*	
+	    AND fromDate <= NOW() 
 		AND toDate >= NOW()
+	*/
 	ORDER BY
 		notice_no DESC
 	LIMIT

@@ -1,12 +1,7 @@
 package com.rrs.web.reservation.service.impl;
 
-import java.util.List;
-import java.util.Map;
-
+import java.util.*;
 import javax.annotation.Resource;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,8 +16,6 @@ public class ReservationServiceImpl implements ReservationService {
 	@Resource(name = "commonService")
 	CommonService commonService;
 
-	private static final Logger logger = LoggerFactory.getLogger(ReservationServiceImpl.class);
-			
 	// 패키지 리스트
 	public List<Map<String, Object>> packageList() throws Exception {
 		return reservationMapper.packageList();
@@ -197,7 +190,6 @@ public class ReservationServiceImpl implements ReservationService {
 
 		return insertGbn;
 	}
-	
 
 	// 일반 예약요청
 	public int reservationInsert1(Map<String, Object> paramMap) throws Exception {
@@ -379,5 +371,20 @@ public class ReservationServiceImpl implements ReservationService {
 	// 환불가능여부
 	public Map<String, Object> getReFundInfo(Map<String, Object> paramMap) throws Exception {
 		return reservationMapper.getReFundInfo(paramMap);
+	}
+	
+	// 동반자등록
+	public int reservationPartnarInsert(List<Map<String, Object>> paramMap) throws Exception {
+		return reservationMapper.reservationPartnarInsert(paramMap);
+	}
+	
+	// 예약등록체크
+	public Map<String, Object> reservationChk(Map<String, Object> paramMap) throws Exception {
+		return reservationMapper.reservationChk(paramMap);
+	}
+	
+	// 동반자 예약 리스트
+	public List<Map<String, Object>> reservationPartnarList(Map<String, Object> paramMap) throws Exception {
+		return reservationMapper.reservationPartnarList(paramMap);
 	}
 }

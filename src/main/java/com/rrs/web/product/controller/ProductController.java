@@ -47,7 +47,7 @@ public class ProductController {
 
 		mav.addObject("tableLists" , tableLists );  // 성수기
 		mav.addObject("tableLists2", tableLists2);  // 비수기
-		mav.setViewName("product/product.view1");
+		mav.setViewName("product/product.view");
 		return mav;
 	}
 

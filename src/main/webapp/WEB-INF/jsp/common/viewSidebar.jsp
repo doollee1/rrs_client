@@ -55,19 +55,19 @@
 						</a>
 					</div>
 					<div class="menu-item">
+						<a href="/productInfo.do" class="menu-link">
+							<div class="menu-icon">
+								<i class="far fa-message"></i> 
+							</div>
+							<div class="menu-text">상품소개</div>
+						</a>
+					</div>
+					<div class="menu-item">
 						<a href="/setting.do" class="menu-link">
 							<div class="menu-icon">
 								<i class="fa fa-cog"></i>
 							</div>
 							<div class="menu-text">개인설정</div>
-						</a>
-					</div>
-					<div class="menu-item">
-						<a href="/resortInfo.do" class="menu-link">
-							<div class="menu-icon">
-								<i class="fa fa-calendar-check"></i>
-							</div>
-							<div class="menu-text">리조트&골프장</div>
 						</a>
 					</div>
 					<div class="menu-item logout">
