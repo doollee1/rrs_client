@@ -113,4 +113,15 @@ public class SignServiceImpl implements SignService {
 		return this.signMapper.checkUserWithSessionKey(sessionId);
 	}
 	
+	/**
+	 * 관리자 여부 확인
+	 */
+	@Override
+	public String isAdminYn(String userId) throws Exception {
+		// TODO Auto-generated method stub
+		logger.info("======== 관리자여부확인 서비스 ========");
+		
+		return this.signMapper.isAdminYn(userId);
+	}
+	
 }

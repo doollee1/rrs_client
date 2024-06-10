@@ -20,14 +20,19 @@ $(window).ready( function() {
 function setEvent(){
 	
 }
+<%// 목록 버튼%>
+function goList(){
+	location.href="/qnaList.do";
+}
 
 function goModify(){
 	
-	let qna_seq = '${list[0].qna_seq}';
-	let title = '${list[0].title}';
-	let content = '${list[0].content}';
+	let qna_seq   = '${list[0].qna_seq}';
+	let title     = '${list[0].title}';
+	let content   = '${list[0].content}';
+	let secret_yn = '${list[0].secret_yn}';
 	
-	location.href="/qnaModify.do?qna_seq="+qna_seq+"&&title="+title+"&&content="+content;
+	location.href="/qnaModify.do?qna_seq="+qna_seq+"&&title="+title+"&&content="+content+"&&secret_yn="+secret_yn;
 }
 
 function goDelete(){
@@ -96,7 +101,7 @@ function goDelete(){
 						</c:when>
 					</c:choose>
 					
-					<a href="#" class="btn btn-success btn-list" onclick="history.back();">목록</a>
+					<a href="#" class="btn btn-success btn-list" onclick="goList();">목록</a>
 				</div>
 			</div>
 		</div>

@@ -37,28 +37,9 @@ public class RememberInterceptor extends HandlerInterceptorAdapter {
 		logger.info("======== 자동로그인 인터셋터 preHandler ========");
 		
 		HttpSession httpSession = request.getSession();
-		
-		Cookie[] cookies = request.getCookies(); //client에서 쿠키를 받아옴
-		logger.info("===== cookie 객수 :" +cookies.length);
-		
-		Cookie loginCookie = null;
 				
-		if(cookies!=null){
-		    for(int i=0;i<cookies.length;i++){
-		    	
-		    	String cookieName = cookies[i].getName();
-	            String cookieValue = cookies[i].getValue();
-	            
-	            logger.info("===== cookie 명 :" +cookieName);
-	            logger.info("===== cookie 값 :" +cookieValue);
-	            
-		        if(cookieName.equals("RRSCLIENTSESSION")){
-		        	loginCookie = cookies[i];
-		        }
-		    }
-		}
-		
-        //Cookie loginCookie = WebUtils.getCookie(request, "loginCookie");
+		//로그인쿠키 가져오기
+        Cookie loginCookie = WebUtils.getCookie(request, "loginCookie");
         logger.info("===== loginCookie : "+loginCookie);
         
         //loginCookie가 null 이 아닐시
@@ -75,7 +56,5 @@ public class RememberInterceptor extends HandlerInterceptorAdapter {
 		
 		return true;
 	}
-	
-	
 
 }

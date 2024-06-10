@@ -148,7 +148,7 @@ public class SignController {
 	// 로그인 처리
 	@RequestMapping(value = {"/signIn.do"}, method = {RequestMethod.POST})
 	@ResponseBody
-	public String signIn(@ModelAttribute("SignVO") SignVO vo, HttpServletRequest req) throws Exception {
+	public String signIn(@ModelAttribute("SignVO") SignVO vo, HttpServletRequest req, HttpServletResponse res) throws Exception {
 		
 		logger.info("========= 로그인 처리 Controller ==========");
 		logger.info("========= SignVO : "+vo.toString());
@@ -159,6 +159,8 @@ public class SignController {
 		vo.setPasswd(EgovFileScrty.encryptPassword(vo.getPasswd(), vo.getUser_id()));
 		
 		SignVO login = this.signService.signIn(vo);
+		//logger.info("========= login : "+ (ObjectUtils.isEmpty(login)? null : login.toString()));
+		
 		String loginYn = "";
 		
 		if (login == null) {
@@ -178,9 +180,15 @@ public class SignController {
 			} else if(login.getRet_yn().equals("R")) {
 				loginYn = "R";
 			} else {
-				loginYn = "Y"; // Y : 로그인 성공
+				
+				//관리자 여부
+				String isAdminYn = this.signService.isAdminYn(vo.getUser_id());
+				logger.info("======== 관리자여부 : "+isAdminYn);
+				
+				loginYn = "Y".equals(isAdminYn) ? "A" : "Y" ;  // Y : 일반 로그인 성공, A : 관리자로그인 성공
 			}
 			
+													
 			session = req.getSession(true);
 			session.setAttribute("login",	login);
 			session.setAttribute("user_id",	login.getUser_id());	//사용자id
@@ -192,12 +200,25 @@ public class SignController {
 			session.setAttribute("passwd",	login.getPasswd());		//비밀번호
 			session.setAttribute("ret_yn",	login.getRet_yn());		//탈퇴여부
 			session.setAttribute("reg_dtm",	login.getReg_dtm());	//등록일시
-			session.setAttribute("upd_dtm",	login.getUpd_dtm());	//수정일시
+			session.setAttribute("upd_dtm",	login.getUpd_dtm());	//수정일시			
 			
 			
 			//자동로그인 선택시
 			if(StringUtils.isNotEmpty(vo.getUseCookie())) {
-				int amount = 60*60*24*1;   //1일 유지
+				
+				Cookie loginCookie = new Cookie("loginCookie", session.getId());
+        		logger.info("===== loginCookie.name : "+loginCookie.getName() );
+        		logger.info("===== loginCookie.value : "+loginCookie.getValue() );
+        		
+        		int amount = 60*60*24*1;   //1일 유지
+             	loginCookie.setPath("/");
+             	loginCookie.setMaxAge(amount);   //자동로그인 1일
+             	
+             	//쿠키추가
+             	res.addCookie(loginCookie);
+
+             	
+				//쿠키유효시간
 				Date sessionLimit = new Date(System.currentTimeMillis() + (1000*amount));
 				
 				Map<String, Object> paramMap = new HashMap<>();
@@ -208,6 +229,7 @@ public class SignController {
 				//로그인 유지
 				this.signService.keepLogin(paramMap);
 			}
+						
 		}
 		
 		logger.debug("loginYn ::::: " + loginYn);
@@ -443,7 +465,7 @@ public class SignController {
 	@RequestMapping({"/signOut.do"})
 	public String signOut(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws Exception {
 		
-		logger.info("signOut");
+		logger.info("======== 로그아웃 처리 =========");
 		
 		//session.removeAttribute("login");
 		session.removeAttribute("user_id");
@@ -455,41 +477,24 @@ public class SignController {
 		session.removeAttribute("passwd");
 		session.removeAttribute("ret_yn");
 		session.removeAttribute("reg_dtm");
-		session.removeAttribute("upd_dtm");
+		session.removeAttribute("upd_dtm");		
 		//session.invalidate();
 			
 		
 		Object object = session.getAttribute("login");
-		logger.info("===== object : "+object.toString());
+		logger.info("===== object : "+object);
 		
 		//login 세션이 있을 경우 로그아웃 처리
 		if(!ObjectUtils.isEmpty(object)) {
 			
 			SignVO login = (SignVO) object;
 			
-			session.removeAttribute("login");			
+			session.removeAttribute("login");	
+			session.invalidate(); //세션 무효화 처리
 			
-			Cookie[] cookies = request.getCookies(); //client에서 쿠키를 받아옴
-			logger.info("===== cookie 객수 :" +cookies.length);
 			
-			Cookie loginCookie = null;
-					
-			if(cookies!=null){
-			    for(int i=0;i<cookies.length;i++){
-			    	
-			    	String cookieName = cookies[i].getName();
-		            String cookieValue = cookies[i].getValue();
-		            
-		            logger.info("===== cookie 명 :" +cookieName);
-		            logger.info("===== cookie 값 :" +cookieValue);
-		            
-			        if(cookieName.equals("RRSCLIENTSESSION")){
-			        	loginCookie = cookies[i];
-			        }
-			    }
-			}
-			
-			//Cookie loginCookie = WebUtils.getCookie(request, "loginCookie");
+			//로그인쿠키 가져오기
+			Cookie loginCookie = WebUtils.getCookie(request, "loginCookie");
 			logger.info("===== loginCookie : "+loginCookie);
 			
 			if(loginCookie != null) {
@@ -507,10 +512,9 @@ public class SignController {
 				
 			}
 		}
+				
 		
-		session.invalidate(); //세션 무효화 처리
-		
-		logger.debug("signOut Complete");
+		logger.debug("======== 로그아웃 처리완료 =========");
 		
 		return "main.index";
 	}

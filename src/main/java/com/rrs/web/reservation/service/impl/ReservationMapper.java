@@ -19,6 +19,9 @@ public interface ReservationMapper {
 	// 멤버 숙박비 계산
 	Map<String, Object> getRoomCharge(Map<String, Object> paramMap) throws Exception;
 
+	// 비라운딩,소아 계산
+	Map<String, Object> nokidChargeCalc(Map<String, Object> paramMap) throws Exception;
+		
 	// 패키지 가격 계산
 	Map<String, Object> packageCharge(Map<String, Object> paramMap) throws Exception;
 
@@ -31,6 +34,9 @@ public interface ReservationMapper {
 	// roomup 계산
 	Map<String, Object> roomupCalc(Map<String, Object> paramMap) throws Exception;
 
+	// lateCheckIn 계산
+	Map<String, Object> lateCheckInCalc(Map<String, Object> paramMap) throws Exception;
+	
 	// lateCheckOut 계산
 	Map<String, Object> lateCheckOutCalc(Map<String, Object> paramMap) throws Exception;
 
@@ -77,14 +83,17 @@ public interface ReservationMapper {
 	String getPrcSts(Map<String, Object> paramMap) throws Exception;
 	
 	// 예약자 동반자 등록
-	int reservationPartnarInsert(List<Map<String, Object>> paramMap) throws Exception;
-	
-	// 예약자 동반자 삭제
-	int reservationPartnarDelete(Map<String, Object> paramMap) throws Exception;
+	int reservationComInsert(List<Map<String, Object>> paramMap) throws Exception;
 	
 	// 예약등록체크
 	Map<String, Object> reservationChk(Map<String, Object> paramMap) throws Exception;
 	
 	// 예약자 동반자 조회
-	List<Map<String, Object>> reservationPartnarList(Map<String, Object> paramMap) throws Exception;
+	List<Map<String, Object>> reservationComList(Map<String, Object> paramMap) throws Exception;
+	
+	// 예약자 동반자 삭제
+	int deleteCompanion(Map<String, Object> paramMap) throws Exception;
+	
+	// 예약불가 검토
+	List<Map<String, Object>> noRoomChk(Map<String, Object> paramMap) throws Exception;
 }

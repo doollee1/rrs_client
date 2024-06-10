@@ -91,7 +91,7 @@ function signUpChk(){
 	var ret_yn		= $("#ret_yn").val();		<%//탈퇴여부%>
 	var reg_dtm		= $("#reg_dtm").val();		<%//등록일시%>
 	var upd_dtm		= $("#upd_dtm").val();		<%//수정일시%>
-	
+	var privacy_ch  = $("input:checkbox[id='privacy']").is(":checked"); <%//개인정보동의여부%>
 	
 	if(han_name == null || han_name == ''){
 		$("#han_name").focus();
@@ -137,6 +137,10 @@ function signUpChk(){
 	}
 	if(!validChk_email(email)) {
 		alert("이메일 형식이 올바르지 않습니다.");
+		return;
+	}
+	if(!privacy_ch){
+		alert("개인정보동의여부에 체크해주세요.");
 		return;
 	}
 	/* 
@@ -272,6 +276,11 @@ function pwChk(){
 				</div>
 				<div class="small" id="passwdChkText">
 					비밀번호는 8자리 이상 영문과 숫자를 포함해야 합니다.
+				</div>
+				<div class="mb-3 ">
+					<lable class="mb-2" style="font-size:17px">개인정보동의여부</lable>
+					<input type="checkbox" id="privacy" name="privacy" value="privacyYN">
+					<a href="/policy.do" style="text-decoration-line:underline;float:right">상세보기</a>
 				</div>
 				<input type="hidden" id="mem_gbn" name="mem_gbn" class="form-control" placeholder="회원구분"><BR></BR>
 				<input type="hidden" id="ret_yn" name="ret_yn" class="form-control" placeholder="탈퇴여부"><BR></BR>

@@ -18,8 +18,8 @@
 		</ul>
 	</c:if>
 	
-	<%//로그인 후 화면 : main_btn.html %>
-	<c:if test="${sessionScope.login != null}">
+	<%//로그인 후 화면_사용자 : main_btn.html %>
+	<c:if test="${sessionScope.login != null && sessionScope.user_id ne 'admin'}">
 		<div class="main-btn-wrap">
 			<div class="goto-menu">
 				<a href="/productInfo.do" class="btn btn-success"><i class="far fa-message"></i>상품소개</a>
@@ -31,4 +31,11 @@
 			<a href="/setting.do" class="btn btn-dark btn-sm btn-set">설정</a>
 		</div>
 	</c:if>
+	
+	
+	<%//로그인 후 화면_관리자 : main_btn.html %>
+	<c:if test="${sessionScope.login != null && sessionScope.login.user_id eq 'admin'}">		
+		<jsp:forward page="/adminReservationList.do"/>		
+	</c:if>
+	
 </div>

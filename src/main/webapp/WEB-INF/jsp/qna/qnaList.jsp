@@ -35,8 +35,14 @@ function isEmpty(str){
 }
 
 <%//문의사항 상세보기%>
-function goDetail(qna_seq){
-	location.href="/qnaView.do?qna_seq="+qna_seq;
+function goDetail(qna_seq, secret_yn, reg_id){
+	let user_id = '${sessionScope.user_id}';
+	
+	if ((secret_yn == 'Y') && (reg_id != user_id)) {
+		alert("비밀글입니다.");
+	} else {
+		location.href="/qnaView.do?qna_seq="+qna_seq;
+	}
 }
 
 <%//내 문의내역 보기%>
@@ -71,6 +77,11 @@ function myQnaList(){
 				}
 				html+= '	</td>';
 				html+= '	<td><span>'+data[i].title+'</span></td>';
+				html+= '	<td>'
+				if (data[i].secret_yn == 'Y') {
+					html+= '	<i class="fa fa-lock"></i>'
+				}		
+				html+= '	</td>'
 				html+= '</tr>';
 			}
 		}
@@ -110,7 +121,12 @@ function nextPage(){
 		page++;
 		let html = "";
 		for(var i = 0; i < data.length; i++) {
-			html+= '<tr onclick="goDetail('+data[i].qna_seq+')">';
+			let yn = data[i].secret_yn;
+			if ((yn == null)) {
+				yn = 'N';
+			}
+			
+			html+= '<tr onclick="goDetail('+data[i].qna_seq+',\''+yn+'\',\''+data[i].reg_id+',\')">';
 			html+= '	<td class="date"><span>'+data[i].reg_dt+'</span></td>';
 			html+= '	<td>';
 			if(data[i].reg_sts == "1") {
@@ -120,6 +136,11 @@ function nextPage(){
 			}
 			html+= '	</td>';
 			html+= '	<td><span>'+data[i].title +'</span></td>';
+			html+= '	<td>'
+			if (data[i].secret_yn == 'Y') {
+				html+= '	<i class="fa fa-lock"></i>'
+			}		
+			html+= '	</td>'
 			html+= '</tr>';
 		}
 		$('#default-tab-1 tbody').last().append(html);
@@ -163,7 +184,7 @@ function nextPage(){
 					</colgroup>
 					<tbody>
 						<c:forEach var="list" items="${list}">
-							<tr onclick="goDetail('${list.qna_seq}')">
+							<tr onclick="goDetail('${list.qna_seq}','${list.secret_yn}','${list.reg_id}')">
 								<td class="date"><span>${list.reg_dt}</span></td>
 								<td>
 									<c:choose>
@@ -172,6 +193,12 @@ function nextPage(){
 									</c:choose>
 								</td>
 								<td><span>${list.title }</span></td>
+								
+								<td>
+									<c:choose>
+										<c:when test="${list.secret_yn eq 'Y'}"><i class="fa fa-lock"></i></c:when>
+									</c:choose>
+								</td>
 							</tr>
 						</c:forEach>
 					</tbody>

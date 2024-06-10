@@ -66,6 +66,8 @@ function signIn(){
 		success:function(data){
 			if(data == "Y"){
 				location.href = "/main.do";
+			} else if(data == "A"){
+				location.href = "/adminReservationList.do";   //관리자 예약목록 페이지로 이동  
 			} else if(data == "R"){
 				alert("비밀번호가 초기 상태입니다.\n비밀번호 변경 후 이용해주세요.");
 				location.href="/infoChange.do";

@@ -1,6 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.rrs.web.reservation.service.impl.ReservationMapper">
+
+	<select id="nokidChargeCalc" parameterType="hashMap" resultType="hashMap">
+	<![CDATA[
+        WITH RECURSIVE TEMP_CHK_DT AS (
+            SELECT DATE_FORMAT(#{chk_in_dt}, '%Y%m%d') AS CHK_DT
+             UNION
+            SELECT DATE_FORMAT(DATE_ADD(TEMP_CHK_DT.CHK_DT, INTERVAL 1 DAY), '%Y%m%d') AS CHK_DT
+              FROM TEMP_CHK_DT
+             WHERE DATE_FORMAT(DATE_ADD(TEMP_CHK_DT.CHK_DT, INTERVAL 1 DAY), '%Y%m%d') <= #{chk_out_dt} -1
+        )
+        SELECT A.BAS_YY /* 기준년도 */
+             , A.BAS_YY_SEQ /* 기간년도순번 */
+             , A.PROD_SEQ /* 상품순번 */
+        	 , SUM(A.COM_AMT) * #{nokid_person} AS NOKID_AMT /* 식사 + 숙박비 */
+          FROM (
+              SELECT AA.BAS_YY /* 기준년도 */
+             	   , AA.BAS_YY_SEQ /* 기간년도순번 */
+             	   , AA.PROD_SEQ /* 상품순번 */
+              	   , MAX(AA.COM_AMT) AS COM_AMT
+                FROM tb_prod_info   AA
+                JOIN tb_bas_yy_info BB
+                  ON AA.HDNG_GBN   = '30'
+                 AND AA.BAS_YY     = BB.BAS_YY
+                 AND AA.BAS_YY_SEQ = BB.BAS_YY_SEQ
+                JOIN TEMP_CHK_DT CC
+                  ON CC.CHK_DT BETWEEN BB.ST_DT1 AND BB.ED_DT1
+                  OR CC.CHK_DT BETWEEN BB.ST_DT2 AND BB.ED_DT2
+                  OR CC.CHK_DT BETWEEN BB.ST_DT3 AND BB.ED_DT3
+               GROUP BY AA.BAS_YY, AA.BAS_YY_SEQ, AA.PROD_SEQ, CC.CHK_DT
+               ) A
+    ]]>
+	</select>
+	
 	<select id="memRoomChargeCalc" parameterType="hashMap" resultType="hashMap">
 	<![CDATA[
         WITH RECURSIVE TEMP_CHK_DT AS (
@@ -8,9 +41,9 @@
              UNION
             SELECT DATE_FORMAT(DATE_ADD(TEMP_CHK_DT.CHK_DT, INTERVAL 1 DAY), '%Y%m%d') AS CHK_DT
               FROM TEMP_CHK_DT
-             WHERE DATE_FORMAT(DATE_ADD(TEMP_CHK_DT.CHK_DT, INTERVAL 1 DAY), '%Y%m%d') <= #{chk_out_dt}
+             WHERE DATE_FORMAT(DATE_ADD(TEMP_CHK_DT.CHK_DT, INTERVAL 1 DAY), '%Y%m%d') <= #{chk_out_dt}-1
         )
-        SELECT SUM(A.COM_AMT) * #{tot_person} AS MEM_ROOM_CHARGE /* 숙박비 */
+        SELECT SUM(A.COM_AMT) * IF( ROUND(#{m_person} / 2) = 0, 1, ROUND(#{m_person} / 2) ) AS MEM_ROOM_CHARGE /* 숙박비 */
           FROM (
               SELECT MAX(AA.COM_AMT) AS COM_AMT
                 FROM tb_prod_info   AA
@@ -34,9 +67,9 @@
              UNION
             SELECT DATE_FORMAT(DATE_ADD(TEMP_CHK_DT.CHK_DT, INTERVAL 1 DAY), '%Y%m%d') AS CHK_DT
               FROM TEMP_CHK_DT
-             WHERE DATE_FORMAT(DATE_ADD(TEMP_CHK_DT.CHK_DT, INTERVAL 1 DAY), '%Y%m%d') <= #{chk_out_dt}
+             WHERE DATE_FORMAT(DATE_ADD(TEMP_CHK_DT.CHK_DT, INTERVAL 1 DAY), '%Y%m%d') <= #{chk_out_dt}-1
         )
-        SELECT SUM(A.COM_AMT) * #{tot_person} AS PACKAGE_AMT /* 숙박비 */
+        SELECT SUM(A.COM_AMT) * #{g_person} AS PACKAGE_AMT /* 숙박비 */
           FROM (
               SELECT MAX(AA.COM_AMT) AS COM_AMT
                 FROM tb_prod_info   AA
@@ -80,7 +113,7 @@
         SELECT A.BAS_YY /* 기준년도 */
              , A.BAS_YY_SEQ /* 기간년도순번 */
              , A.PROD_SEQ /* 상품순번 */
-             , A.COM_AMT * DATEDIFF(CAST(#{chk_out_dt} AS DATE), CAST(#{chk_in_dt} AS DATE)) * #{tot_person} AS PACKAGE_AMT /* 패키지가격 */
+             , A.COM_AMT * DATEDIFF(CAST(#{chk_out_dt} AS DATE), CAST(#{chk_in_dt} AS DATE)) * #{g_person} AS PACKAGE_AMT /* 패키지가격 */
           FROM tb_prod_info   A /* 상품정보 테이블 */
           JOIN tb_bas_yy_info B /* 년도별 기간 관리테이블 */
             ON A.HDNG_GBN   = #{package_} /* 항목구분 */
@@ -114,15 +147,11 @@
           FROM bc_comm_l    A
           JOIN tb_prod_info B /* 상품정보 테이블 */
             ON A.HEAD_CD  = '500210' /* 미팅샌딩 */
-           AND A.CODE     = #{pick_gbn}
            AND A.REF_CHR1 = B.HDNG_GBN
-           AND A.REF_CHR2 = B.PROD_COND
-          JOIN tb_bas_yy_info C /* 년도별 기간 관리테이블 */
-            ON B.BAS_YY     = C.BAS_YY
-           AND B.BAS_YY_SEQ = C.BAS_YY_SEQ
-         WHERE #{chk_in_dt} BETWEEN C.ST_DT1 AND C.ED_DT1
-            OR #{chk_in_dt} BETWEEN C.ST_DT2 AND C.ED_DT2
-            OR #{chk_in_dt} BETWEEN C.ST_DT3 AND C.ED_DT3
+           AND A.CODE      = #{pick_gbn}
+           AND B.PROD_COND = #{prod_cond}
+           AND B.PROD_SEQ in ('82','83','84','85','86')
+           AND B.BAS_YY = YEAR(NOW())
 	</select>
 
 	<select id="surchageCalc" parameterType="hashMap" resultType="hashMap">
@@ -166,7 +195,7 @@
 	</select>
 	
 	<select id="lateCheckOutCalc" parameterType="hashMap" resultType="hashMap">
-        SELECT B.COM_AMT * IF( FLOOR(#{tot_person} / 2) = 0, 1, FLOOR(#{tot_person} / 2) ) AS LATECHECKOUT_AMT /* latecheckout비용 */
+        SELECT B.COM_AMT * #{room_person} AS LATECHECKOUT_AMT /* latecheckout비용 */
           FROM bc_comm_l A
           JOIN tb_prod_info B  /* 상품정보 테이블 */
             ON A.HEAD_CD    = '500060' /* Late체크아웃여부  */
@@ -180,6 +209,23 @@
                  OR #{chk_in_dt} BETWEEN C.ST_DT3 AND C.ED_DT3
                )
 	</select>
+
+	<select id="lateCheckInCalc" parameterType="hashMap" resultType="hashMap">
+ 		SELECT B.COM_AMT * #{room_person} AS LATECHECKIN_AMT /* latecheckIN비용 */
+          FROM bc_comm_l A
+          JOIN tb_prod_info B  /* 상품정보 테이블 */
+            ON A.HEAD_CD    = '500150' /* Late체크아웃여부  */
+           AND A.CODE       = #{late_check_in}
+           AND B.HDNG_GBN   = A.REF_CHR1
+          JOIN tb_bas_yy_info C /* 년도별 기간 관리테이블 */
+            ON B.BAS_YY     = C.BAS_YY
+           AND B.BAS_YY_SEQ = C.BAS_YY_SEQ
+         WHERE (    #{chk_in_dt} BETWEEN C.ST_DT1 AND C.ED_DT1
+                 OR #{chk_in_dt} BETWEEN C.ST_DT2 AND C.ED_DT2
+                 OR #{chk_in_dt} BETWEEN C.ST_DT3 AND C.ED_DT3
+               )
+	</select>
+
 
 	<select id="getPrcSts" parameterType="hashMap" resultType="String">
         SELECT A.PRC_STS /* 예약상태 */
@@ -228,168 +274,146 @@
          , REQ_ENG_NM      /* 예약자영문명 */
          , REQ_TEL_NO      /* 예약자전화번호 */
          , MEM_GBN         /* 회원구분 */
+         , AGN_GB          /* 에이전시구분 */
          , AGN_CD          /* 에이전시코드 */
          , PRC_STS         /* 예약상태 */
          , CHK_IN_DT       /* 체크인일자 */
          , CHK_OUT_DT      /* 체크아웃일자 */
+         , LATE_CHECK_IN   /* Late체크인 */
+         , LATE_CHECK_OUT  /* Late체크아웃 */
          , ROOM_TYPE       /* 객실타입 */
          , FLIGHT_IN       /* 도착항공기편 */
+         , FLIGHT_IN_HH    /* 도착항공기시각 */
          , FLIGHT_OUT      /* 출발항공기편 */
-         , TOT_PERSON      /* 총인원 */
-         , R_PERSON        /* 라운딩인원 */
+         , FLIGHT_OUT_HH   /* 출발항공기시각 */
+         , M_PERSON        /* 멤버인원 */
+         , G_PERSON        /* 일반인원 */
          , N_PERSON        /* 비라운딩인원 */
-         , NR_PERSON       /* 비멤버인원(클라이언트 멤버예약 비멤버인원) */
-         , K_PERSON        /* 소아인원 */
+         , K_PERSON        /* 소아 */
+         , I_PERSON        /* 영유아 */
+         , TOT_PERSON      /* 총인원 */
          , BAS_YY          /* 기준년도 */
          , BAS_YY_SEQ      /* 기준년도순번 */
          , PROD_SEQ        /* 상품순번 */
+         , HDNG_GBN        /* 항목구분 */         
+         , ADD_BAS_YY      /* 추가패키지기준년도 */
+         , ADD_BAS_YY_SEQ  /* 추가패키지기준년도순번 */
+         , ADD_PROD_SEQ    /* 추가패키지상품순번 */
+         , ADD_HDNG_GBN    /* 추가패키지항목구분 */   
          , PICK_GBN        /* 미팅샌딩구분 */
-         , ADD_R_S_PER     /* 싱글룸추가인원수 */
-         , ADD_R_S_DAY     /* 싱글룸추가일수 */
-         , ADD_R_S_CNT     /* 싱글룸추가갯수 */
-         , ADD_R_P_PER     /* 프리미엄룸추가인원수 */
-         , ADD_R_P_DAY     /* 프리미엄룸추가일수 */
-         , ADD_R_P_CNT     /* 프리미엄추가갯수 */
-         , CNT_D1          /* 트윈갯수 */
-         , CNT_D2          /* 더블갯수 */
-         , CNT_P1          /* 프리미엄트윈갯수 */
-         , CNT_P2          /* 프리미엄킹갯수 */
+         , PER_NUM         /* 미팅샌딩인원수 */
          , PICK_IN         /* 픽업차량-도착 */
          , PICK_OUT        /* 픽업차량-출발 */
-         , LATE_CHECK_OUT  /* Late체크아웃 */
-         , REMARK          /* 비고(추가요구사항) */
+         , TWIN_CNT        /* 트윈갯수 */
+         , KING_CNT        /* 킹갯수 */
+         , ROOM_ADD_CNT    /* 룸추가갯수 */
+         , ROOM_ADD_IL     /* 룸추가일수 */
+         , PRIM_ADD_CNT    /* 프리미엄추가추가갯수 */
+         , PRIM_ADD_IL     /* 프리미엄추가일수 */
          , INV_REG_DT      /* 인보이스발행일자 */
-         , CONFIRM_NO      /* 리조트confirm번호 */
          , RND_CHG_YN1     /* 라운딩변경(토오전)여부 */
          , RND_CHG_YN2     /* 라운딩변경(일오전)여부 */
+         , REMARK          /* 비고(추가요구사항) */
          , REG_DTM         /* 등록일시 */
          , REG_ID          /* 등록자ID */
          , UPD_DTM         /* 수정일시 */
          , UPD_ID          /* 수정자ID */
         ) VALUES
         (
-           #{req_dt        }
-         , #{seq           }
-         , #{user_id       }
-         , #{han_name      }
-         , #{eng_name      }
-         , #{tel_no        }
-         , #{mem_gbn       }
-         , ''
-         , #{prc_sts       }
-         , #{chk_in_dt     }
-         , #{chk_out_dt    }
-         , #{room_type     }
-         , #{flight_in     }
-         , #{flight_out    }
-         , #{tot_person    }
-         , CASE WHEN '01' = #{mem_gbn       }
-                THEN #{r_person      } + #{nr_person     }
-                ELSE #{r_person      }
-            END /* 멤버 라운딩인원 = 멤버 + 비멤버 */
-         , CASE WHEN '01' = #{mem_gbn       }
-                THEN 0
-                ELSE #{n_person      }
-            END /* 멤버일때 노라운딩 0 */
-         , CASE WHEN '01' = #{mem_gbn       }
-                THEN #{nr_person     }
-                ELSE 0
-            END
-         , #{k_person      }
-         , #{res_bas_yy    }
-         , #{res_bas_yy_seq}
-         , #{res_prod_seq  }
-         , #{pick_gbn      }
-         , IFNULL(#{add_r_s_per   }, 0)
-         , IFNULL(#{add_r_s_day   }, 0)
-         , CASE WHEN ISNULL(#{add_r_s_per   }) OR #{add_r_s_per   } = 0
-                THEN 0
-                ELSE IF( FLOOR(#{add_r_s_per   } / 2) = 0, 1, FLOOR(#{add_r_s_per   } / 2) )
-            END
-         , IFNULL(#{add_r_p_per   }, 0)
-         , IFNULL(#{add_r_p_day   }, 0)
-         , CASE WHEN ISNULL(#{add_r_p_per   }) OR #{add_r_p_per   } = 0
-                THEN 0
-                ELSE IF( FLOOR(#{add_r_p_per   } / 2) = 0, 1, FLOOR(#{add_r_p_per   } / 2) )
-            END
-         , CASE WHEN #{room_type      } = '01'
-                THEN IF( FLOOR(#{tot_person    } / 2) = 0, 1, FLOOR(#{tot_person    } / 2) )
-                ELSE 0
-            END
-         , CASE WHEN #{room_type      } = '02'
-                THEN IF( FLOOR(#{tot_person    } / 2) = 0, 1, FLOOR(#{tot_person    } / 2) )
-                ELSE 0
-            END
-         , 0
-         , 0
-         , ''
-         , ''
-         , #{late_check_out}
-         , #{remark        }
-         , ''
-         , ''
-         , ''
-         , ''
-         , NOW()
-         , #{user_id       }
-         , NOW()
-         , #{user_id       }
+           #{req_dt        }			/* 예약일자             */
+         , #{seq           }			/* 일련번호             */
+         , #{user_id       }			/* 사용자ID       */
+         , #{han_name      }			/* 예약자한글명        */
+         , #{eng_name      }			/* 예약자영문명        */
+         , #{tel_no        }			/* 예약자전화번호     */
+         , #{mem_gbn       }			/* 회원구분             */
+         , ''							/* 에이전시구분        */
+         , ''							/* 에이전시코드        */
+         , #{prc_sts       }			/* 예약상태             */
+         , #{chk_in_dt	   }			/* 체크인               */
+         , #{chk_out_dt	   }			/* 체크아웃             */
+         , #{late_check_in }			/* 레이트체크인        */
+         , #{late_check_out}			/* 레이트체크아웃      */
+         , #{room_type	   }			/* 객실타입             */
+         , #{flight_in	   }			/* 비행출발일자        */
+         , #{flight_in_hh  }			/* 비행출발시간        */
+         , #{flight_out	   }			/* 비행도착일자        */
+         , #{flight_out_hh }			/* 비행도착시간        */
+         , #{m_person	   }			/* 멤버                 */
+         , #{g_person	   }			/* 일반                 */
+         , #{n_person	   }			/* 비라운딩            */
+         , #{k_person	   }			/* 소아                 */
+         , #{i_person	   }			/* 영유아               */
+         , #{tot_person	   }			/* 총인원               */
+         , #{bas_yy        }			/* 기준년도             */
+         , #{bas_yy_seq    }			/* 기준년도순번        */
+         , #{prod_seq      }			/* 상품순번             */
+         , #{hdng_gbn       }			/* 항목구분             */
+         , #{add_bas_yy    }			/* 추가기준년도        */
+         , #{add_bas_yy_seq}			/* 추가기준년도순번   */
+         , #{add_prod_seq  }			/* 추가상품순번        */
+         , #{add_hdng_gbn  }			/* 추가항목구분        */
+         , #{pick_gbn	   }			/* 미팅샌딩구분        */
+         , #{per_num	   }			/* 미팅샌딩인원수      */
+         , ''							/* 픽업차량-도착       */
+         , ''							/* 픽업차량-출발       */
+         , #{twin_cnt      }			/* 트윈갯수              */
+         , #{king_cnt      }			/* 킹갯수                 */
+         , #{add_r_s_per   }			/* 싱글룸추가갯수       */
+         , #{add_r_s_day   }			/* 싱글룸추가일수       */
+         , #{add_r_p_per   }			/* 프리미엄추가갯수    */
+         , #{add_r_p_day   }			/* 프리미엄추가일수    */
+         , ''							/* 인보이스발행일자    */
+         , 'N'							/* 라운딩변경(토오전)여부 */
+         , 'N'							/* 라운딩변경(일오전)여부 */
+         , #{remark		   }			/* 추가요청사항          */
+         , NOW()						/* 등록일시               */
+         , #{user_id       }			/* 등록자ID        */
+         , NOW()						/* 수정일시               */
+         , #{user_id       }			/* 수정자ID        */
         )
 	</insert>
 	
 	<update id="updateTbReqBookingM" parameterType="hashMap">
         UPDATE tb_req_booking_m 
-           SET PRC_STS    = IFNULL(#{prc_sts   }, PRC_STS)
-             , CHK_IN_DT  = #{chk_in_dt }
-             , CHK_OUT_DT = #{chk_out_dt}
-             , ROOM_TYPE  = #{room_type }
-             , FLIGHT_IN  = #{flight_in }
-             , FLIGHT_OUT = #{flight_out}
-             , TOT_PERSON = #{tot_person}
-             , R_PERSON   = CASE WHEN '01' = #{mem_gbn       }
-                                 THEN #{r_person      } + #{nr_person     }
-                                 ELSE #{r_person      }
-                             END /* 멤버 라운딩인원 = 멤버 + 비멤버 */
-             , N_PERSON   = CASE WHEN '01' = #{mem_gbn       }
-                                 THEN 0
-                                 ELSE #{n_person      }
-                             END /* 멤버일때 노라운딩 0 */
-             , NR_PERSON  = CASE WHEN '01' = #{mem_gbn       }
-                                 THEN #{nr_person     }
-                                 ELSE 0
-                            END
-             , K_PERSON    = #{k_person      }
-             , BAS_YY      = #{res_bas_yy    }
-             , BAS_YY_SEQ  = #{res_bas_yy_seq}
-             , PROD_SEQ    = #{res_prod_seq  }
-             , PICK_GBN    = #{pick_gbn      }
-             , ADD_R_S_PER = IFNULL(#{add_r_s_per   }, 0)
-             , ADD_R_S_DAY = IFNULL(#{add_r_s_day   }, 0)
-             , ADD_R_S_CNT = CASE WHEN ISNULL(#{add_r_s_per   }) OR #{add_r_s_per   } = 0
-                                  THEN 0
-                                  ELSE IF( FLOOR(#{add_r_s_per   } / 2) = 0, 1, FLOOR(#{add_r_s_per   } / 2) )
-                              END
-             , ADD_R_P_PER = IFNULL(#{add_r_p_per   }, 0)
-             , ADD_R_P_DAY = IFNULL(#{add_r_p_day   }, 0)
-             , ADD_R_P_CNT = CASE WHEN ISNULL(#{add_r_p_per   }) OR #{add_r_p_per   } = 0
-                                  THEN 0
-                                  ELSE IF( FLOOR(#{add_r_p_per   } / 2) = 0, 1, FLOOR(#{add_r_p_per   } / 2) )
-                              END
-             , CNT_D1      = CASE WHEN #{room_type      } = '01'
-                                  THEN IF( FLOOR(#{tot_person    } / 2) = 0, 1, FLOOR(#{tot_person    } / 2) )
-                                  ELSE 0
-                              END
-             , CNT_D2      = CASE WHEN #{room_type      } = '02'
-                                  THEN IF( FLOOR(#{tot_person    } / 2) = 0, 1, FLOOR(#{tot_person    } / 2) )
-                                  ELSE 0
-                              END
-             , LATE_CHECK_OUT = #{late_check_out}
-             , REMARK         = #{remark        }
-             , UPD_DTM        = NOW()
-             , UPD_ID         = #{user_id       }
-         WHERE REQ_DT  = #{req_dt        }
-           AND SEQ     = #{seq           }
-           AND USER_ID = #{user_id       }
+           SET PRC_STS			= IFNULL(#{prc_sts   }, PRC_STS)
+             , CHK_IN_DT		= #{chk_in_dt     }
+             , CHK_OUT_DT		= #{chk_out_dt    }
+             , ROOM_TYPE		= #{room_type     }
+             , FLIGHT_IN		= #{flight_in     }
+             , FLIGHT_IN_HH		= #{flight_in_hh  }
+             , FLIGHT_OUT		= #{flight_out    }
+			 , FLIGHT_OUT_HH	= #{flight_out_hh }
+             , M_PERSON			= #{m_person      }
+             , G_PERSON			= #{g_person      }
+             , N_PERSON			= #{n_person      }
+             , K_PERSON			= #{k_person      }
+             , I_PERSON			= #{i_person      }
+             , TOT_PERSON		= #{tot_person    }
+             , BAS_YY			= #{bas_yy        }
+             , BAS_YY_SEQ		= #{bas_yy_seq    }
+             , PROD_SEQ			= #{prod_seq      }
+             , HDNG_GBN			= #{hdng_gbn      }
+             , ADD_BAS_YY		= #{add_bas_yy    }
+             , ADD_BAS_YY_SEQ	= #{add_bas_yy_seq}
+             , ADD_PROD_SEQ		= #{add_prod_seq  }
+             , ADD_HDNG_GBN		= #{add_hdng_gbn  }
+             , PICK_GBN			= #{pick_gbn      }
+             , PER_NUM			= #{per_num       }
+             , LATE_CHECK_IN	= #{late_check_in }
+             , LATE_CHECK_OUT	= #{late_check_out}
+             , TWIN_CNT			= #{twin_cnt      }
+             , KING_CNT			= #{king_cnt      }
+             , ROOM_ADD_CNT		= #{add_r_s_per   }
+             , ROOM_ADD_IL		= #{add_r_s_day   }
+             , PRIM_ADD_CNT		= #{add_r_p_per   }
+             , PRIM_ADD_IL		= #{add_r_p_day   }
+             , REMARK			= #{remark        }
+             , UPD_DTM			= NOW()
+             , UPD_ID			= #{user_id       }
+         WHERE REQ_DT		= #{req_dt        }
+           AND SEQ			= #{seq           }
+           AND USER_ID		= #{user_id       }
 	</update>
 
 	<update id="updateTbReqFee" parameterType="hashMap">
@@ -515,48 +539,59 @@
 	</select>
 
 	<select id="reservationDetail" parameterType="hashMap" resultType="hashMap">
-        SELECT A.REQ_DT
-             , A.SEQ
-             , A.REQ_HAN_NM
-             , A.REQ_ENG_NM
-             , A.MEM_GBN
-             , A.PRC_STS
-             , DATE_FORMAT(A.CHK_IN_DT , '%Y-%m-%d') AS CHK_IN_DT
-             , DATE_FORMAT(A.CHK_OUT_DT, '%Y-%m-%d') AS CHK_OUT_DT
-             , A.ROOM_TYPE
-             , A.FLIGHT_IN
-             , A.FLIGHT_OUT
-             , A.TOT_PERSON
-             , IFNULL(A.R_PERSON , 0) AS R_PERSON
-             , IFNULL(A.N_PERSON , 0) AS N_PERSON
-             , IFNULL(A.NR_PERSON, 0) AS NR_PERSON
-             , IFNULL(A.K_PERSON , 0) AS K_PERSON
-             , A.ADD_R_S_PER
-             , A.ADD_R_S_DAY
-             , A.ADD_R_P_PER
-             , A.ADD_R_P_DAY
-             , A.LATE_CHECK_OUT
-             , A.REMARK
+        SELECT A.REQ_DT									/* 예약일자 */
+             , A.SEQ									/* 일련번호 */
+             , A.REQ_HAN_NM								/* 예약자한글명 */
+             , A.REQ_ENG_NM								/* 예약자영문명 */
+             , A.REQ_TEL_NO								/* 예약자전화번호 */
+             , A.MEM_GBN								/* 회원구분 */
+             , A.PRC_STS								/* 예약상태 */
+             , DATE_FORMAT(A.CHK_IN_DT , '%Y-%m-%d') AS CHK_IN_DT		/* 체크인일자 */
+             , DATE_FORMAT(A.CHK_OUT_DT, '%Y-%m-%d') AS CHK_OUT_DT		/* 체크아웃일자 */
+             , A.LATE_CHECK_IN							/* Late체크인 */
+             , A.LATE_CHECK_OUT							/* Late체크아웃 */
+             , A.ROOM_TYPE								/* 객실타입 */
+             , A.FLIGHT_IN								/* 도착항공기편 */
+             , A.FLIGHT_IN_HH							/* 도착항공기시각 */
+             , A.FLIGHT_OUT								/* 출발항공기편 */
+             , A.FLIGHT_OUT_HH							/* 출발항공기시각 */
+             , IFNULL(A.M_PERSON , 0) AS M_PERSON		/* 멤버인원 */
+             , IFNULL(A.G_PERSON , 0) AS G_PERSON		/* 일반인원 */
+             , IFNULL(A.N_PERSON , 0) AS N_PERSON		/* 비라운딩인원 */
+             , IFNULL(A.K_PERSON , 0) AS K_PERSON		/* 소아인원 */
+             , IFNULL(A.I_PERSON , 0) AS I_PERSON		/* 영유아인원 */
+             , A.TOT_PERSON								/* 총인원 */
+             , A.BAS_YY									/* 기준년도 */
+             , A.BAS_YY_SEQ								/* 기준년도순번 */
+             , A.PROD_SEQ								/* 상품순번 */
+             , A.HDNG_GBN								/* 항목구분 */
+             , A.ADD_BAS_YY								/* 추가기준년도 */
+             , A.ADD_BAS_YY_SEQ							/* 추가기준년도순번 */
+             , A.ADD_PROD_SEQ							/* 추가상품순번 */
+             , A.ADD_HDNG_GBN							/* 추가항목구분 */
+             , A.PICK_GBN 								/* 미팅샌딩구분 */
+             , A.PER_NUM 								/* 미팅샌딩인원수 */
+             , A.ROOM_ADD_CNT AS ADD_R_S_PER			/* 룸추가갯수 */
+             , A.ROOM_ADD_IL  AS ADD_R_S_DAY			/* 룸추가일수 */
+             , A.PRIM_ADD_CNT AS ADD_R_P_PER			/* 프리미엄추가추가갯수 */
+             , A.PRIM_ADD_IL  AS ADD_R_P_DAY			/* 프리미엄추가일수 */
+             , A.REMARK									/* 비고 */
              , ( SELECT ADD_FILE_REAL_NM
                    FROM tb_req_add_file
                   WHERE REQ_DT  = A.REQ_DT
                     AND REQ_SEQ  = A.SEQ
-                    AND (SELECT MAX(ADD_FILE_SEQ) FROM tb_req_add_file WHERE REQ_DT = A.REQ_DT AND REQ_SEQ = A.SEQ)
-               ) AS FLIGTH_IMAGE
-             , A.PICK_GBN
-             , ( SELECT IFNULL(SUM(PER_NUM), 0) FROM tb_req_pickup WHERE REQ_DT = A.REQ_DT AND REQ_SEQ = A.SEQ ) AS PER_NUM
-             , IFNULL(C.TOT_AMT, 0) AS CAL_AMT
-             , IFNULL(C.DEP_AMT, 0) AS DEP_AMT
-             , IFNULL(C.BAL_AMT, 0) AS BAL_AMT
-             , ( SELECT HDNG_GBN FROM tb_prod_info WHERE BAS_YY = A.BAS_YY AND PROD_SEQ = A.PROD_SEQ) AS PACKAGE_
+                    AND ADD_FILE_SEQ= (SELECT MAX(ADD_FILE_SEQ) FROM tb_req_add_file WHERE REQ_DT = A.REQ_DT AND REQ_SEQ = A.SEQ)
+               ) AS FLIGTH_IMAGE							/* 항공권이미지 */
+             , IFNULL(C.TOT_AMT, 0) AS CAL_AMT				/*  */
+             , IFNULL(C.DEP_AMT, 0) AS DEP_AMT				/*  */
+             , IFNULL(C.BAL_AMT, 0) AS BAL_AMT				/*  */
+             , ( SELECT HDNG_GBN FROM tb_prod_info WHERE BAS_YY = A.BAS_YY AND PROD_SEQ = A.PROD_SEQ) AS PACKAGE_				/* 패키지 */
              , CASE WHEN DATEDIFF(CAST(chk_in_dt AS DATE), NOW()) >= IFNULL((SELECT REF_CHR1 FROM bc_comm_l WHERE HEAD_CD = '500230' AND CODE = '01'), 1)
                     THEN 'Y'
                     ELSE 'N'
                 END AS REFUND_YN /* 환불요청가능 */
-          FROM tb_req_booking_m A
-     LEFT JOIN tb_req_fee       C
-            ON A.REQ_DT   = C.REQ_DT
-           AND A.SEQ      = C.REQ_SEQ
+          FROM tb_req_booking_m AS A
+     LEFT JOIN tb_req_fee AS C ON A.REQ_DT = C.REQ_DT AND A.SEQ = C.REQ_SEQ
          WHERE A.REQ_DT   = #{req_dt }
            AND A.SEQ      = #{seq    }
            AND A.USER_ID  = #{user_id}
@@ -568,24 +603,39 @@
           FROM bc_comm_l
          WHERE HEAD_CD = '500000'
            AND REF_CHR1 = '01'
-           AND CODE NOT IN('28', '29') /* 숙박제외 */
+           AND CODE NOT IN('28', '29', '30', '31') /* 숙박제외 */
            AND STATUS   = 'Y'
          ORDER BY CODE ASC
 	</select>
 	
-	<insert id="reservationPartnarInsert" parameterType="list" flushCache="true">
-		INSERT INTO TB_PARTNAR
+	<insert id="reservationComInsert" parameterType="list" flushCache="true">
+		INSERT INTO TB_REQ_BOOKING_D
 		(
 			 REQ_DT
 			,SEQ
-			,PARTNAR_SEQ
-			,PARTNAR_USERID
-			,PARTNAR_GBN
-			,PARTNAR_HAN_NAME
-			,PARTNAR_ENG_NAME
-			,PARTNAR_TEL_NO
+			,DSEQ
+			,COM_GBN
+			,NUM_GBN
+			,COM_HAN_NM
+			,COM_ENG_NM
+			,COM_TEL_NO
+			,CHK_IN_DT
+			,CHK_OUT_DT
+			,FLIGHT_IN
+			,FLIGHT_IN_HH
+			,FLIGHT_OUT
+			,FLIGHT_OUT_HH
+			,BAS_YY
+			,BAS_YY_SEQ
+			,PROD_SEQ
+			,HDNG_GBN
+			,LATE_CHECK_IN
+			,LATE_CHECK_OUT
+			,ROOM_TYPE
 			,REG_DTM
+			,REG_ID
 			,UPD_DTM
+			,UPD_ID
 		)
 		
 		VALUES 
@@ -593,46 +643,76 @@
 		(
 			 #{item.req_dt}
 			,#{item.seq}
-			,#{item.part_seq}
-			,#{item.part_userid}
-			,#{item.part_gbn}
-			,#{item.part_han_name}
-			,#{item.part_eng_name}
-			,#{item.part_telno}
+			,#{item.dseq}
+			,#{item.com_gbn}
+			,#{item.num_gbn}
+			,#{item.com_han_name}
+			,#{item.com_eng_name}
+			,#{item.comn_tel_no}
+			,#{item.chk_in_dt}
+			,#{item.chk_out_dt}
+			,#{item.flight_in}
+			,#{item.flight_in_hh}
+			,#{item.flight_out}
+			,#{item.flight_out_hh}
+			,#{item.bas_yy}
+			,#{item.bas_yy_seq}
+			,#{item.prod_seq}
+			,#{item.hdng_gbn}
+			,#{item.late_check_in}
+			,#{item.late_check_out}
+			,#{item.room_type}
 			,NOW()
+			,#{item.user_id}
 			,NOW()
+			,#{item.user_id}
 		)
         </foreach>
 	</insert>
 	
-	<delete id="reservationPartnarDelete" parameterType="hashMap">
-        DELETE
-          FROM TB_PARTNAR
-         WHERE REQ_DT   = #{req_dt}
-           AND REQ_SEQ  = #{seq}
-	</delete>
-	
 	<select id="reservationChk" parameterType="hashMap" resultType="hashMap">
-		SELECT   REQ_DT
-				,SEQ
+		SELECT    REQ_DT 
+				, MAX(SEQ) as SEQ
 		FROM tb_req_booking_m /* 예약 테이블 */
 	   WHERE USER_ID  = #{user_id}
 	     AND REQ_DT = (SELECT MAX(REQ_DT) FROM tb_req_booking_m WHERE USER_ID = #{user_id})
 	</select>
 	
-	<select id="reservationPartnarList" parameterType="hashMap" resultType="hashMap">
-		SELECT REQ_DT,
-				SEQ,
-				PARTNAR_SEQ,
-				PARTNAR_USERID,
-				PARTNAR_GBN,
-				PARTNAR_HAN_NAME,
-				PARTNAR_ENG_NAME,
-				PARTNAR_TEL_NO
-		   FROM TB_PARTNAR
+	<select id="reservationComList" parameterType="hashMap" resultType="hashMap">
+		SELECT  REQ_DT,				<!-- 예약일자 -->
+				SEQ,				<!-- 예약순번 -->
+				DSEQ,				<!-- 등록순번 -->
+				COM_GBN,			<!-- 동반자구분 -->
+				NUM_GBN,			<!-- 회원구분 01 멤버 / 02 일반 / 03 비라운딩 / 04 소아 / 05 영유아  -->
+				COM_HAN_NM,			<!-- 동반자한글명 -->
+				COM_ENG_NM,			<!-- 동반자영문명 -->
+				REGEXP_REPLACE(COM_TEL_NO, '(02|.{3})(.+)(.{4})', '\\1-\\2-\\3') AS COM_TEL_NO			<!-- 동반자전화번호 -->
+		   FROM tb_req_booking_d
 		 WHERE REQ_DT   = #{req_dt }
 		   AND SEQ      = #{seq    }
-		   AND PARTNAR_USERID  = #{user_id}
-		 ORDER BY PARTNAR_SEQ ASC
+		 ORDER BY DSEQ ASC
+	</select>
+	
+	<delete id="deleteCompanion" parameterType="hashMap">
+        DELETE
+          FROM tb_req_booking_d
+         WHERE REQ_DT   = #{req_dt      }
+           AND SEQ		= #{seq         }
+	</delete>
+	
+	<select id="noRoomChk" parameterType="hashMap" resultType="hashMap">
+		SELECT REQ_NO_DT
+     		 , ROOM_TYPE
+     		 , CASE WHEN ROOM_TYPE = '00' THEN '전체(트윈,킹)'
+     		 		WHEN ROOM_TYPE = '01' THEN '트윈'
+     		 		WHEN ROOM_TYPE = '02' THEN '킹'
+               ELSE 'N'
+               END AS ROOM_TYPE_NAME
+  		  FROM tb_req_no_room
+		 WHERE 1=1
+		   AND ROOM_TYPE IN ('00',#{room_type})
+		   AND REQ_NO_DT BETWEEN #{chk_in_dt} AND #{chk_out_dt}
+		 GROUP BY REQ_NO_DT,ROOM_TYPE
+		 ORDER BY REQ_NO_DT
 	</select>
 </mapper>

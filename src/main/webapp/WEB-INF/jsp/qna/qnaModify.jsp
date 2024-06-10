@@ -19,13 +19,18 @@ $(window).ready( function() {
 function setEvent(){
 	<%//기존의 작성되었던 내용 추가%>
 	
-	let qna_seq = '${qna_seq}';
-	let title = '${title}';
-	let content = '${content}';
+	let qna_seq   = '${qna_seq}';
+	let title     = '${title}';
+	let content   = '${content}';
+	let secret_yn = '${secret_yn}';
 	
 	$('#qna_seq').val(qna_seq);
 	$('#title').val(title);
 	$('#cont').val(content);
+
+	if (secret_yn =='Y') {
+		$('#qna_chk').prop('checked',true);
+	}
 	
 }
 
@@ -36,16 +41,22 @@ function modQna(){
 	let title = $('#title').val();
 	let content = $('#cont').val();
 	let user_id = '${sessionScope.user_id}';
+	let secret_yn = 'N';
+	
+	if ($('#qna_chk').is(':checked')) {
+		secret_yn = 'Y';
+	}
 	
 	$.ajax({
 		type:"post",
 		url:"/qnaModify.do",
 		dataType:'json',
-		data: {	"qna_seq":qna_seq
-			,	"title":title
-			,	"content":content
-			,	"user_id":user_id
-			,	"reg_sts":"1"
+		data: {	"qna_seq"  :qna_seq
+			,	"title"    :title
+			,	"content"  :content
+			,	"user_id"  :user_id
+			,	"reg_sts"  :"1"
+			,   "secret_yn":secret_yn
 		},
 		success:function(data){
 			if(data == "Y") {
@@ -86,7 +97,11 @@ function cancle(){
 					<!-- BEGIN 문의 내용 -->
 					<textarea class="form-control" rows="10" id="cont" placeholder="문의사항을 남겨주세요"></textarea>
 					<!-- END 문의 내용 -->
-					
+					<!-- BEGIN 비밀글 check -->
+					<div class="qna_secret_chk"">
+						<input type="checkbox" id="qna_chk"><span>비밀글 설정</span>
+					</div>
+					<!-- END 비밀글 check -->
 				</div>
 			</div>
 		</div>

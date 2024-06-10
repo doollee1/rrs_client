@@ -150,4 +150,11 @@ WHERE user_id = #{user_id}
 	WHERE session_key = #{value}
 </select>
 
+
+<!-- 관리자 정보확인 -->
+<select id ="isAdminYn" parameterType="string" resultType="string">
+	SELECT CASE WHEN COUNT(*) > 0 THEN 'Y' ELSE 'N' END isAdminYn
+	FROM BC_USER
+	WHERE USER_ID = #{value}
+</select>
 </mapper>

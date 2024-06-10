@@ -24,4 +24,7 @@ public interface SignService {
 		
 	//세션키 검증
 	SignVO checkUserWithSessionKey(String sessionId) throws Exception;
+	
+	//관리자 여부 확인
+	String isAdminYn(String userId) throws Exception;
 }

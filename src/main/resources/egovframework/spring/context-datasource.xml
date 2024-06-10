@@ -20,8 +20,8 @@
     
     <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
         <property name="driverClassName" value="org.mariadb.jdbc.Driver"/>
-        <property name="url" value="jdbc:mariadb://106.240.164.71:44006/doollee?serverTimezone=UTC" />
-        <!-- <property name="url" value="jdbc:mariadb://106.240.164.71:44006/doollee_dev?serverTimezone=UTC" /> -->
+        <!-- <property name="url" value="jdbc:mariadb://106.240.164.71:44006/doollee?serverTimezone=UTC" /> -->
+        <property name="url" value="jdbc:mariadb://106.240.164.71:44006/doollee_dev?serverTimezone=UTC" />
         <property name="username" value="doollee"/> 
         <property name="password" value="EnfflEnffl12#$"/>
         <!-- validationQuery:유효 검사용 쿼리( 1개 이상의 row를 반환하는 쿼리를 넣어주면 된다. ) -->

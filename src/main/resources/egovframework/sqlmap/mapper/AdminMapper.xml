@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rrs.web.admin.service.impl.AdminMapper">
+
+	<!--  관리자 예약 목록 -->
+	<select id="adminReservationList" parameterType="hashMap" resultType="hashMap">
+        SELECT REQ_DT		/* 예약일자 */
+             , SEQ			/* 일련번호 */
+             , USER_ID      /* 사용자ID */       
+          FROM tb_req_booking_m
+         WHERE CHK_IN_DT BETWEEN  #{start_dt} AND #{end_dt} 
+         ORDER BY REQ_DT DESC, SEQ ASC
+	</select>
+	
+	
+	<!-- 다중 파일업로드 예약 목록 상세 -->
+	<select id="adminImageUploadList" parameterType="hashMap" resultType="hashMap">
+		SELECT B.REQ_DT			/* 예약일자  */
+			 , B.SEQ			/* 일련번호 */
+			 , B.DSEQ			/* 상세일련번호 */
+			 , (SELECT CODE_NM
+	              FROM BC_COMM_L
+	             WHERE HEAD_CD = '500040'    
+	               AND CODE = B.NUM_GBN) AS NUM_GBN 	/* 인원구분 */			 
+			 , B.COM_HAN_NM		/* 동반자한글명 */
+			 , B.COM_ENG_NM		/* 동반자영문명 */
+			 , B.COM_TEL_NO		/* 동반자전화번호 */
+	    from tb_req_booking_m A, tb_req_booking_d B
+		where A.REQ_DT = B.REQ_DT 
+		  and A.SEQ  = B.SEQ
+		  and A.REQ_DT = #{req_dt}
+		  and A.SEQ = #{seq}
+		order by  B.DSEQ ASC  		 
+	</select>	
+	
+	
+	<!-- 예약상세  업데이트  -->
+	<update id="updateBookingD" parameterType="hashMap">
+		UPDATE TB_REQ_BOOKING_D
+		  SET ADD_FILE_SEQ = #{file_seq}		/* 첨부파일일련번호 */
+		  	<if test = 'com_han_nm != null and !"".equals(com_han_nm)'>
+		  	 , COM_HAN_NM = #{com_han_nm}		/* 동반자한글명 */
+		  	</if>
+		    <if test = 'com_eng_nm != null and !"".equals(com_eng_nm)'>
+		  	 , COM_ENG_NM = #{com_eng_nm}		/* 동반자영문명 */
+		  	</if>
+		  	<if test = 'com_tel_no != null and !"".equals(com_tel_no)'>
+		  	 , COM_TEL_NO = #{com_tel_no}		/* 동반자전화번호 */
+		  	</if>  
+		  	 , UPD_DTM        = NOW()
+             , UPD_ID         = #{user_id       }
+		WHERE REQ_DT = #{req_dt}
+		  AND SEQ    = #{seq}
+		  AND DSEQ   = #{dseq} 	
+	</update>
+</mapper>

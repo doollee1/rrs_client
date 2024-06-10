@@ -7,7 +7,7 @@
 <select id="qnaList" parameterType="hashMap" resultType="hashMap">
 <![CDATA[
 	SELECT
-		qna_seq, title, DATE_FORMAT(reg_dt, '%Y-%m-%d') AS reg_dt, reg_sts
+		qna_seq, title, DATE_FORMAT(reg_dt, '%Y-%m-%d') AS reg_dt, reg_sts, secret_yn, reg_id
 	FROM
 		tb_qna_board
 	WHERE
@@ -33,7 +33,7 @@
 <select id="myQnaList" parameterType="hashMap" resultType="hashMap">
 <![CDATA[
 	SELECT
-		qna_seq, title, DATE_FORMAT(reg_dt, '%Y-%m-%d') AS reg_dt, reg_sts
+		qna_seq, title, DATE_FORMAT(reg_dt, '%Y-%m-%d') AS reg_dt, reg_sts, secret_yn
 	FROM
 		tb_qna_board
 	WHERE
@@ -59,7 +59,7 @@
 <select id="qnaView" parameterType="String" resultType="hashMap">
 <![CDATA[
 	SELECT
-		qna_seq, title, content, reg_id
+		qna_seq, title, content, reg_id, secret_yn
 	FROM
 		tb_qna_board
 	WHERE 
@@ -79,6 +79,7 @@
 			, reg_sts
 			, reg_dtm
 			, reg_id
+			, secret_yn
 		)
 		VALUES (
 			(SELECT IFNULL(MAX(qna_seq) + 1, 1) FROM tb_qna_board a)
@@ -90,6 +91,7 @@
 			, '1'
 			, NOW()
 			, #{reg_id}
+			, #{secret_yn}
 		)
 </insert>
 
@@ -101,6 +103,7 @@
 		,reg_sts = #{reg_sts}
 		,upd_dtm = NOW()
 		,upd_id = #{upd_id}
+		,secret_yn = #{secret_yn}
 	WHERE 
 		qna_seq = #{qna_seq};
 </update>

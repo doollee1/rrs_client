@@ -15,11 +15,15 @@ $(window).ready( function() {
 });
 
 function qnaWrite(){
-	
 	let user_id = '${sessionScope.user_id}';
 	let title = $('#title').val();
 	let content = $('#cont').val();
+	let secret_yn = 'N';
 	
+	if ($('#qna_chk').is(':checked')) {
+		secret_yn = 'Y';
+	}
+
 	$.ajax({
 		type:"post",
 		url:"/qnaWrite.do",
@@ -27,6 +31,7 @@ function qnaWrite(){
 		data: {	"title":title
 			,	"content":content
 			,	"user_id":user_id
+			,   "secret_yn":secret_yn
 		},
 		success:function(data){
 			if(data == "Y") {
@@ -54,12 +59,15 @@ function qnaWrite(){
 					<!-- BEGIN 제목 -->
 					<input type="text" class="form-control" id="title" placeholder="제목을 넣어주세요"  />
 					<!-- END 제목 -->
-					
 					<hr class="bg-gray-500">
-					
 					<!-- BEGIN 문의 내용 -->
 					<textarea class="form-control" rows="10" id="cont" placeholder="문의사항을 남겨주세요"></textarea>
 					<!-- END 문의 내용 -->
+					<!-- BEGIN 비밀글 check -->
+					<div class="qna_secret_chk">
+						<input type="checkbox" id="qna_chk"><span>비밀글 설정</span>
+					</div>
+					<!-- END 비밀글 check -->
 					
 				</div>
 			</div>

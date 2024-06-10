@@ -166,6 +166,7 @@ public class QnaController {
 		vo.setTitle((String) map.get("title"));
 		vo.setContent((String) map.get("content"));
 		vo.setReg_id((String) map.get("user_id"));
+		vo.setSecret_yn((String) map.get("secret_yn"));
 		
 		StringBuffer sb = new StringBuffer();
 		
@@ -205,9 +206,10 @@ public class QnaController {
 		
 		ModelAndView mav = new ModelAndView();
 		
-		mav.addObject("qna_seq", map.get("qna_seq"));
-		mav.addObject("title", map.get("title"));
-		mav.addObject("content", map.get("content"));
+		mav.addObject("qna_seq",   map.get("qna_seq"));
+		mav.addObject("title",     map.get("title"));
+		mav.addObject("content",   map.get("content"));
+		mav.addObject("secret_yn", map.get("secret_yn"));
 		
 		mav.setViewName("qna/qnaModify.view");
 		
@@ -226,6 +228,7 @@ public class QnaController {
 		vo.setContent((String) map.get("content"));
 		vo.setReg_sts((String) map.get("reg_sts"));
 		vo.setUpd_id((String) map.get("user_id"));
+		vo.setSecret_yn((String) map.get("secret_yn"));
 		
 		try {
 			this.qnaService.qnaModify(vo);

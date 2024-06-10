@@ -12,6 +12,7 @@ public class QnaVO {
 	private String reg_id;		//등록자ID
 	private String upd_dtm;		//수정일시
 	private String upd_id;		//수정자ID
+	private String secret_yn;   //비밀글 설정
 	
 	public int getQna_seq() {
 		return qna_seq;
@@ -73,5 +74,10 @@ public class QnaVO {
 	public void setUpd_id(String upd_id) {
 		this.upd_id = upd_id;
 	}
-	
+	public String secret_yn() {
+		return secret_yn;
+	}
+	public void setSecret_yn(String secret_yn) {
+		this.secret_yn = secret_yn;
+	}
 }

@@ -6,6 +6,9 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <script>
 $(document).ready(function() {
+	var roomPerson = 0;			// 숙박인원 (레이크인아웃 체크를위함)
+	var twinCnt = 0;			// 숙박인원에따른 사용 트윈 갯수
+	var kingCnt = 0;			// 숙박인원에따른 사용 킹 갯수
 	setTitle("예약요청");
 	setEvent();
 
@@ -37,6 +40,11 @@ $(document).ready(function() {
 			return false;
 		}
 
+		if($("#room_type").val() == "") {
+			alert("객실타입을 선택하세요.");
+			return false;
+		}
+		
 		var inDate  = new Date($("#chk_in_dt" ).val());
 		var outDate = new Date($("#chk_out_dt").val());
 
@@ -52,6 +60,12 @@ $(document).ready(function() {
 			alert("인원을 입력해주세요.");
 			return false;
 		}
+		
+		if($("#package_" ).val() == ""){
+			 alert("패키지 정보를 선택해주세요.")
+			 return false;
+		}
+		
 		return true;
 	}
 
@@ -62,6 +76,7 @@ $(document).ready(function() {
 		var endDate   = new Date();
 		startDate.setDate(curDate.getDate() + 1);
 		endDate.setFullYear(curDate.getFullYear() + 1);
+		
 		<%-- datepicker setting --%>
 		$(".input-daterange").datepicker({
 			todayHighlight: true,
@@ -92,9 +107,8 @@ $(document).ready(function() {
 									$(this).find("input").datepicker().focus();
 								});
 
-								$("#r_person, #n_person, #k_person").removeAttr("readonly");
+								$("#g_person, #n_person, #k_person, #i_person").removeClass("readonly");
 								$("#package_, #room_type").removeClass("readonly");
-
 								$("#reservationUpdateBtn").text("수정 등록");
 							} else {
 								alert("상태값이 변경되어 수정할 수 없습니다.");
@@ -106,18 +120,34 @@ $(document).ready(function() {
 				if(!isValidate()) {
 					return;
 				}
+				
+				// 숙박인원 기준:(일반 + 비라운딩 + 소아)
+				roomPerson = Math.round((strToNum($("#g_person").val()) + strToNum($("#n_person").val()) + strToNum($("#k_person").val()))/2);
+				roomPerson = roomPerson > 0 ? roomPerson : 1;
+				
+				if($("#room_type" ).val() =="01"){			// 트윈
+					twinCnt = roomPerson;
+				}else if($("#room_type" ).val() =="02"){	// 킹
+					kingCnt = roomPerson;
+				}else{
+					twinCnt = 0;
+					kingCnt = 0;
+				}
 
 				var data = {
 						  req_dt         : $("#req_dt"        ).val()
 						, seq            : $("#seq"           ).val()
 						, chk_in_dt      : $("#chk_in_dt" ).val().replace(/-/gi, "")
 						, chk_out_dt     : $("#chk_out_dt").val().replace(/-/gi, "")
-						, tot_person     : $("#tot_person").val().replace(/,/gi, "")
-						, r_person       : $("#r_person"  ).val().replace(/,/gi, "")
-						, n_person       : $("#n_person"  ).val().replace(/,/gi, "")
-						, k_person       : $("#k_person"  ).val().replace(/,/gi, "")
+						, tot_person     : $("#tot_person").val()
+						, g_person       : $("#g_person"  ).val()
+						, n_person       : $("#n_person"  ).val()
+						, k_person       : $("#k_person"  ).val()
+						, i_person       : $("#i_person"  ).val()
 						, package_       : $("#package_"  ).val()
 						, room_type      : $("#room_type" ).val()
+						, twin_cnt		 : twinCnt	// 트윈 갯수
+						, king_cnt		 : kingCnt	// 킹 갯수
 				};
 
 				var formData = new FormData();
@@ -134,9 +164,15 @@ $(document).ready(function() {
 					success : function(data) {
 						dimClose();
 						if(data.result == "SUCCESS") {
+							roomPerson = 0;
+							twinCnt = 0;
+							kingCnt = 0;
 							alert("수정이 완료되었습니다.");
 							location.replace("/main.do");
 						} else {
+							roomPerson = 0;
+							twinCnt = 0;
+							kingCnt = 0;
 							alert("상태값이 변경되어 수정할 수 없습니다.");
 						}
 					}
@@ -202,17 +238,82 @@ $(document).ready(function() {
 				if(this.value == "") {
 					this.value = "0";
 				}
-				var id = this.id;
-				if(id == "r_person" || id == "n_person" || id == "k_person") {
-					var sum = strToNum($("#r_person").val()) + strToNum($("#n_person").val()) + strToNum($("#k_person").val());
+			}
+		});
+
+		<%-- toNumber 이벤트 --%>
+		$(".toNumber").on("propertychange change keyup input", function() {
+			this.value = numberComma(this.value);
+		});
+		
+		<%-- toNumbers 이벤트 --%>
+		$(".toNumbers").change(function(){
+			var id = this.id;
+			if(id == "g_person" || id == "n_person"|| id == "k_person"|| id == "i_person") {
+				var sum = strToNum($("#g_person").val()) + strToNum($("#n_person").val()) + strToNum($("#k_person").val()) + strToNum($("#i_person").val());
+				if(sum <=9){
+					$("#tot_person").val("0"+sum);
+				}else{
 					$("#tot_person").val(numberComma(sum));
 				}
 			}
 		});
+		
+		<%-- room_type 이벤트 --%>
+		$("#room_type").on("change", function() {
+			if($("#chk_in_dt").val() == "") {
+				alert("체크인 날짜를 선택하세요.");
+				$("#room_type").val("")
+				return false;
+			}
 
-		<%-- input 이벤트 --%>
-		$(".toNumber").on("propertychange change keyup input", function() {
-			this.value = numberComma(this.value);
+			if($("#chk_out_dt").val() == "") {
+				alert("체크아웃 날짜를 선택하세요.");
+				$("#room_type").val("")
+				return false;
+			}
+			
+			if($("#chk_in_dt").val() != "" && $("#chk_out_dt").val() != "") {
+				var data = {
+						  chk_in_dt      : $("#chk_in_dt" ).val().replace(/-/gi, "")			//체크인
+						, chk_out_dt     : $("#chk_out_dt").val().replace(/-/gi, "")			//체크아웃
+						, room_type      : $("#room_type" ).val()						// 객실타입
+					};
+
+					dimOpen();
+					$.ajax({
+						type : "POST",
+						url : "noRoomChk.do",
+						data : data,
+						dataType : "json",
+						success : function(data) {
+							dimClose();
+							if(data.result == "SUCCESS") {
+								if(data.roomChkMsg == ""){
+									$("#no_room_chk").val("Check OK")
+									$("#no_room_chk").css("color","green");
+								}else{
+									alert(data.roomChkMsg);
+									$("#no_room_chk").val("STAND BY")
+									$("#no_room_chk").css("color","red");
+									$("#chk_in_dt").val("")
+									$("#chk_out_dt").val("")
+									$("#room_type").val("")
+								}
+							} else {
+								alert("룸 체크 실패. 관리자에게 문의 하세요.");
+							}
+					 	}
+					});
+			}
+		});
+		
+		$("#chk_in_dt").on("change", function() {
+			$("#room_type").val("")
+		});
+		
+		$("#chk_out_dt").on("change", function() {
+			$("#room_type").val("")
 		});
 	}
 });
@@ -226,7 +327,7 @@ $(document).ready(function() {
 			<li class="nav-item">
 				<a href="#default-tab-1" data-bs-toggle="tab" class="nav-link active">
 					<span class="d-sm-none">요청</span>
-					<span class="d-sm-block d-none">Default 요청</span>
+					<span class="d-sm-block d-none">예약ㆍ요청</span>
 				</a>
 			</li>
 		</ul>
@@ -242,7 +343,7 @@ $(document).ready(function() {
 						<label class="form-label col-form-label col-lg-4">체크인</label>
 						<div class="col-lg-12">
 							<div class="input-group date" >
-								<input type="text" id="chk_in_dt" name="chk_in_dt" class="form-control text-start" placeholder="날짜를 선택하세요" readonly>
+								<input type="text" id="chk_in_dt" name="chk_in_dt" class="form-control text-start text-center" placeholder="날짜를 선택하세요" readonly>
 								<span class="input-group-text input-group-addon"><i class="fa fa-calendar"></i></span>
 							</div>
 						</div>
@@ -251,67 +352,129 @@ $(document).ready(function() {
 						<label class="form-label col-form-label col-lg-4">체크아웃</label>
 						<div class="col-lg-12">
 							<div class="input-group date" >
-								<input type="text" id="chk_out_dt" name="chk_out_dt" class="form-control text-start" placeholder="날짜를 선택하세요" readonly>
+								<input type="text" id="chk_out_dt" name="chk_out_dt" class="form-control text-start text-center" placeholder="날짜를 선택하세요" readonly>
 								<span class="input-group-text input-group-addon"><i class="fa fa-calendar"></i></span>
 							</div>
 						</div>
 					</div>
 				</div>
 				<div class="row mb-2">
-					<label class="form-label col-form-label col-md-3">한글이름</label>
-					<div class="col-sm-9">
-						<input type="text" class="form-control" value="${sessionScope.login.han_name}" readonly>
-					</div>
-				</div>
-				<div class="row mb-2">
-					<label class="form-label col-form-label col-md-3">영문이름</label>
-					<div class="col-sm-9">
-						<input type="text" class="form-control" value="${sessionScope.login.eng_name}" readonly>
-					</div>
-				</div>
-				<div class="row mb-2">
-					<label class="form-label col-form-label col-md-3">객실타입</label>
+					<label class="form-label col-form-label col-md-3" style="display: flex; align-items: center;" >객실타입
+					<input type="text" id="no_room_chk" name="no_room_chk" class="form-control text-center" value="Check OK"
+						   style="border:none;border-right:0px; border-top:0px; boder-left:0px; boder-bottom:0px; width:85px; background: #FFFFFF; opacity:30%; color: green;" readonly></label>
 					<div class="col-md-9">
-						<select id="room_type" name="room_type" class="form-select readonly">
+						<select id="room_type" name="room_type" class="form-select text-center readonly">
+							<option value="">-선택-</option>
 							<c:forEach items="${roomTypeList}" var="room" varStatus="status">
 								<option value="${room.CODE}">${room.CODE_NM}</option>
 							</c:forEach>
 						</select>
 					</div>
 				</div>
-				<div class="total-people-wrap">
-					<div class="inline-flex">
-						<div class="col-form-label">총인원</div>
-						<input type="text" id="tot_person" name="tot_person" class="toNumber form-control text-end" value="0" readonly>명
+				<div class="row mb-2">
+					<label class="form-label col-form-label col-md-3">한글이름</label>
+					<div class="col-md-9">
+						<input type="text" class="form-control text-muted text-center" value="${sessionScope.login.han_name}" readonly>
 					</div>
-					<div class="inline-flex">
-						<div class="col-form-label">라운딩</div>
-						<input type="text" id="r_person" name="r_person" maxlength="3" class="toNumber form-control text-end" readonly>명
-					</div>
-					<div class="inline-flex">
-						<div class="col-form-label">비라운딩</div>
-						<input type="text" id="n_person" name="n_person" maxlength="3" class="toNumber form-control text-end" readonly>명
-					</div>
-					<div class="inline-flex">
-						<div class="col-form-label">소아</div>
-						<input type="text" id="k_person" name="k_person" maxlength="3" class="toNumber form-control text-end" readonly>명
+				</div>
+				<div class="row mb-2">
+					<label class="form-label col-form-label col-md-3">영문이름</label>
+					<div class="col-md-9">
+						<input type="text" class="form-control text-muted text-center" value="${sessionScope.login.eng_name}" readonly>
 					</div>
 				</div>
 				<div class="row mb-2">
 					<label class="form-label col-form-label col-md-3">패키지</label>
-					<div class="col-sm-9">
-						<select id="package_" class="form-select readonly">
+					<div class="col-md-9">
+						<select id="package_" class="form-select text-center readonly">
 							<c:forEach items="${packageList}" var="package_" varStatus="status">
 								<option value="${package_.CODE}">${package_.CODE_NM}</option>
 							</c:forEach>
 						</select>
 					</div>
 				</div>
+				
+				<div class="total-people-wrap">
+					<div class="row mb-2" style = "justify-content:flex-end">
+						<label class="form-label col-form-label col-md-2"></label>
+						<div class="col-md-9 inline-flex">
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text">일반　</span>
+								</div>
+								<select id="g_person" name="g_person" class="form-select text-center toNumbers readonly">
+									<c:forEach var="i" begin="1" end="15" step="1">
+										<option value="<fmt:formatNumber value="${i}"/>">
+											<fmt:formatNumber value="${i}" minIntegerDigits="2" />
+										</option>
+									</c:forEach>
+								</select>명
+							</div>
+							<label class="form-label col-form-label  col-md-2"></label>
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text">비라운딩　</span>
+								</div>
+								<select id="n_person" name="n_person" class="form-select text-center toNumbers readonly">
+									<c:forEach var="i" begin="0" end="15" step="1">
+										<option value="<fmt:formatNumber value="${i}"/>">
+											<fmt:formatNumber value="${i}" minIntegerDigits="2" />
+										</option>
+									</c:forEach>
+								</select>명
+							</div>
+						</div>
+					</div>
+					
+					<div class="row mb-2" style = "justify-content:flex-end">
+						<label class="form-label col-form-label col-md-2"></label>
+						<div class="col-md-9 inline-flex">
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text">소아　</span>
+								</div>
+								<select id="k_person" name="k_person" class="form-select text-center toNumbers readonly">
+									<c:forEach var="i" begin="0" end="15" step="1">
+										<option value="<fmt:formatNumber value="${i}"/>">
+											<fmt:formatNumber value="${i}" minIntegerDigits="2" />
+										</option>
+									</c:forEach>
+								</select>명
+							</div>
+							<label class="form-label col-form-label  col-md-2"></label>
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text">영유아　　</span>
+								</div>
+								<select id="i_person" name="i_person" class="form-select text-center toNumbers readonly">
+									<c:forEach var="i" begin="0" end="15" step="1">
+										<option value="<fmt:formatNumber value="${i}"/>">
+											<fmt:formatNumber value="${i}" minIntegerDigits="2" />
+										</option>
+									</c:forEach>
+								</select>명
+							</div>
+						</div>
+					</div>
+					
+					<div class="row mb-2" style = "justify-content:flex-end">
+						<label class="form-label col-form-label col-md-2"></label>
+						<div class="col-md-9 inline-flex">
+							<div class="input-group"></div>
+							<label class="form-label col-form-label  col-md-2"></label>
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text">총　인　원</span>
+								</div>
+								<input id="tot_person" name="tot_person" type="text" class="form-control text-center toNumbers" maxlength="2" value="01" readonly>명
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 			<!-- END tab-pane -->
 		</div>
 		<!-- END tab-content -->
-
 	</div>
 	<!-- END content-container -->
 	
