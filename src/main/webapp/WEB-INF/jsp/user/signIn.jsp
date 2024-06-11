@@ -75,6 +75,8 @@ function signIn(){
 				alert("이용할 수 없는 게정입니다. 관리자에게 문의해주세요.");
 			} else if(data == "N"){
 				alert("ID 또는 비밀번호가 틀렸습니다.");
+			} else if(data == "Q"){
+				alert("에이전시 회원은 관리자에서만 가능합니다.");
 			} else {
 				alert("존재하지 않는 회원입니다. 회원가입 후 이용해주세요.");
 			}

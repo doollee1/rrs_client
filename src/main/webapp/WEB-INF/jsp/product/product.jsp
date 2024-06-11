@@ -21,16 +21,19 @@ $(document).ready(function() {
 		<ul class="nav nav-tabs">
 			<li class="nav-item">
 				<a href="#default-tab-1" data-bs-toggle="tab" class="nav-link active">
+					<span class="d-sm-none">성수기</span>
 					<span class="d-sm-block d-none">성수기</span>
 				</a>
 			</li>
 			<li class="nav-item">
 				<a href="#default-tab-2" data-bs-toggle="tab" class="nav-link">
+					<span class="d-sm-none">준성수기</span>
 					<span class="d-sm-block d-none">준성수기</span>
 				</a>
 			</li>
 			<li class="nav-item">
 				<a href="#default-tab-3" data-bs-toggle="tab" class="nav-link">
+					<span class="d-sm-none">비수기</span>
 					<span class="d-sm-block d-none">비수기</span>
 				</a>
 			</li>

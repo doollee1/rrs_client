@@ -99,7 +99,7 @@ $(document).ready(function() {
 	
 	// 동반자 목록 내 구분추가
 	function setPeopleGbn(s_data) {
-		var $combo = $('<select id="list_num_gbn" name="list_num_gbn" disabled="disabled"/>');
+		var $combo = $('<select id="list_num_gbn" name="list_num_gbn" style="min-width:70px;" disabled="disabled"/>');
 		    $combo.append($('<option/>',{'value':'01'}).text('멤버')); //여기는 value 없는 그냥 기본 셋팅 값
 		    $combo.append($('<option/>',{'value':'02'}).text('일반')); //여기는 value 없는 그냥 기본 셋팅 값
 		    $combo.append($('<option/>',{'value':'03'}).text('비라운딩')); //여기는 value 없는 그냥 기본 셋팅 값
@@ -820,12 +820,12 @@ $(document).ready(function() {
  			for (var i = 0; i < personCnt; i++){
 				$("#list_table").append(
 						$("<tr id=com_board>").append(
-							$("<td>").append(),										// 순번
+							$("<td style=min-width:45px>").append(),										// 순번
 							$("<td style=display:none >").append( "2" ),			// 예약자구분 (1:예약자,2:동반자')
 							$("<td>").append(setPeopleGbn(idvalue) ),				// 인원구분
-							$("<td class=text-ellipsis style=max-width:80px table-layout=fixed contenteditable=true>").append(),				// 한글명
-							$("<td class=text-ellipsis style=max-width:80px table-layout=fixed contenteditable=true>").append(),				// 영문명
-							$("<td class=text-ellipsis style=max-width:80px table-layout=fixed contenteditable=true>").append(),				// 연락처
+							$("<td id=onlyKor style=min-width:70px contenteditable=true>").append(),				// 한글명
+							$("<td id=onlyEng style=min-width:70px contenteditable=true>").append(),				// 영문명
+							$("<td id=onlyNum style=min-width:120px contenteditable=true>").append(),				// 연락처
 							$("<td style=display:none>").append( $("#com_user_id").val() ),	// 등록자
 						)	
 				);
@@ -1064,7 +1064,7 @@ $(document).ready(function() {
 						<div class="col-md-9 inline-flex">
 							<div class="input-group">
 								<div class="input-group-prepend">
-									<span class="input-group-text">멤버　</span>
+									<span class="input-group-text" style="padding : 0.5rem 0.1rem 0.5rem 0rem">멤　버　</span>
 								</div>
 								<select id="m_person" name="m_person" class="form-select text-center toNumbers addCom readonly">
 									<c:forEach var="i" begin="1" end="15" step="1">
@@ -1077,7 +1077,7 @@ $(document).ready(function() {
 							<label class="form-label col-form-label  col-md-2"></label>
 							<div class="input-group">
 								<div class="input-group-prepend">
-									<span class="input-group-text">일반　</span>
+									<span class="input-group-text" style="padding : 0.5rem 0.1rem 0.5rem 0rem">일　반　</span>
 								</div>
 								<select id="g_person" name="g_person" class="form-select text-center toNumbers addCom readonly">
 									<c:forEach var="i" begin="0" end="15" step="1">
@@ -1095,7 +1095,7 @@ $(document).ready(function() {
 						<div class="col-md-9 inline-flex">
 							<div class="input-group">
 								<div class="input-group-prepend">
-									<span class="input-group-text">비라운딩</span>
+									<span class="input-group-text" style="padding : 0.5rem 0.1rem 0.5rem 0rem">비라운딩</span>
 								</div>
 								<select id="n_person" name="n_person" class="form-select text-center toNumbers addCom readonly">
 									<c:forEach var="i" begin="0" end="15" step="1">
@@ -1108,7 +1108,7 @@ $(document).ready(function() {
 							<label class="form-label col-form-label  col-md-2"></label>
 							<div class="input-group">
 								<div class="input-group-prepend">
-									<span class="input-group-text">소아　</span>
+									<span class="input-group-text" style="padding : 0.5rem 0.1rem 0.5rem 0rem">소　아　</span>
 								</div>
 								<select id="k_person" name="k_person" class="form-select text-center toNumbers addCom readonly">
 									<c:forEach var="i" begin="0" end="15" step="1">
@@ -1126,7 +1126,7 @@ $(document).ready(function() {
 						<div class="col-md-9 inline-flex">
 							<div class="input-group">
 								<div class="input-group-prepend">
-									<span class="input-group-text">영유아</span>
+									<span class="input-group-text" style="padding : 0.5rem 0.1rem 0.5rem 0rem">영유아　</span>
 								</div>
 								<select id="i_person" name="i_person" class="form-select text-center toNumbers addCom readonly">
 									<c:forEach var="i" begin="0" end="15" step="1">
@@ -1139,7 +1139,7 @@ $(document).ready(function() {
 							<label class="form-label col-form-label  col-md-2"></label>
 							<div class="input-group">
 								<div class="input-group-prepend">
-									<span class="input-group-text">총인원</span>
+									<span class="input-group-text" style="padding : 0.5rem 0.1rem 0.5rem 0rem">총인원　</span>
 								</div>
 								<input id="tot_person" name="tot_person" type="text" class="form-control text-end toNumbers" maxlength="2" value="01" readonly>명
 							</div>
@@ -1150,7 +1150,7 @@ $(document).ready(function() {
 				<div id="packageDiv" class="row mb-2">
 					<label class="form-label col-form-label col-md-3">패키지</label>
 					<div class="col-md-9">
-						<select id="add_hdng_gbn" name="add_hdng_gbn" class="form-select readonly">
+						<select id="add_hdng_gbn" name="add_hdng_gbn" class="form-select text-center readonly">
 							<c:forEach items="${packageList}" var="add_hdng_gbn" varStatus="status">
 								<option value="${add_hdng_gbn.CODE}">${add_hdng_gbn.CODE_NM}</option>
 							</c:forEach>
@@ -1179,8 +1179,8 @@ $(document).ready(function() {
 			<!-- BEGIN tab-pane -->
 			<div class="tab-pane fade" id="default-tab-3">
 				<div class="total-people-wrap">
-					<div class="container2">
-						<table border="1" id="list_table" class="table table-striped table-bordered">
+					<div class="container2" style="overflow:auto">
+						<table border="1" id="list_table" class="table table-striped table-bordered" style="text-align:center;">
 							<thead>
 								<tr>
 									<th>번호</th>
@@ -1196,10 +1196,10 @@ $(document).ready(function() {
 							<tbody>
 								<c:forEach items="${reservationComList}" var = "list" varStatus="status">
 									<tr id="com_board">
-										<td>${list.DSEQ}</td>
+										<td style="min-width:45px;">${list.DSEQ}</td>
 										<td style="display:none">${list.COM_GBN}</td>
 										<td >
-											<select id="list_num_gbn" name="list_num_gbn" disabled="disabled">
+											<select id="list_num_gbn" name="list_num_gbn" disabled="disabled" style="min-width:70px;">
 												<option value="01" <c:if test="${list.NUM_GBN eq '01' }">selected</c:if>>멤버</option>
 												<option value="02" <c:if test="${list.NUM_GBN eq '02' }">selected</c:if>>일반</option>
 												<option value="03" <c:if test="${list.NUM_GBN eq '03' }">selected</c:if>>비라운딩</option>
@@ -1207,9 +1207,9 @@ $(document).ready(function() {
 												<option value="05" <c:if test="${list.NUM_GBN eq '05' }">selected</c:if>>영유아</option>
 											</select>
 										</td>
-										<td id=onlyKor class=text-ellipsis style=max-width:80px table-layout=fixed contenteditable=true>${list.COM_HAN_NM}</td>
-										<td id=onlyEng class=text-ellipsis style=max-width:80px table-layout=fixed contenteditable=true>${list.COM_ENG_NM}</td>
-										<td id=onlyNum class=text-ellipsis style=max-width:80px table-layout=fixed contenteditable=true>${list.COM_TEL_NO}</td>
+										<td id=onlyKor style="min-width:70px;" contenteditable=true>${list.COM_HAN_NM}</td>
+										<td id=onlyEng style="min-width:70px;" contenteditable=true>${list.COM_ENG_NM}</td>
+										<td id=onlyNum style="min-width:120px;" contenteditable=true>${list.COM_TEL_NO}</td>
 										<td style="display:none">${sessionScope.login.user_id}</td>
 									</tr>
 								</c:forEach>

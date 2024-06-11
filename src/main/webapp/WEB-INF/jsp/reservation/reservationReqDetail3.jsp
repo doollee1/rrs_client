@@ -688,12 +688,12 @@ $(document).ready(function() {
 	 			for (var i = 0; i < gPerson-1; i++){
 					$("#list_table").append(
 							$("<tr id=com_board>").append(
-								$("<td>").append(),										// 순번
+								$("<td style=min-width:45px>").append(),										// 순번
 								$("<td style=display:none >").append( "2" ),			// 예약자구분 (1:예약자,2:동반자')
 								$("<td>").append(setPeopleGbn("02") ),					// 인원구분
-								$("<td id=onlyKor class=text-ellipsis style=max-width:80px table-layout=fixed contenteditable=true>").append(""),// 한글명
-								$("<td id=onlyEng class=text-ellipsis style=max-width:80px table-layout=fixed contenteditable=true>").append(""),// 영문명
-								$("<td id=onlyNum class=text-ellipsis style=max-width:80px table-layout=fixed contenteditable=true>").append(""),// 연락처
+								$("<td id=onlyKor style=min-width:70px contenteditable=true>").append(""),// 한글명
+								$("<td id=onlyEng style=min-width:70px contenteditable=true>").append(""),// 영문명
+								$("<td id=onlyNum style=min-width:120px contenteditable=true>").append(""),// 연락처
 								$("<td style=display:none>").append( $("#req_user_id").val() ),	// 등록자
 							)	
 					);
@@ -704,12 +704,12 @@ $(document).ready(function() {
 	 			for (var i = 0; i < nPerson; i++){
 					$("#list_table").append(
 							$("<tr id=com_board>").append(
-								$("<td>").append(),										// 순번
+								$("<td style=min-width:45px>").append(),										// 순번
 								$("<td style=display:none >").append( "2" ),			// 예약자구분 (1:예약자,2:동반자')
 								$("<td>").append(setPeopleGbn("03") ),					// 인원구분
-								$("<td id=onlyKor class=text-ellipsis style=max-width:80px table-layout=fixed contenteditable=true>").append(""),// 한글명
-								$("<td id=onlyEng class=text-ellipsis style=max-width:80px table-layout=fixed contenteditable=true>").append(""),// 영문명
-								$("<td id=onlyNum class=text-ellipsis style=max-width:80px table-layout=fixed contenteditable=true>").append(""),// 연락처
+								$("<td id=onlyKor style=min-width:70px contenteditable=true>").append(""),// 한글명
+								$("<td id=onlyEng style=min-width:70px contenteditable=true>").append(""),// 영문명
+								$("<td id=onlyNum style=min-width:120px contenteditable=true>").append(""),// 연락처
 								$("<td style=display:none>").append( $("#req_user_id").val() ),	// 등록자
 							)	
 					);
@@ -720,12 +720,12 @@ $(document).ready(function() {
 	 			for (var i = 0; i < kPerson; i++){
 					$("#list_table").append(
 							$("<tr id=com_board>").append(
-								$("<td>").append(),										// 순번
+								$("<td style=min-width:45px>").append(),										// 순번
 								$("<td style=display:none >").append( "2" ),			// 예약자구분 (1:예약자,2:동반자')
 								$("<td>").append(setPeopleGbn("04") ),					// 인원구분
-								$("<td id=onlyKor class=text-ellipsis style=max-width:80px table-layout=fixed contenteditable=true>").append(""),// 한글명
-								$("<td id=onlyEng class=text-ellipsis style=max-width:80px table-layout=fixed contenteditable=true>").append(""),// 영문명
-								$("<td id=onlyNum class=text-ellipsis style=max-width:80px table-layout=fixed contenteditable=true>").append(""),// 연락처
+								$("<td id=onlyKor style=min-width:70px contenteditable=true>").append(""),// 한글명
+								$("<td id=onlyEng style=min-width:70px contenteditable=true>").append(""),// 영문명
+								$("<td id=onlyNum style=min-width:120px contenteditable=true>").append(""),// 연락처
 								$("<td style=display:none>").append( $("#req_user_id").val() ),	// 등록자
 							)	
 					);
@@ -736,12 +736,12 @@ $(document).ready(function() {
 	 			for (var i = 0; i < iPerson; i++){
 					$("#list_table").append(
 							$("<tr id=com_board>").append(
-								$("<td>").append(),										// 순번
+								$("<td style=min-width:45px>").append(),										// 순번
 								$("<td style=display:none >").append( "2" ),			// 예약자구분 (1:예약자,2:동반자')
 								$("<td>").append(setPeopleGbn("05") ),					// 인원구분
-								$("<td id=onlyKor class=text-ellipsis style=max-width:80px table-layout=fixed contenteditable=true>").append(""),// 한글명
-								$("<td id=onlyEng class=text-ellipsis style=max-width:80px table-layout=fixed contenteditable=true>").append(""),// 영문명
-								$("<td id=onlyNum class=text-ellipsis style=max-width:80px table-layout=fixed contenteditable=true>").append(""),// 연락처
+								$("<td id=onlyKor style=min-width:70px contenteditable=true>").append(""),// 한글명
+								$("<td id=onlyEng style=min-width:70px contenteditable=true>").append(""),// 영문명
+								$("<td id=onlyNum style=min-width:120px contenteditable=true>").append(""),// 연락처
 								$("<td style=display:none>").append( $("#req_user_id").val() ),	// 등록자
 							)	
 					);
@@ -764,7 +764,7 @@ $(document).ready(function() {
 		
 		// 동반자 목록 내 구분추가
 		function setPeopleGbn(s_data) {
-			var $combo = $('<select id="list_num_gbn" name="list_num_gbn" disabled="disabled"/>');
+			var $combo = $('<select id="list_num_gbn" name="list_num_gbn" style="min-width:70px;" disabled="disabled"/>');
 			    $combo.append($('<option/>',{'value':'02'}).text('일반')); //여기는 value 없는 그냥 기본 셋팅 값
 			    $combo.append($('<option/>',{'value':'03'}).text('비라운딩')); //여기는 value 없는 그냥 기본 셋팅 값
 			    $combo.append($('<option/>',{'value':'04'}).text('소아')); //여기는 value 없는 그냥 기본 셋팅 값
@@ -842,19 +842,19 @@ $(document).ready(function() {
 		<ul class="nav nav-tabs">
 			<li class="nav-item">
 				<a href="#default-tab-1" data-bs-toggle="tab" class="nav-link active">
-					<span class="d-sm-none">객실</span>
+					<span class="d-sm-none addcom">객실</span>
 					<span class="d-sm-block d-none addcom">[예약신청]ㆍ객실</span>
 				</a>
 			</li>
 			<li class="nav-item">
 				<a href="#default-tab-2" data-bs-toggle="tab" class="nav-link">
-					<span class="d-sm-none">옵션</span>
+					<span class="d-sm-none addcom">옵션</span>
 					<span class="d-sm-block d-none addcom">[예약신청]ㆍ옵션</span>
 				</a>
 			</li>
 			<li class="nav-item">
 				<a href="#default-tab-3" data-bs-toggle="tab" class="nav-link">
-					<span class="d-sm-none">동반자</span>
+					<span class="d-sm-none addcom">동반자</span>
 					<span class="d-sm-block d-none addcom">[예약신청]ㆍ동반자</span>
 				</a>
 			</li>
@@ -1071,9 +1071,9 @@ $(document).ready(function() {
 						<div class="col-md-9 inline-flex">
 							<div class="input-group">
 								<div class="input-group-prepend">
-									<span class="input-group-text">일반　</span>
+									<span class="input-group-text" style="padding : 0.5rem 0.1rem 0.5rem 0rem">일　반　</span>
 								</div>
-								<select id="g_person" name="g_person" class="form-select text-center toNumbers addCom readonly">
+								<select id="g_person" name="g_person" class="form-select text-center toNumbers addCom readonly" style="padding : 0.5rem 0rem 0.5rem 0rem">
 									<c:forEach var="i" begin="1" end="15" step="1">
 										<option value="<fmt:formatNumber value="${i}"/>">
 											<fmt:formatNumber value="${i}" minIntegerDigits="2" />
@@ -1084,9 +1084,9 @@ $(document).ready(function() {
 							<label class="form-label col-form-label  col-md-2"></label>
 							<div class="input-group">
 								<div class="input-group-prepend">
-									<span class="input-group-text">비라운딩　</span>
+									<span class="input-group-text" style="padding : 0.5rem 0.1rem 0.5rem 0rem">비라운딩</span>
 								</div>
-								<select id="n_person" name="n_person" class="form-select text-center toNumbers addCom readonly">
+								<select id="n_person" name="n_person" class="form-select text-center toNumbers addCom readonly" style="padding : 0.5rem 0rem 0.5rem 0rem">
 									<c:forEach var="i" begin="0" end="15" step="1">
 										<option value="<fmt:formatNumber value="${i}"/>">
 											<fmt:formatNumber value="${i}" minIntegerDigits="2" />
@@ -1102,9 +1102,9 @@ $(document).ready(function() {
 						<div class="col-md-9 inline-flex">
 							<div class="input-group">
 								<div class="input-group-prepend">
-									<span class="input-group-text">소아　</span>
+									<span class="input-group-text" style="padding : 0.5rem 0.1rem 0.5rem 0rem">소　아　</span>
 								</div>
-								<select id="k_person" name="k_person" class="form-select text-center toNumbers addCom readonly">
+								<select id="k_person" name="k_person" class="form-select text-center toNumbers addCom readonly" style="padding : 0.5rem 0rem 0.5rem 0rem">
 									<c:forEach var="i" begin="0" end="15" step="1">
 										<option value="<fmt:formatNumber value="${i}"/>">
 											<fmt:formatNumber value="${i}" minIntegerDigits="2" />
@@ -1115,9 +1115,9 @@ $(document).ready(function() {
 							<label class="form-label col-form-label  col-md-2"></label>
 							<div class="input-group">
 								<div class="input-group-prepend">
-									<span class="input-group-text">영유아　　</span>
+									<span class="input-group-text" style="padding : 0.5rem 0.1rem 0.5rem 0rem">영유아　</span>
 								</div>
-								<select id="i_person" name="i_person" class="form-select text-center toNumbers addCom readonly">
+								<select id="i_person" name="i_person" class="form-select text-center toNumbers addCom readonly" style="padding : 0.5rem 0rem 0.5rem 0rem">
 									<c:forEach var="i" begin="0" end="15" step="1">
 										<option value="<fmt:formatNumber value="${i}"/>">
 											<fmt:formatNumber value="${i}" minIntegerDigits="2" />
@@ -1135,9 +1135,9 @@ $(document).ready(function() {
 							<label class="form-label col-form-label  col-md-2"></label>
 							<div class="input-group">
 								<div class="input-group-prepend">
-									<span class="input-group-text">총　인　원</span>
+									<span class="input-group-text" style="padding : 0.5rem 0.1rem 0.5rem 0rem">총　인　원</span>
 								</div>
-								<input id="tot_person" name="tot_person" type="text" class="form-control text-end toNumbers" maxlength="2" value="01" readonly>명
+								<input id="tot_person" name="tot_person" type="text" class="form-control text-center toNumbers" style="padding : 0.5rem 0rem 0.5rem 0rem" maxlength="2" value="01" readonly>명
 							</div>
 						</div>
 					</div>
@@ -1164,8 +1164,8 @@ $(document).ready(function() {
 			<!-- BEGIN tab-pane -->
 			<div class="tab-pane fade" id="default-tab-3">
 				<div class="total-people-wrap">
-					<div class="container2">
-						<table border="1" id="list_table" class="table table-striped table-bordered">
+					<div class="container2" style="overflow:auto">
+						<table border="1" id="list_table" class="table table-striped table-bordered" style="text-align:center;">
 							<thead>
 								<tr>
 									<th>번호</th>
@@ -1181,19 +1181,19 @@ $(document).ready(function() {
 							<tbody>
 								<c:forEach items="${reservationComList}" var = "list" varStatus="status">
 									<tr id="com_board">
-										<td>${list.DSEQ}</td>
+										<td style="min-width:45px;">${list.DSEQ}</td>
 										<td style="display:none">${list.COM_GBN}</td>
 										<td >
-											<select id="list_num_gbn" name="list_num_gbn" disabled="disabled">
+											<select id="list_num_gbn" name="list_num_gbn" disabled="disabled" style="min-width:70px;">
 												<option value="02" <c:if test="${list.NUM_GBN eq '02' }">selected</c:if>>일반</option>
 												<option value="03" <c:if test="${list.NUM_GBN eq '03' }">selected</c:if>>비라운딩</option>
 												<option value="04" <c:if test="${list.NUM_GBN eq '04' }">selected</c:if>>소아</option>
 												<option value="05" <c:if test="${list.NUM_GBN eq '05' }">selected</c:if>>영유아</option>
 											</select>
 										</td>
-										<td id=onlyKor class=text-ellipsis style=max-width:80px table-layout=fixed contenteditable=true>${list.COM_HAN_NM}</td>
-										<td id=onlyEng class=text-ellipsis style=max-width:80px table-layout=fixed contenteditable=true>${list.COM_ENG_NM}</td>
-										<td id=onlyNum class=text-ellipsis style=max-width:80px table-layout=fixed contenteditable=true>${list.COM_TEL_NO}</td>
+										<td id=onlyKor style="min-width:70px;" contenteditable=true>${list.COM_HAN_NM}</td>
+										<td id=onlyEng style="min-width:70px;" contenteditable=true>${list.COM_ENG_NM}</td>
+										<td id=onlyNum style="min-width:120px;" contenteditable=true>${list.COM_TEL_NO}</td>
 										<td style="display:none">${sessionScope.login.user_id}</td>
 									</tr>
 								</c:forEach>

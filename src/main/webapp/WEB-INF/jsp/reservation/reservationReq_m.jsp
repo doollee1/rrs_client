@@ -4,13 +4,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-<style>
-.fixedHeader {
-	position: sticky;
-	top: 0;
-}
-</style>
-
 <script>
 $(document).ready(function() {
 	var isCal    = false;
@@ -92,7 +85,7 @@ $(document).ready(function() {
 	
 	// 동반자 목록 내 구분추가
 	function setPeopleGbn(s_data) {
-		var $combo = $('<select id="list_num_gbn" name="list_num_gbn" disabled="disabled"/>');
+		var $combo = $('<select id="list_num_gbn" name="list_num_gbn" style="min-width:70px;" disabled="disabled"/>');
 		    $combo.append($('<option/>',{'value':'01'}).text('멤버')); 
 		    $combo.append($('<option/>',{'value':'02'}).text('일반')); 
 		    $combo.append($('<option/>',{'value':'03'}).text('비라운딩')); 
@@ -780,13 +773,13 @@ $(document).ready(function() {
  			for (var i = 0; i < personCnt; i++){
 				$("#list_table").append(
 						$("<tr id=com_board>").append(
-							$("<td>").append(),										// 순번
-							$("<td style=display:none >").append( "2" ),			// 예약자구분 (1:예약자,2:동반자')
-							$("<td>").append(setPeopleGbn(idvalue) ),				// 인원구분
-							$("<td id=onlyKor class=text-ellipsis style=max-width:80px table-layout=fixed contenteditable=true>").append(),				// 한글명
-							$("<td id=onlyEng class=text-ellipsis style=max-width:80px table-layout=fixed contenteditable=true>").append(),				// 영문명
-							$("<td id=onlyNum class=text-ellipsis style=max-width:80px table-layout=fixed contenteditable=true>").append(),				// 연락처
-							$("<td style=display:none>").append( $("#com_user_id").val() ),	// 등록자
+							$("<td style=min-width:45px>").append(),										// 순번
+							$("<td style=display:none >").append( "2" ),									// 예약자구분 (1:예약자,2:동반자')
+							$("<td>").append(setPeopleGbn(idvalue) ),										// 인원구분
+							$("<td id=onlyKor style=min-width:70px contenteditable=true>").append(),		// 한글명
+							$("<td id=onlyEng style=min-width:70px contenteditable=true>").append(),		// 영문명
+							$("<td id=onlyNum style=min-width:120px contenteditable=true>").append(),		// 연락처
+							$("<td style=display:none>").append( $("#com_user_id").val() ),					// 등록자
 						)	
 				);
 			}
@@ -1015,7 +1008,7 @@ $(document).ready(function() {
 						<div class="col-md-9 inline-flex">
 							<div class="input-group">
 								<div class="input-group-prepend">
-									<span class="input-group-text">멤버　</span>
+									<span class="input-group-text" style="padding : 0.5rem 0.1rem 0.5rem 0rem">멤　버　</span>
 								</div>
 								<select id="m_person" name="m_person" class="form-select text-center toNumbers addCom">
 									<c:forEach var="i" begin="1" end="15" step="1">
@@ -1028,7 +1021,7 @@ $(document).ready(function() {
 							<label class="form-label col-form-label  col-md-2"></label>
 							<div class="input-group">
 								<div class="input-group-prepend">
-									<span class="input-group-text">일반　</span>
+									<span class="input-group-text" style="padding : 0.5rem 0.1rem 0.5rem 0rem">일　반　</span>
 								</div>
 								<select id="g_person" name="g_person" class="form-select text-center toNumbers addCom">
 									<c:forEach var="i" begin="0" end="15" step="1">
@@ -1046,7 +1039,7 @@ $(document).ready(function() {
 						<div class="col-md-9 inline-flex">
 							<div class="input-group">
 								<div class="input-group-prepend">
-									<span class="input-group-text">비라운딩</span>
+									<span class="input-group-text" style="padding : 0.5rem 0.1rem 0.5rem 0rem">비라운딩</span>
 								</div>
 								<select id="n_person" name="n_person" class="form-select text-center toNumbers addCom">
 									<c:forEach var="i" begin="0" end="15" step="1">
@@ -1059,7 +1052,7 @@ $(document).ready(function() {
 							<label class="form-label col-form-label  col-md-2"></label>
 							<div class="input-group">
 								<div class="input-group-prepend">
-									<span class="input-group-text">소아　</span>
+									<span class="input-group-text" style="padding : 0.5rem 0.1rem 0.5rem 0rem">소　아　</span>
 								</div>
 								<select id="k_person" name="k_person" class="form-select text-center toNumbers addCom">
 									<c:forEach var="i" begin="0" end="15" step="1">
@@ -1077,7 +1070,7 @@ $(document).ready(function() {
 						<div class="col-md-9 inline-flex">
 							<div class="input-group">
 								<div class="input-group-prepend">
-									<span class="input-group-text">영유아</span>
+									<span class="input-group-text" style="padding : 0.5rem 0.1rem 0.5rem 0rem">영유아　</span>
 								</div>
 								<select id="i_person" name="i_person" class="form-select text-center toNumbers addCom">
 									<c:forEach var="i" begin="0" end="15" step="1">
@@ -1090,9 +1083,9 @@ $(document).ready(function() {
 							<label class="form-label col-form-label  col-md-2"></label>
 							<div class="input-group">
 								<div class="input-group-prepend">
-									<span class="input-group-text">총인원</span>
+									<span class="input-group-text" style="padding : 0.5rem 0.1rem 0.5rem 0rem">총인원　</span>
 								</div>
-								<input id="tot_person" name="tot_person" type="text" class="form-control text-end toNumbers" maxlength="2" value="01" readonly>명
+								<input id="tot_person" name="tot_person" type="text" class="form-control text-center toNumbers" maxlength="2" value="01" readonly>명
 							</div>
 						</div>
 					</div>
@@ -1101,7 +1094,7 @@ $(document).ready(function() {
 				<div id="packageDiv" class="row mb-2">
 					<label class="form-label col-form-label col-md-3">패키지</label>
 					<div class="col-md-9">
-						<select id="add_hdng_gbn" class="form-select">
+						<select id="add_hdng_gbn" class="form-select text-center">
 							<option value="">-선택-</option>
 							<c:forEach items="${packageList}" var="add_hdng_gbn" varStatus="status">
 								<option value="${add_hdng_gbn.CODE}">${add_hdng_gbn.CODE_NM}</option>
@@ -1162,7 +1155,7 @@ $(document).ready(function() {
 									</td>
 									<td style="min-width:70px;">${sessionScope.login.han_name}</td>
 									<td style="min-width:70px;">${sessionScope.login.eng_name}</td>
-									<td id="sessionTelNo" style="min-width:110px;"></td>
+									<td id="sessionTelNo" style="min-width:120px;"></td>
 									<td style="display:none">${sessionScope.login.user_id}</td>
 								</tr>
 							</tbody>

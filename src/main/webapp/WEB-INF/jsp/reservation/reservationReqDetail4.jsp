@@ -134,13 +134,7 @@ $(document).ready(function() {
 			</li>
 		</ul>
 		<!-- END nav-tabs -->
-		
-		<!-- BEGIN tab-content -->
-		<div class="tab-content panel rounded-0 p-3 m-0">
-			<input type="hidden" id="req_user_id"  name="req_user_id"  value="${sessionScope.login.user_id}"/>
-			<input type="hidden" id="req_dt"       name="req_dt"       />
-			<input type="hidden" id="seq"          name="seq"          />
-			
+
 		<!-- BEGIN tab-content -->
 		<div class="tab-content panel rounded-0 p-3 m-0">
 			<input type="hidden" id="req_user_id"  name="req_user_id"  value="${sessionScope.login.user_id}"/>
@@ -257,9 +251,6 @@ $(document).ready(function() {
 			</div>
 			<!-- END tab-pane -->
 			
-			
-			
-			
 			<!-- BEGIN tab-pane -->
 			<div class="tab-pane fade" id="default-tab-2">
 								<div class="row mb-2">
@@ -351,9 +342,9 @@ $(document).ready(function() {
 						<div class="col-md-9 inline-flex">
 							<div class="input-group">
 								<div class="input-group-prepend">
-									<span class="input-group-text">일반　</span>
+									<span class="input-group-text" style="padding : 0.5rem 0.1rem 0.5rem 0rem">일　반　</span>
 								</div>
-								<select id="g_person" name="g_person" class="form-select text-muted text-center toNumbers addCom readonly">
+								<select id="g_person" name="g_person" class="form-select text-muted text-center toNumbers addCom readonly" style="padding : 0.5rem 0rem 0.5rem 0rem">
 									<c:forEach var="i" begin="1" end="15" step="1">
 										<option value="<fmt:formatNumber value="${i}"/>">
 											<fmt:formatNumber value="${i}" minIntegerDigits="2" />
@@ -364,9 +355,9 @@ $(document).ready(function() {
 							<label class="form-label col-form-label  col-md-2"></label>
 							<div class="input-group">
 								<div class="input-group-prepend">
-									<span class="input-group-text">비라운딩　</span>
+									<span class="input-group-text" style="padding : 0.5rem 0.1rem 0.5rem 0rem">비라운딩</span>
 								</div>
-								<select id="n_person" name="n_person" class="form-select text-muted text-center toNumbers addCom readonly">
+								<select id="n_person" name="n_person" class="form-select text-muted text-center toNumbers addCom readonly" style="padding : 0.5rem 0rem 0.5rem 0rem">
 									<c:forEach var="i" begin="0" end="15" step="1">
 										<option value="<fmt:formatNumber value="${i}"/>">
 											<fmt:formatNumber value="${i}" minIntegerDigits="2" />
@@ -382,9 +373,9 @@ $(document).ready(function() {
 						<div class="col-md-9 inline-flex">
 							<div class="input-group">
 								<div class="input-group-prepend">
-									<span class="input-group-text">소아　</span>
+									<span class="input-group-text" style="padding : 0.5rem 0.1rem 0.5rem 0rem">소　아　</span>
 								</div>
-								<select id="k_person" name="k_person" class="form-select text-muted text-center toNumbers addCom readonly">
+								<select id="k_person" name="k_person" class="form-select text-muted text-center toNumbers addCom readonly" style="padding : 0.5rem 0rem 0.5rem 0rem">
 									<c:forEach var="i" begin="0" end="15" step="1">
 										<option value="<fmt:formatNumber value="${i}"/>">
 											<fmt:formatNumber value="${i}" minIntegerDigits="2" />
@@ -395,9 +386,9 @@ $(document).ready(function() {
 							<label class="form-label col-form-label  col-md-2"></label>
 							<div class="input-group">
 								<div class="input-group-prepend">
-									<span class="input-group-text">영유아　　</span>
+									<span class="input-group-text" style="padding : 0.5rem 0.1rem 0.5rem 0rem">영유아　</span>
 								</div>
-								<select id="i_person" name="i_person" class="form-select text-muted text-center toNumbers addCom readonly">
+								<select id="i_person" name="i_person" class="form-select text-muted text-center toNumbers addCom readonly" style="padding : 0.5rem 0rem 0.5rem 0rem">
 									<c:forEach var="i" begin="0" end="15" step="1">
 										<option value="<fmt:formatNumber value="${i}"/>">
 											<fmt:formatNumber value="${i}" minIntegerDigits="2" />
@@ -415,9 +406,9 @@ $(document).ready(function() {
 							<label class="form-label col-form-label  col-md-2"></label>
 							<div class="input-group">
 								<div class="input-group-prepend">
-									<span class="input-group-text">총　인　원</span>
+									<span class="input-group-text" style="padding : 0.5rem 0.1rem 0.5rem 0rem">총　인　원</span>
 								</div>
-								<input id="tot_person" name="tot_person" type="text" class="form-control text-muted text-end toNumbers" maxlength="2" value="01" readonly>명
+								<input id="tot_person" name="tot_person" type="text" class="form-control text-muted text-center toNumbers" style="padding : 0.5rem 0rem 0.5rem 0rem" maxlength="2" value="01" readonly>명
 							</div>
 						</div>
 					</div>
@@ -462,7 +453,7 @@ $(document).ready(function() {
 			<!-- BEGIN tab-pane -->
 			<div class="tab-pane fade" id="default-tab-3">
 				<div class="total-people-wrap">
-					<div class="container2">
+					<div class="container2" style="overflow:auto">
 						<table border="1" id="list_table" class="table table-striped table-bordered readonly">
 							<thead>
 								<tr>
@@ -479,19 +470,19 @@ $(document).ready(function() {
 							<tbody>
 								<c:forEach items="${reservationComList}" var = "list" varStatus="status">
 									<tr id="com_board">
-										<td>${list.DSEQ}</td>
+										<td style="min-width:45px;">${list.DSEQ}</td>
 										<td style="display:none">${list.COM_GBN}</td>
 										<td >
-											<select id="list_num_gbn" name="list_num_gbn">
+											<select id="list_num_gbn" name="list_num_gbn" disabled="disabled" style="min-width:70px;">
 												<option value="02" <c:if test="${list.NUM_GBN eq '02' }">selected</c:if>>일반</option>
 												<option value="03" <c:if test="${list.NUM_GBN eq '03' }">selected</c:if>>비라운딩</option>
 												<option value="04" <c:if test="${list.NUM_GBN eq '04' }">selected</c:if>>소아</option>
 												<option value="05" <c:if test="${list.NUM_GBN eq '05' }">selected</c:if>>영유아</option>
 											</select>
 										</td>
-										<td id=onlyKor class=text-ellipsis style=max-width:80px table-layout=fixed >${list.COM_HAN_NM}</td>
-										<td id=onlyEng class=text-ellipsis style=max-width:80px table-layout=fixed >${list.COM_ENG_NM}</td>
-										<td id=onlyNum class=text-ellipsis style=max-width:80px table-layout=fixed >${list.COM_TEL_NO}</td>
+										<td id=onlyKor style="min-width:70px;">${list.COM_HAN_NM}</td>
+										<td id=onlyEng style="min-width:70px;">${list.COM_ENG_NM}</td>
+										<td id=onlyNum style="min-width:120px;">${list.COM_TEL_NO}</td>
 										<td style="display:none">${sessionScope.login.user_id}</td>
 									</tr>
 								</c:forEach>
@@ -520,5 +511,4 @@ $(document).ready(function() {
 		</div>
 	</c:if>
 	<!-- END #footer -->
-	
 </div>

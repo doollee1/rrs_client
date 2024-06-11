@@ -175,11 +175,23 @@ public class SignController {
 			session = req.getSession(true);
 			
 			if(login.getRet_yn().equals("Y")) { // 계정 이용불가 상태
+				
 				loginYn = "F";
 				return loginYn;
-			} else if(login.getRet_yn().equals("R")) {
-				loginYn = "R";
+			} else if(login.getRet_yn().equals("R")) {  //비밀번호 초기화
+				
+				loginYn = "R";			
+				return loginYn;
 			} else {
+				
+				//에이전시 회원일 경우 반환
+				String memGbn = login.getMem_gbn();
+				if(!"01".equals(memGbn) && !"02".equals(memGbn)) {  //01(멤버), 02(일반) 회원이 아닌 경우
+					
+					loginYn = "Q";			
+					return loginYn;
+				}
+				
 				
 				//관리자 여부
 				String isAdminYn = this.signService.isAdminYn(vo.getUser_id());

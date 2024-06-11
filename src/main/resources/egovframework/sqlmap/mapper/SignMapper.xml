@@ -29,6 +29,7 @@ WHERE user_id = #{user_id}
 			, email
 			, passwd
 			, ret_yn
+			, perinfo_agree_yn
 			, reg_dtm
 			, upd_dtm
 		)
@@ -42,6 +43,7 @@ WHERE user_id = #{user_id}
 			, #{email}
 			, #{passwd}
 			, "N"
+			, "Y"
 			, #{reg_dtm}
 			, #{upd_dtm}
 		)

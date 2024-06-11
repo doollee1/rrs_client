@@ -103,5 +103,4 @@ public class SignVO {
 				+ ", sessionId=" + sessionId + ", sessionLimit=" + sessionLimit + ", useCookie=" + useCookie
 				+ ", reg_dtm=" + reg_dtm + ", upd_dtm=" + upd_dtm + "]";
 	}
-		
 }

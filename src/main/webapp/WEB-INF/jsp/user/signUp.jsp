@@ -158,7 +158,7 @@ function signUpChk(){
 				, "tel_no" : tel_no
 				, "email" : email
 				, "passwd" : passwd
-				, "ret_yn" : ret_yn
+				, "ret_yn" : ret_yn	//탈퇴여부
 				, "reg_dtm" : reg_dtm
 				, "upd_dtm" : upd_dtm
 			},

@@ -400,9 +400,9 @@ $(document).ready(function() {
 						<div class="col-md-9 inline-flex">
 							<div class="input-group">
 								<div class="input-group-prepend">
-									<span class="input-group-text">일반　</span>
+									<span class="input-group-text" style="padding : 0.5rem 0.1rem 0.5rem 0rem">일반　</span>
 								</div>
-								<select id="g_person" name="g_person" class="form-select text-center toNumbers readonly">
+								<select id="g_person" name="g_person" class="form-select text-center toNumbers readonly" style="padding : 0.5rem 0rem 0.5rem 0rem">
 									<c:forEach var="i" begin="1" end="15" step="1">
 										<option value="<fmt:formatNumber value="${i}"/>">
 											<fmt:formatNumber value="${i}" minIntegerDigits="2" />
@@ -413,9 +413,9 @@ $(document).ready(function() {
 							<label class="form-label col-form-label  col-md-2"></label>
 							<div class="input-group">
 								<div class="input-group-prepend">
-									<span class="input-group-text">비라운딩　</span>
+									<span class="input-group-text" style="padding : 0.5rem 0rem 0.5rem 0rem">비라운딩　</span>
 								</div>
-								<select id="n_person" name="n_person" class="form-select text-center toNumbers readonly">
+								<select id="n_person" name="n_person" class="form-select text-center toNumbers readonly" style="padding : 0.5rem 0rem 0.5rem 0rem">
 									<c:forEach var="i" begin="0" end="15" step="1">
 										<option value="<fmt:formatNumber value="${i}"/>">
 											<fmt:formatNumber value="${i}" minIntegerDigits="2" />
@@ -431,9 +431,9 @@ $(document).ready(function() {
 						<div class="col-md-9 inline-flex">
 							<div class="input-group">
 								<div class="input-group-prepend">
-									<span class="input-group-text">소아　</span>
+									<span class="input-group-text" style="padding : 0.5rem 0.1rem 0.5rem 0rem">소아　</span>
 								</div>
-								<select id="k_person" name="k_person" class="form-select text-center toNumbers readonly">
+								<select id="k_person" name="k_person" class="form-select text-center toNumbers readonly" style="padding : 0.5rem 0rem 0.5rem 0rem">
 									<c:forEach var="i" begin="0" end="15" step="1">
 										<option value="<fmt:formatNumber value="${i}"/>">
 											<fmt:formatNumber value="${i}" minIntegerDigits="2" />
@@ -444,9 +444,9 @@ $(document).ready(function() {
 							<label class="form-label col-form-label  col-md-2"></label>
 							<div class="input-group">
 								<div class="input-group-prepend">
-									<span class="input-group-text">영유아　　</span>
+									<span class="input-group-text" style="padding : 0.5rem 0.1rem 0.5rem 0rem">영유아　　</span>
 								</div>
-								<select id="i_person" name="i_person" class="form-select text-center toNumbers readonly">
+								<select id="i_person" name="i_person" class="form-select text-center toNumbers readonly" style="padding : 0.5rem 0rem 0.5rem 0rem">
 									<c:forEach var="i" begin="0" end="15" step="1">
 										<option value="<fmt:formatNumber value="${i}"/>">
 											<fmt:formatNumber value="${i}" minIntegerDigits="2" />
@@ -464,9 +464,9 @@ $(document).ready(function() {
 							<label class="form-label col-form-label  col-md-2"></label>
 							<div class="input-group">
 								<div class="input-group-prepend">
-									<span class="input-group-text">총　인　원</span>
+									<span class="input-group-text" style="padding : 0.5rem 0.1rem 0.5rem 0rem">총　인　원</span>
 								</div>
-								<input id="tot_person" name="tot_person" type="text" class="form-control text-center toNumbers" maxlength="2" value="01" readonly>명
+								<input id="tot_person" name="tot_person" type="text" class="form-control text-center toNumbers" style="padding : 0.5rem 0rem 0.5rem 0rem" maxlength="2" value="01" readonly>명
 							</div>
 						</div>
 					</div>
