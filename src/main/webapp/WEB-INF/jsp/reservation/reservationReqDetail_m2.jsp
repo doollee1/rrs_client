@@ -446,8 +446,8 @@ $(document).ready(function() {
 			<div class="tab-pane fade" id="default-tab-3">
 				<div class="total-people-wrap">
 					<div class="container2" style="overflow:auto">
-						<table border="1" id="list_table" class="table table-striped table-bordered readonly" style="text-align:center;">
-							<thead>
+						<table border="1" id="list_table" class="table table-bordered readonly" style="text-align:center;">
+							<thead class="table-secondary">
 								<tr>
 									<th>번호</th>
 									<th style="display:none">동반자구분</th>
