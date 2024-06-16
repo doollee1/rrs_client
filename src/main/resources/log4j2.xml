@@ -4,8 +4,8 @@
         <Console name="console" target="SYSTEM_OUT">
             <PatternLayout charset="UTF-8" pattern="%d %5p [%c] %m%n" />
         </Console>
-        <RollingFile name="file" fileName="/opt/apache-tomcat-8.5.32/logs/${date:yyyy}/${date:MM}/clientLog.log"
-        						filePattern="/opt/apache-tomcat-8.5.32/logs/${date:yyyy}/${date:MM}/clientLog_%d{yyyyMMdd}.log">
+        <RollingFile name="file" fileName="/opt/apache-tomcat-8.5.32/logs/rrs_client/${date:yyyy}/${date:MM}/rrs_client.log"
+        						filePattern="/opt/apache-tomcat-8.5.32/logs/rrs_client/${date:yyyy}/${date:MM}/rrs_client_%d{yyyyMMdd}.log">
         	<PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
 			<Policies>
 				<TimeBasedTriggeringPolicy />
