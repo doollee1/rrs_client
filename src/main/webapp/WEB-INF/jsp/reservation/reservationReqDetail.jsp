@@ -470,6 +470,10 @@ $(document).ready(function() {
 							</div>
 						</div>
 					</div>
+					<span style="text-align:left; opacity:30%; color:red; font-size:0.7rem">
+									         ※   신청 인원은 [예약요청]단계에서만 변경이 가능하며,<br/>
+					  &nbsp;&nbsp;&nbsp;&nbsp;이 후 [카카오톡:yyoahkim]으로 문의주시길 바랍니다.
+					</span>
 				</div>
 			</div>
 			<!-- END tab-pane -->

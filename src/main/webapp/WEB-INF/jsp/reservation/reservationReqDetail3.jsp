@@ -4,6 +4,18 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+
+<style type="text/css">
+	#wrapper_popup div[id ^= 'layerPop'] {position:absolute; width:86%; left:7%; top:30%; padding:0px 8px; background:#fff; z-index:100000;border-radius:10px;overflow:auto;display:none;border:double;}
+	#wrapper_popup div[id ^= 'layerPop'] h2 {display:block;margin:10px 0 0;padding-bottom:15px;border-bottom:1px #d8d8d8 solid;font-size:1.1em;font-weight:bold}
+	#wrapper_popup #layerPop .popup_top_box {display: flex; justify-content: space-between; margin-top:5px;}
+	#wrapper_popup .c-blue {color:blue !important}
+	#reserve_popup {display:flex; flex-direction:column; gap:9px; margin:5px 0 7px;}
+	#reserve_popup .radioSet div {display:flex; justify-content: center; gap:7px;}
+	.find-btn {display: flex; justify-content: space-between;}
+	.find-btn button {width:100%;}
+</style>
+
 <script>
 $(document).ready(function() {
 	var isCal    = false;
@@ -20,12 +32,15 @@ $(document).ready(function() {
 	var prodCond = 0;
 	var twinCnt = 0;			// 숙박인원에따른 사용 트윈 갯수
 	var kingCnt = 0;			// 숙박인원에따른 사용 킹 갯수
+	var comTemp = "";
+	var comTempChk = "";
 	
 	setTitle("예약신청");
 	setEvent();
 	
 	$("#num_gbn option:eq(1)").remove();
-
+	$('.radioSet').buttonset();
+	
 	<%-- 데이터 셋팅 --%>
 	var detailData = JSON.parse('${strReservationDetail}');
 	for(key in detailData) {
@@ -41,27 +56,27 @@ $(document).ready(function() {
 	
 	$(document).on("focusout", '[id^=onlyKor]', function() {
 		const regExp = /[ㄱ-ㅎㅏ-ㅣ가-힣]/gi; 
-		if($(this).text() != "" && !regExp.test($(this).text())){
+		if($(this).val() != "" && !regExp.test($(this).val())){
 	    	alert("한글로 작성해주세요.");
-	    	$(this).text("");
+	    	$(this).val("");
 	    }
 	});
 	
 	$(document).on("focusout", '[id^=onlyEng]', function() {
 		const regExp =  /^[a-zA-Z]*$/; 
-		if($(this).text() != "" && !regExp.test($(this).text())){
+		if($(this).val() != "" && !regExp.test($(this).val())){
 	    	alert("영문으로 작성해주세요.");
-	    	$(this).text("");
+	    	$(this).val("");
 	    }
 	});
 	
 	$(document).on("focusout", '[id^=onlyNum]', function() {
 		const regExp = /^[0123456789-]*$/;
-		if($(this).text() != "" && !regExp.test($(this).text())){
+		if($(this).val() != "" && !regExp.test($(this).val())){
 	    	alert("숫자로 작성해주세요.");
-	    	$(this).text("");
+	    	$(this).val("");
 	    }else{
-	    	$(this).text($(this).text().replace(/^(\d{2,3})(\d{3,4})(\d{4})$/g, "$1-$2-$3"));
+	    	$(this).val($(this).val().replace(/^(\d{2,3})(\d{3,4})(\d{4})$/g, "$1-$2-$3"));
 	    }
 	});
 	
@@ -347,7 +362,7 @@ $(document).ready(function() {
 								$("#fligth_image").parent().hide();
 								$("#flight_in, #flight_in_hh, #flight_out, #flight_out_hh").removeClass("readonly");
 								$("#calBtn").removeAttr("disabled"); /* 가계산 버튼 */
-								$("#pick_gbn, #add_r_s_day, #add_r_s_day, #add_r_s_per, #add_r_p_per, #add_r_p_day, #comDelete").removeClass("readonly");
+								$("#list_table, #pick_gbn, #add_r_s_day, #add_r_s_day, #add_r_s_per, #add_r_p_per, #add_r_p_day, #comDelete").removeClass("readonly");
 								$("#late_check_in, #late_check_out, #remark").removeClass("readonly");
 								$("#append_row").removeAttr("disabled"); /* 동반자 추가 버튼 */
 								
@@ -691,9 +706,9 @@ $(document).ready(function() {
 								$("<td style=min-width:45px>").append(),										// 순번
 								$("<td style=display:none >").append( "2" ),			// 예약자구분 (1:예약자,2:동반자')
 								$("<td>").append(setPeopleGbn("02") ),					// 인원구분
-								$("<td id=onlyKor style=min-width:70px contenteditable=true>").append(""),// 한글명
-								$("<td id=onlyEng style=min-width:70px contenteditable=true>").append(""),// 영문명
-								$("<td id=onlyNum style=min-width:120px contenteditable=true>").append(""),// 연락처
+								$("<td style=min-width:70px>").append(""),// 한글명
+								$("<td style=min-width:70px>").append(""),// 영문명
+								$("<td style=min-width:120px>").append(""),// 연락처
 								$("<td style=display:none>").append( $("#req_user_id").val() ),	// 등록자
 							)	
 					);
@@ -707,9 +722,9 @@ $(document).ready(function() {
 								$("<td style=min-width:45px>").append(),										// 순번
 								$("<td style=display:none >").append( "2" ),			// 예약자구분 (1:예약자,2:동반자')
 								$("<td>").append(setPeopleGbn("03") ),					// 인원구분
-								$("<td id=onlyKor style=min-width:70px contenteditable=true>").append(""),// 한글명
-								$("<td id=onlyEng style=min-width:70px contenteditable=true>").append(""),// 영문명
-								$("<td id=onlyNum style=min-width:120px contenteditable=true>").append(""),// 연락처
+								$("<td style=min-width:70px>").append(""),// 한글명
+								$("<td style=min-width:70px>").append(""),// 영문명
+								$("<td style=min-width:120px>").append(""),// 연락처
 								$("<td style=display:none>").append( $("#req_user_id").val() ),	// 등록자
 							)	
 					);
@@ -723,9 +738,9 @@ $(document).ready(function() {
 								$("<td style=min-width:45px>").append(),										// 순번
 								$("<td style=display:none >").append( "2" ),			// 예약자구분 (1:예약자,2:동반자')
 								$("<td>").append(setPeopleGbn("04") ),					// 인원구분
-								$("<td id=onlyKor style=min-width:70px contenteditable=true>").append(""),// 한글명
-								$("<td id=onlyEng style=min-width:70px contenteditable=true>").append(""),// 영문명
-								$("<td id=onlyNum style=min-width:120px contenteditable=true>").append(""),// 연락처
+								$("<td style=min-width:70px>").append(""),// 한글명
+								$("<td style=min-width:70px>").append(""),// 영문명
+								$("<td style=min-width:120px>").append(""),// 연락처
 								$("<td style=display:none>").append( $("#req_user_id").val() ),	// 등록자
 							)	
 					);
@@ -739,9 +754,9 @@ $(document).ready(function() {
 								$("<td style=min-width:45px>").append(),										// 순번
 								$("<td style=display:none >").append( "2" ),			// 예약자구분 (1:예약자,2:동반자')
 								$("<td>").append(setPeopleGbn("05") ),					// 인원구분
-								$("<td id=onlyKor style=min-width:70px contenteditable=true>").append(""),// 한글명
-								$("<td id=onlyEng style=min-width:70px contenteditable=true>").append(""),// 영문명
-								$("<td id=onlyNum style=min-width:120px contenteditable=true>").append(""),// 연락처
+								$("<td style=min-width:70px>").append(""),// 한글명
+								$("<td style=min-width:70px>").append(""),// 영문명
+								$("<td style=min-width:120px>").append(""),// 연락처
 								$("<td style=display:none>").append( $("#req_user_id").val() ),	// 등록자
 							)	
 					);
@@ -830,7 +845,48 @@ $(document).ready(function() {
 			$("#room_type").val("")
 		});
 		
+		// 동반자 상세 이벤트
+		$("#list_table").on('click', 'tr', function(){
+			comTemp = $(this).children().eq(0).text();
+			if(comTemp != "번호"){
+				if(comTemp == "1"){
+					$("#comNumChk span").text( "# " + comTemp + "번째 예약자");
+				}else{
+					$("#comNumChk span").text( "# " + comTemp + "번째 동반자");	
+				}
+				$('input[name="add_han_name"]').val($(this).children().eq(3).text());
+				$('input[name="add_eng_name"]').val($(this).children().eq(4).text());
+				$('input[name="add_telno"]').val($(this).children().eq(5).text());
+				$("#layerPop").css("display","block");
+			}
+		});
 		
+		// 동반자 상세 입력
+		$("#comAddBtn").on("click", function() {
+			$('tr#com_board').each(function() {
+				comTempChk = $(this).children().eq(0).text();
+				if(comTemp == comTempChk){
+					$(this).children().eq(3).text($('input[name="add_han_name"]').val());
+					$(this).children().eq(4).text($('input[name="add_eng_name"]').val());
+					$(this).children().eq(5).text($('input[name="add_telno"]').val());
+				}
+				
+			});
+			$("#layerPop").css("display","none");
+		});
+		
+		$("#popup_close_btn").on("click", function() {
+			$("#layerPop").css("display","none");
+		});
+		
+		$("#list_table").on('mouseover', 'tr', function(){
+		    $(this ).css("background-color", "#afeeee");
+		    $(this).children().css("cursor", "pointer");
+		});
+
+		$("#list_table").on('mouseleave', 'tr', function(){
+		    $(this).css("background-color", "white");
+		});
 	}
 });
 </script>
@@ -1141,6 +1197,10 @@ $(document).ready(function() {
 							</div>
 						</div>
 					</div>
+					<span style="text-align:left; opacity:30%; color:red; font-size:0.7rem">
+									         ※   [예약신청]단계에서는 인원정보 수정이 불가합니다.<br/>
+					  &nbsp;&nbsp;&nbsp;&nbsp;수정 시 [카카오톡:yyoahkim]로 문의주시길 바랍니다.
+					</span>
 				</div>
 				
 				<div class="row mb-2">
@@ -1165,8 +1225,8 @@ $(document).ready(function() {
 			<div class="tab-pane fade" id="default-tab-3">
 				<div class="total-people-wrap">
 					<div class="container2" style="overflow:auto">
-						<table border="1" id="list_table" class="table table-striped table-bordered" style="text-align:center;">
-							<thead>
+						<table border="1" id="list_table" class="table table-bordered readonly" style="text-align:center;">
+							<thead class="table-secondary">
 								<tr>
 									<th>번호</th>
 									<th style="display:none">동반자구분</th>
@@ -1191,14 +1251,49 @@ $(document).ready(function() {
 												<option value="05" <c:if test="${list.NUM_GBN eq '05' }">selected</c:if>>영유아</option>
 											</select>
 										</td>
-										<td id=onlyKor style="min-width:70px;" contenteditable=true>${list.COM_HAN_NM}</td>
-										<td id=onlyEng style="min-width:70px;" contenteditable=true>${list.COM_ENG_NM}</td>
-										<td id=onlyNum style="min-width:120px;" contenteditable=true>${list.COM_TEL_NO}</td>
+										<td style="min-width:70px;">${list.COM_HAN_NM}</td>
+										<td style="min-width:70px;">${list.COM_ENG_NM}</td>
+										<td style="min-width:120px;">${list.COM_TEL_NO}</td>
 										<td style="display:none">${sessionScope.login.user_id}</td>
 									</tr>
 								</c:forEach>
 							</tbody>
 						</table>
+						
+						<div id="wrapper_popup">
+							<div id="layerPop" class="layer-shadow">
+							<div class="popup_top_box">
+								<div id="comNumChk"><span style="text-align:left; opacity:30%; color:red"></span></div>
+								<i class="fa fa-close" id="popup_close_btn"></i>
+							</div>
+								<div class="total-people-wrap" id="reserve_popup">
+									<div class="input-group">
+										<div class="input-group-prepend">
+											<span class="input-group-text">한글이름</span>
+										</div>
+										<input id="onlyKor" name="add_han_name" type="text" class="form-control text-center" style="min-width:70px;">
+									</div>
+									
+									<div class="input-group">
+										<div class="input-group-prepend">
+											<span class="input-group-text">영문이름</span>
+										</div>
+										<input id="onlyEng" name="add_eng_name" type="text" class="form-control text-center" style="min-width:70px;">
+									</div>
+									
+									<div class="input-group">
+										<div class="input-group-prepend">
+											<span class="input-group-text">전화번호</span>
+										</div>
+										<input id="onlyNum" name="add_telno" type="text" class="form-control text-center" style="min-width:70px;">
+									</div>
+									<div class="find-btn">	
+										<button id="comAddBtn" name="comAddBtn" type="button" class="btn btn-primary btn-lg">입력</button>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- /.wrapper_popup1 -->
 					</div> 
 						<!-- /.container2 -->
 				</div>
