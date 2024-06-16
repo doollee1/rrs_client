@@ -4,6 +4,13 @@
         <Console name="console" target="SYSTEM_OUT">
             <PatternLayout charset="UTF-8" pattern="%d %5p [%c] %m%n" />
         </Console>
+        <RollingFile name="file" fileName="/logs/${date:yyyy}/${date:MM}/clientLog.log"
+        						filePattern="/logs/${date:yyyy}/${date:MM}/clientLog_%d{yyyyMMdd}.log">
+        	<PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+			</Policies>						
+   		</RollingFile>
     </Appenders>
     <Loggers>
         <Logger name="java.sql" level="DEBUG" additivity="false">
@@ -28,6 +35,7 @@
 
         <Root level="DEBUG">
             <AppenderRef ref="console" />
+            <AppenderRef ref="file"/>
         </Root>
     </Loggers>
 </Configuration>
