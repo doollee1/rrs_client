@@ -54,4 +54,6 @@ public interface ReservationService {
 	List<Map<String, Object>> reservationComList(Map<String, Object> param) throws Exception;
 	
 	List<Map<String, Object>> noRoomChk(Map<String, Object> param) throws Exception;
+	
+	List<Map<String, Object>> packageListReset(Map<String, Object> param) throws Exception;
 }

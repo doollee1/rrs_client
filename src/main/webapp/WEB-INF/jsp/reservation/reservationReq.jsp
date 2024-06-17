@@ -224,10 +224,39 @@ $(document).ready(function() {
 		
 		$("#chk_in_dt").on("change", function() {
 			$("#room_type").val("")
+			$("#chk_out_dt").val("")
+			$("#package_").find("option").remove();
+			$("#package_").append("<option value='' selected> -선택- </option>");
 		});
 		
 		$("#chk_out_dt").on("change", function() {
 			$("#room_type").val("")
+			if($("#chk_in_dt").val() != "" && $("#chk_out_dt").val() != "") {
+				$("#package_").find("option").remove();
+				var data = {
+						  chk_in_dt      : $("#chk_in_dt" ).val().replace(/-/gi, "")	//체크인
+						, chk_out_dt     : $("#chk_out_dt").val().replace(/-/gi, "")	//체크아웃
+					};
+					dimOpen();
+					$.ajax({
+						type : "POST",
+						url : "packageListReset.do",
+						data : data,
+						dataType : "json",
+						success : function(data) {
+							dimClose();
+							if(data.result == "SUCCESS") {
+								$("#package_").append("<option value='' selected> -선택- </option>");
+								for (var i = 0; i < data.packageListReset.length; i++) {
+									$("#package_").append("<option value="+data.packageListReset[i].CODE+">"+data.packageListReset[i].CODE_NM+"</option>");
+								}
+							} else {
+								alert("패키지 상품이 없습니다. 관리자에게 문의 하세요.");
+								$("#g_person").val("00");
+							}
+					 	}
+					});
+			}
 		});
 		
 	}

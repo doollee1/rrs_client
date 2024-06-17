@@ -719,4 +719,33 @@
 		 GROUP BY REQ_NO_DT,ROOM_TYPE
 		 ORDER BY REQ_NO_DT
 	</select>
+	
+	<select id="packageListReset" parameterType="hashMap" resultType="hashMap">
+	<![CDATA[
+		SELECT  distinct
+		        A.CODE
+		      , A.CODE_NM
+		  FROM  bc_comm_l as A
+		      , tb_prod_info as B
+		      , tb_bas_yy_info as C
+		 WHERE 1 = 1
+		   and A.CODE = B.HDNG_GBN
+		   AND B.BAS_YY     = C.BAS_YY
+		   AND B.BAS_YY_SEQ = C.BAS_YY_SEQ
+		   AND A.HEAD_CD = '500000'
+		   AND A.REF_CHR1 = '01'
+		   AND A.CODE NOT IN('28', '29', '30', '31')
+		   AND A.STATUS   = 'Y'
+		   AND (    #{chk_in_dt} BETWEEN C.ST_DT1 AND C.ED_DT1
+		         OR #{chk_in_dt} BETWEEN C.ST_DT2 AND C.ED_DT2
+		         OR #{chk_in_dt} BETWEEN C.ST_DT3 AND C.ED_DT3
+		       )
+		   AND B.PROD_COND = CASE WHEN PROD_COND != '0' AND DATEDIFF(CAST(#{chk_out_dt} AS DATE), CAST(#{chk_in_dt} AS DATE)) >= 10
+		                          THEN 'DU10'
+		                          WHEN PROD_COND != '0' AND DATEDIFF(CAST(#{chk_out_dt} AS DATE), CAST(#{chk_in_dt} AS DATE)) < 10
+		                          THEN 'DD10' 
+		                           END  
+		   ORDER BY CODE asc
+	]]>
+	</select>
 </mapper>

@@ -531,4 +531,9 @@ public class ReservationServiceImpl implements ReservationService {
 	public List<Map<String, Object>> noRoomChk(Map<String, Object> paramMap) throws Exception {
 		return reservationMapper.noRoomChk(paramMap);
 	}
+	
+	// noRoomChk
+	public List<Map<String, Object>> packageListReset(Map<String, Object> paramMap) throws Exception {
+		return reservationMapper.packageListReset(paramMap);
+	}
 }

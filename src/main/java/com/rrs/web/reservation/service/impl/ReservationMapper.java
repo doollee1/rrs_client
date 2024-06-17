@@ -96,4 +96,7 @@ public interface ReservationMapper {
 	
 	// 예약불가 검토
 	List<Map<String, Object>> noRoomChk(Map<String, Object> paramMap) throws Exception;
+	
+	// 예약불가 검토
+	List<Map<String, Object>> packageListReset(Map<String, Object> paramMap) throws Exception;
 }

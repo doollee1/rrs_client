@@ -7,7 +7,7 @@
 <script src="PalmResort/assets/plugins/jquery-sticky-header-footer.js"></script>
 <script>
 var arr;
-$(document).ready(function() {
+$(window).ready( function() {
 	setTitle("상품소개");
 	 $("table").stickyHeaderFooter();
 });
@@ -15,7 +15,7 @@ $(document).ready(function() {
 
 <div id="content" class="app-content d-flex flex-column p-0">
 	<!-- BEGIN content-container -->
-	<div class="app-content-padding flex-grow-1" data-scrollbar="true" data-height="100%">
+	<div class="app-content-padding flex-grow-1 overflow-hidden" data-scrollbar="true" data-height="100%">
 							
 		<!-- BEGIN nav-tabs -->
 		<ul class="nav nav-tabs">

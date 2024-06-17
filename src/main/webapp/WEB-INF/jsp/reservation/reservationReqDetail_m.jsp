@@ -66,6 +66,47 @@ $(document).ready(function() {
 	$("#g_person").change(function(){   
 		if($("#g_person").val() > 0){
 			$("#packageDiv").show();
+			
+			if($("#chk_in_dt").val() == "") {
+				alert("체크인 날짜를 선택하세요.");
+				$("#g_person").val("00")
+				return false;
+			}
+			
+			if($("#chk_out_dt").val() == "") {
+				alert("체크아웃 날짜를 선택하세요.");
+				$("#g_person").val("00")
+				return false;
+			}
+			
+			if($("#chk_in_dt").val() != "" && $("#chk_out_dt").val() != "") {
+				$("#add_hdng_gbn").find("option").remove();
+				var data = {
+						  chk_in_dt      : $("#chk_in_dt" ).val().replace(/-/gi, "")	//체크인
+						, chk_out_dt     : $("#chk_out_dt").val().replace(/-/gi, "")	//체크아웃
+					};
+					dimOpen();
+					$.ajax({
+						type : "POST",
+						url : "packageListReset.do",
+						data : data,
+						dataType : "json",
+						success : function(data) {
+							dimClose();
+							if(data.result == "SUCCESS") {
+								
+								$("#add_hdng_gbn").append("<option value='' selected> -선택- </option>");
+								
+								for (var i = 0; i < data.packageListReset.length; i++) {
+									$("#add_hdng_gbn").append("<option value="+data.packageListReset[i].CODE+">"+data.packageListReset[i].CODE_NM+"</option>");
+								}
+							} else {
+								alert("패키지 상품이 없습니다. 관리자에게 문의 하세요.");
+								$("#g_person").val("00");
+							}
+					 	}
+					});
+			}
 		}else{
 			$("#packageDiv").hide();
 		}
@@ -417,6 +458,8 @@ $(document).ready(function() {
 								$("#pick_gbn, #add_r_s_day, #add_r_s_day, #add_r_s_per, #add_r_p_per, #add_r_p_day, #comDelete").removeClass("readonly");
 								$("#list_table, #comPlusBtn, #late_check_in, #late_check_out, #m_person, #g_person, #n_person, #k_person, #i_person, #add_hdng_gbn, #remark").removeClass("readonly");
 								$("#append_row").removeAttr("disabled"); /* 동반자 추가 버튼 */
+								$("#chk_in_dt").removeAttr("disabled"); /* 체크인 버튼 */
+								$("#chk_out_dt").removeAttr("disabled"); /* 체크아웃 버튼 */
 								if($("#pick_gbn").val() == "01") {
 									$("#per_num").val(00).attr("disabled", true);
 								} else {
@@ -809,11 +852,38 @@ $(document).ready(function() {
 		});
 		
 		$("#chk_in_dt").on("change", function() {
-			$("#room_type").val("")
+			$("#room_type").val("");
+			if(!$("#chk_in_dt").is(":disabled") && $("#g_person").val() > 0){
+			$("#add_hdng_gbn").find("option").remove();
+				$("#g_person").val("0");
+				$("#packageDiv").hide();
+				$("tr#com_board").each(function (index, item) {
+					let td = $(this).children();
+					let comListChk = td.eq(2).find('#list_num_gbn option:selected').val(); // 인원구분
+					if(comListChk == "02"){
+						td.remove();
+					}
+				});
+				alert("체크인 날짜변경으로 인원내역(:일반)을 재선택해주세요");
+			}
+			
 		});
 		
 		$("#chk_out_dt").on("change", function() {
-			$("#room_type").val("")
+			$("#room_type").val("");
+			if(!$("#chk_out_dt").is(":disabled") && $("#g_person").val() > 0){
+				$("#add_hdng_gbn").find("option").remove();
+				$("#g_person").val("0");
+				$("#packageDiv").hide();
+				$("tr#com_board").each(function (index, item) {
+					let td = $(this).children();
+					let comListChk = td.eq(2).find('#list_num_gbn option:selected').val(); // 인원구분
+					if(comListChk == "02"){
+						td.remove();
+					}
+				});
+				alert("체크아웃 날짜변경으로 인원내역(:일반)을 재선택해주세요");
+			}
 		});
 		
 		<%-- addCom 클래스 이벤트 --%>
@@ -1044,7 +1114,7 @@ $(document).ready(function() {
 						<label class="form-label col-form-label col-lg-4">체크인</label>
 						<div class="col-lg-12">
 							<div class="input-group date" >
-								<input type="text" id="chk_in_dt" name="chk_in_dt" class="form-control text-start" placeholder="날짜를 선택하세요" readonly>
+								<input type="text" id="chk_in_dt" name="chk_in_dt" class="form-control text-start" placeholder="날짜를 선택하세요" disabled="disabled">
 								<span class="input-group-text input-group-addon"><i class="fa fa-calendar"></i></span>
 							</div>
 						</div>
@@ -1053,7 +1123,7 @@ $(document).ready(function() {
 						<label class="form-label col-form-label col-lg-4">체크아웃</label>
 						<div class="col-lg-12">
 							<div class="input-group date" >
-								<input type="text" id="chk_out_dt" name="chk_out_dt" class="form-control text-start" placeholder="날짜를 선택하세요" readonly>
+								<input type="text" id="chk_out_dt" name="chk_out_dt" class="form-control text-start" placeholder="날짜를 선택하세요" disabled="disabled">
 								<span class="input-group-text input-group-addon"><i class="fa fa-calendar"></i></span>
 							</div>
 						</div>

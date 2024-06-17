@@ -244,7 +244,7 @@ public class ReservationController {
 		List<Map<String, Object>> roomTypeList = commonService.commCodeList(param);
 		model.addAttribute("roomTypeList" , roomTypeList );
 		
-		// 일반 패키지 리스트
+		// 일반 패키지 리스트 
 		List<Map<String, Object>> packageList = reservationService.packageList();
 		model.addAttribute("packageList", packageList);
 		
@@ -564,4 +564,18 @@ public class ReservationController {
 		return rMap;
 	}
 	
+	
+	@RequestMapping(value = "/packageListReset.do", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> packageListReset(@RequestParam Map<String, Object> param, HttpServletRequest req) throws Exception {
+		Map<String, Object> rMap = new HashMap<String, Object>();
+		// packageListReset  parameter : chk_in_dt, chk_out_dt
+		List<Map<String, Object>> packageListReset = reservationService.packageListReset(param);
+		
+		if(packageListReset != null && (packageListReset.size() > 0)) { 
+			rMap.put("packageListReset", packageListReset);
+			rMap.put("result", "SUCCESS");
+		}
+		return rMap;
+	}	
 }

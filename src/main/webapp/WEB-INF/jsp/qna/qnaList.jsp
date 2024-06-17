@@ -77,7 +77,7 @@ function myQnaList(){
 				}
 				html+= '	</td>';
 				html+= '	<td><span>'+data[i].title+'</span></td>';
-				html+= '	<td>'
+				html+= '	<td style="text-align:right">'
 				if (data[i].secret_yn == 'Y') {
 					html+= '	<i class="fa fa-lock"></i>'
 				}		
@@ -136,7 +136,7 @@ function nextPage(){
 			}
 			html+= '	</td>';
 			html+= '	<td><span>'+data[i].title +'</span></td>';
-			html+= '	<td>'
+			html+= '	<td style="text-align:right">'
 			if (data[i].secret_yn == 'Y') {
 				html+= '	<i class="fa fa-lock"></i>'
 			}		
@@ -194,7 +194,7 @@ function nextPage(){
 								</td>
 								<td><span>${list.title }</span></td>
 								
-								<td>
+								<td style="text-align:right">
 									<c:choose>
 										<c:when test="${list.secret_yn eq 'Y'}"><i class="fa fa-lock"></i></c:when>
 									</c:choose>
