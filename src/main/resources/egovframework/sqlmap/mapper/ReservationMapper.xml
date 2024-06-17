@@ -157,9 +157,13 @@
 	<select id="surchageCalc" parameterType="hashMap" resultType="hashMap">
 	<![CDATA[
         SELECT A.COM_AMT * #{per_num} AS SURCHARGE
+             , A.BAS_YY
+             , A.PROD_SEQ
+             , '1' as CAR_NUM
+             , A.COM_AMT
           FROM tb_prod_info A
           JOIN tb_bas_yy_info B
-            ON A.HDNG_GBN   = '21' /* 야간차량 할증료 */
+            ON A.HDNG_GBN   = '19' /* 야간차량 할증료 */
            AND A.BAS_YY     = B.BAS_YY
            AND A.BAS_YY_SEQ = B.BAS_YY_SEQ
          WHERE A.PROD_COND  = CASE WHEN #{per_num} < 4

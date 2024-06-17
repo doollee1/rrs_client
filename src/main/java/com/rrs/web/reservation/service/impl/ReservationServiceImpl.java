@@ -198,18 +198,7 @@ public class ReservationServiceImpl implements ReservationService {
 			if(pickupMap != null) {
 				// 미팅샌딩 total 가격
 				sendingAmt = (long)Double.parseDouble(String.valueOf(pickupMap.get("SENDING_AMT")));
-
-				// 야간할증비행기 횟수
-				int surchargeCnt = Integer.parseInt(String.valueOf(pickupMap.get("SURCHARGE_CNT")));
-				if(surchargeCnt > 0) {
-					// surchageCalc parameter : per_num / chk_in_dt
-					Map<String, Object> surchargeMap = reservationMapper.surchageCalc(paramMap);
-					if(surchargeMap != null) {
-						// 야간할증비 가격
-						surchageAmt = (long)Double.parseDouble(String.valueOf(surchargeMap.get("SURCHARGE")));
-					}
-				}
-
+				
 				// 미팅샌딩 테이블 등록
 				paramMap.put("car_num"     , pickupMap.get("CAR_NUM" ));
 				paramMap.put("use_amt"     , pickupMap.get("COM_AMT" ));
@@ -217,6 +206,23 @@ public class ReservationServiceImpl implements ReservationService {
 
 				insertGbn = reservationMapper.insertTbReqPickup(paramMap);
 				if(insertGbn == 0) return insertGbn;
+				
+				// 야간할증비행기 횟수
+				int surchargeCnt = Integer.parseInt(String.valueOf(pickupMap.get("SURCHARGE_CNT")));
+				if(surchargeCnt > 0) {
+					// surchageCalc parameter : per_num / chk_in_dt
+					Map<String, Object> surchargeMap = reservationMapper.surchageCalc(paramMap);
+					if(surchargeMap != null) {
+						paramMap.put("car_num"     , surchargeMap.get("CAR_NUM" ));
+						paramMap.put("use_amt"     , surchargeMap.get("COM_AMT" ));
+						paramMap.put("car_prod_seq", surchargeMap.get("PROD_SEQ"));
+						
+						insertGbn = reservationMapper.insertTbReqPickup(paramMap);
+						if(insertGbn == 0) return insertGbn;
+						// 야간할증비 가격
+						surchageAmt = (long)Double.parseDouble(String.valueOf(surchargeMap.get("SURCHARGE")));
+					}
+				}
 			}
 		}
 
@@ -387,16 +393,6 @@ public class ReservationServiceImpl implements ReservationService {
 				// 미팅샌딩 total 가격
 				sendingAmt = (long)Double.parseDouble(String.valueOf(pickupMap.get("SENDING_AMT")));
 				
-				// 야간할증비행기 횟수
-				int surchargeCnt = Integer.parseInt(String.valueOf(pickupMap.get("SURCHARGE_CNT")));
-				if(surchargeCnt > 0) {
-					Map<String, Object> surchargeMap = reservationMapper.surchageCalc(paramMap);
-					if(surchargeMap != null) {
-						// 야간할증비 가격
-						surchageAmt = (long)Double.parseDouble(String.valueOf(surchargeMap.get("SURCHARGE")));
-					}
-				}
-
 				// 미팅샌딩 테이블 등록
 				paramMap.put("car_num"     , pickupMap.get("CAR_NUM" ));
 				paramMap.put("use_amt"     , pickupMap.get("COM_AMT" ));
@@ -404,6 +400,22 @@ public class ReservationServiceImpl implements ReservationService {
 
 				updateGbn = reservationMapper.insertTbReqPickup(paramMap);
 				if(updateGbn == 0) return updateGbn;
+				
+				// 야간할증비행기 횟수
+				int surchargeCnt = Integer.parseInt(String.valueOf(pickupMap.get("SURCHARGE_CNT")));
+				if(surchargeCnt > 0) {
+					Map<String, Object> surchargeMap = reservationMapper.surchageCalc(paramMap);
+					if(surchargeMap != null) {
+						paramMap.put("car_num"     , surchargeMap.get("CAR_NUM" ));
+						paramMap.put("use_amt"     , surchargeMap.get("COM_AMT" ));
+						paramMap.put("car_prod_seq", surchargeMap.get("PROD_SEQ"));
+						
+						updateGbn = reservationMapper.insertTbReqPickup(paramMap);
+						if(updateGbn == 0) return updateGbn;
+						// 야간할증비 가격
+						surchageAmt = (long)Double.parseDouble(String.valueOf(surchargeMap.get("SURCHARGE")));
+					}
+				}
 			}
 		}
 

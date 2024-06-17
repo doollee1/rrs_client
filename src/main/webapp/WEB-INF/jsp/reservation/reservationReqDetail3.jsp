@@ -390,7 +390,7 @@ $(document).ready(function() {
 				}
 				
 				// 숙박인원 성인기준:(일반 + 비라운딩)
-				roomPerson = Math.round((strToNum($("#g_person").val()) + strToNum($("#n_person").val()))/2);
+				roomPerson = Math.round((strToNum($("#g_person").val()) + strToNum($("#n_person").val()) + strToNum($("#k_person").val())) /2);
 				roomPerson = roomPerson > 0 ? roomPerson : 1;
 				
 				roomChk = 1 ;
@@ -538,7 +538,7 @@ $(document).ready(function() {
 				return;
 			}
 			// 숙박인원 성인기준:(일반 + 비라운딩)
-			roomPerson = Math.round((strToNum($("#g_person").val()) + strToNum($("#n_person").val()))/2);
+			roomPerson = Math.round((strToNum($("#g_person").val()) + strToNum($("#n_person").val()) + strToNum($("#k_person").val())) /2);
 			roomPerson = roomPerson > 0 ? roomPerson : 1;
 			
 			roomChk = 1 ;
@@ -998,7 +998,7 @@ $(document).ready(function() {
 						</select>
 						<select id="flight_in_hh" name="flight_in_hh" class="form-select text-center readonly">
 							<option value="">-선택-</option>
-							<c:forEach var="i" begin="1" end="23" step="1">
+							<c:forEach var="i" begin="0" end="23" step="1">
 								<option value="<fmt:formatNumber value="${i}" minIntegerDigits="2" />" >
 									<fmt:formatNumber value="${i}" minIntegerDigits="2" />시
 								</option>
