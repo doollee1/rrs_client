@@ -55,7 +55,7 @@ $(document).ready(function() {
 	}
 	
 	$(document).on("focusout", '[id^=onlyKor]', function() {
-		const regExp = /[ㄱ-ㅎㅏ-ㅣ가-힣]/gi; 
+		const regExp = /^[가-힣]+$/; 
 		if($(this).val() != "" && !regExp.test($(this).val())){
 	    	alert("한글로 작성해주세요.");
 	    	$(this).val("");
@@ -102,33 +102,35 @@ $(document).ready(function() {
             	parmProdseq  = nokidProdSeq;
             	parmhdngGbn  = "30";
             }
-            // 테이블 객체
-            let td_obj = {
-				req_dt 			: $("#req_dt" ).val(), 											// 예약일자
-				seq 			: $("#seq" ).val(),												// 예약일련번호
-				bas_yy			: parmBasyy,													// 기준년도
-				bas_yy_seq		: parmBasyyseq,													// 기준년도순번
-				prod_seq		: parmProdseq,													// 상품순번
-				hdng_gbn		: parmhdngGbn,													// 항목구분
-				dseq 			: td.eq(0).text(),												// 상세일련번호
-				com_gbn 		: td.eq(1).text(),												// 동반자구분
-				num_gbn			: td.eq(2).find('#list_num_gbn option:selected').val(),			// 인원구분
-				com_han_name	: td.eq(3).text(),							  					// 동반자한글명
-				com_eng_name	: td.eq(4).text(),							  					// 동반자영문명
-				comn_tel_no 	: td.eq(5).text().replace(/-/gi, ""),							// 동반자전화번호
-				user_id			: td.eq(6).text(),												// 신청자ID
-				chk_in_dt   	: $("#chk_in_dt" ).val().replace(/-/gi, ""),					// 체크인일자
-				chk_out_dt  	: $("#chk_out_dt").val().replace(/-/gi, ""),					// 체크아웃일자
-				flight_in   	: $("#flight_in" ).val(),										// 도착항공기편
-				flight_in_hh	: $("#flight_in_hh" ).val(),									// 도착항공기시각
-				flight_out  	: $("#flight_out").val(),										// 출발항공기편
-				flight_out_hh	: $("#flight_out_hh" ).val(),									// 도착항공기편
-				late_check_in   : $("#late_check_in").val(),									// 레이트체크인
-				late_check_out  : $("#late_check_out").val(),									// 레이트체크아웃
-				room_type  		: $("#room_type" ).val() 										// 출발항공기시각
-            };
-            // 배열에 객체를 저장
-            tableArr.push(td_obj);
+            if(typeof td.eq(2).find('#list_num_gbn option:selected').val() != "undefined"){
+	            // 테이블 객체
+	            let td_obj = {
+					req_dt 			: $("#req_dt" ).val(), 											// 예약일자
+					seq 			: $("#seq" ).val(),												// 예약일련번호
+					bas_yy			: parmBasyy,													// 기준년도
+					bas_yy_seq		: parmBasyyseq,													// 기준년도순번
+					prod_seq		: parmProdseq,													// 상품순번
+					hdng_gbn		: parmhdngGbn,													// 항목구분
+					dseq 			: td.eq(0).text(),												// 상세일련번호
+					com_gbn 		: td.eq(1).text(),												// 동반자구분
+					num_gbn			: td.eq(2).find('#list_num_gbn option:selected').val(),			// 인원구분
+					com_han_name	: td.eq(3).text(),							  					// 동반자한글명
+					com_eng_name	: td.eq(4).text(),							  					// 동반자영문명
+					comn_tel_no 	: td.eq(5).text().replace(/-/gi, ""),							// 동반자전화번호
+					user_id			: td.eq(6).text(),												// 신청자ID
+					chk_in_dt   	: $("#chk_in_dt" ).val().replace(/-/gi, ""),					// 체크인일자
+					chk_out_dt  	: $("#chk_out_dt").val().replace(/-/gi, ""),					// 체크아웃일자
+					flight_in   	: $("#flight_in" ).val(),										// 도착항공기편
+					flight_in_hh	: $("#flight_in_hh" ).val(),									// 도착항공기시각
+					flight_out  	: $("#flight_out").val(),										// 출발항공기편
+					flight_out_hh	: $("#flight_out_hh" ).val(),									// 도착항공기편
+					late_check_in   : $("#late_check_in").val(),									// 레이트체크인
+					late_check_out  : $("#late_check_out").val(),									// 레이트체크아웃
+					room_type  		: $("#room_type" ).val() 										// 출발항공기시각
+	            };
+	            // 배열에 객체를 저장
+	            tableArr.push(td_obj);
+            }
         });
 		$.ajax({
 			type : "POST",
@@ -465,11 +467,11 @@ $(document).ready(function() {
 						, king_cnt		 : kingCnt										// 킹 갯수
 						, user_id        : "${sessionScope.login.user_id}"				// 예약등록자
 				};
-
-				var formData = new FormData();
 				formData.append("param", new Blob([JSON.stringify(data)], {type:"application/json"}));
-
 				dimOpen();
+				for (const [key, value] of formData.entries()) {
+					 console.log(key, value);
+				}
 				$.ajax({
 					type : "POST",
 					url : "reservationUpdate.do",
@@ -483,6 +485,7 @@ $(document).ready(function() {
 						if(data.result == "SUCCESS") {
 							addCompanion();
 						} else {
+							formData = new FormData();
 							alert("상태값이 변경되어 수정할 수 없습니다.");
 						}
 					}
@@ -597,14 +600,16 @@ $(document).ready(function() {
 						nokidBasyy 	  = data.nokid_bas_yy;
 						nokidBasyySeq = data.nokid_yy_seq;
 						nokidProdSeq  = data.nokid_prod_seq;
-						
+						/*
 						alert( `패키지 : \${numberComma(data.packageAmt)},
 								미팅샌딩비 : \${numberComma(data.sendingAmt)},
 								SURCHAGE : \${numberComma(data.surchageAmt)},
 								룸 추가 : \${numberComma(data.roomupAmt)},
 								비라운드소아(숙박+식사) : \${numberComma(data.nokidAmt)},
 								EarlyCheckIn(방기준2인1실) : \${numberComma(data.lateCheckInAmt)},
-								lateCheckOut(방기준2인1실) : \${numberComma(data.lateCheckOutAmt)}`);
+								lateCheckOut(방기준2인1실) : \${numberComma(data.lateCheckOutAmt)}`
+								);
+						*/
 					} else {
 						isCal = false;
 						$("#cal_amt").val(0);
@@ -616,6 +621,7 @@ $(document).ready(function() {
 
 		<%-- 이미지 이벤트 --%>
 		$("#fligthImage").on("change", handleImgInput);
+		
 		$("#flight_in, #flight_out, #late_check_out").on("change", function() {
 			isCal = false;
 			$("#cal_amt").val(0);
@@ -1029,8 +1035,12 @@ $(document).ready(function() {
 				
 				<div class="row mb-2">
 					<label class="form-label col-form-label col-md-3">항공권 첨부</label>
+					<div class="col-sm-9" style="display:none;">
+						<input id="fligthImage" name="fligthImage" type="file" accept="image/*" class="form-control"/>
+						수정 시 필수 사항이 아닙니다.
+					</div>
 					<div class="col-sm-9">
-						<input id="fligthImage" name="fligthImage" type="file" accept="image/*" class="form-control" />
+						<input id="fligth_image" name="fligth_image" type="text" class="form-control" readonly>
 					</div>
 				</div>
 			</div>

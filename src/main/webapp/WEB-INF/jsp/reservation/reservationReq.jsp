@@ -223,14 +223,15 @@ $(document).ready(function() {
 		});
 		
 		$("#chk_in_dt").on("change", function() {
-			$("#room_type").val("")
-			$("#chk_out_dt").val("")
+			$("#room_type").val("");
+			$("#chk_out_dt").val("");
 			$("#package_").find("option").remove();
 			$("#package_").append("<option value='' selected> -선택- </option>");
 		});
 		
 		$("#chk_out_dt").on("change", function() {
-			$("#room_type").val("")
+			$("#room_type").val("");
+			
 			if($("#chk_in_dt").val() != "" && $("#chk_out_dt").val() != "") {
 				$("#package_").find("option").remove();
 				var data = {

@@ -121,7 +121,7 @@ public class ReservationController {
 				// 예약 등록 수정
 				param.put("user_id" , session.getAttribute("user_id" ));
 				param.put("mem_gbn" , memGbn                          );
-	
+				param.put("file"    , file                            );
 				int result = 0;
 				String msg = "";
 				// [멤버회원]이면서 [예약요청-멤버] 상태이거나, [일반회원]이면서  [예약신청]인 경우,

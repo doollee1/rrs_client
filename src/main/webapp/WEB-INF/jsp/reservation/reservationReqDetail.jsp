@@ -106,7 +106,8 @@ $(document).ready(function() {
 								$(".input-daterange .input-group").on("click", function() {
 									$(this).find("input").datepicker().focus();
 								});
-
+								$("#chk_in_dt").removeAttr("disabled"); /* 체크인 버튼 */
+								$("#chk_out_dt").removeAttr("disabled"); /* 체크아웃 버튼 */
 								$("#g_person, #n_person, #k_person, #i_person").removeClass("readonly");
 								$("#package_, #room_type").removeClass("readonly");
 								$("#reservationUpdateBtn").text("수정 등록");
@@ -309,11 +310,43 @@ $(document).ready(function() {
 		});
 		
 		$("#chk_in_dt").on("change", function() {
-			$("#room_type").val("")
+			$("#room_type").val("");
+			if(!$("#chk_in_dt").is(":disabled") && $("#g_person").val() > 0){
+				$("#chk_out_dt").val("");
+				$("#package_").find("option").remove();
+				$("#package_").append("<option value='' selected> -선택- </option>");
+			}
 		});
 		
 		$("#chk_out_dt").on("change", function() {
-			$("#room_type").val("")
+			$("#room_type").val("");
+			
+			if(!$("#chk_out_dt").is(":disabled") && $("#chk_in_dt").val() != "" && $("#chk_out_dt").val() != "") {
+				$("#package_").find("option").remove();
+				var data = {
+						  chk_in_dt      : $("#chk_in_dt" ).val().replace(/-/gi, "")	//체크인
+						, chk_out_dt     : $("#chk_out_dt").val().replace(/-/gi, "")	//체크아웃
+					};
+					dimOpen();
+					$.ajax({
+						type : "POST",
+						url : "packageListReset.do",
+						data : data,
+						dataType : "json",
+						success : function(data) {
+							dimClose();
+							if(data.result == "SUCCESS") {
+								$("#package_").append("<option value='' selected> -선택- </option>");
+								for (var i = 0; i < data.packageListReset.length; i++) {
+									$("#package_").append("<option value="+data.packageListReset[i].CODE+">"+data.packageListReset[i].CODE_NM+"</option>");
+								}
+							} else {
+								alert("패키지 상품이 없습니다. 관리자에게 문의 하세요.");
+								$("#g_person").val("00");
+							}
+					 	}
+					});
+			}
 		});
 	}
 });
@@ -343,7 +376,7 @@ $(document).ready(function() {
 						<label class="form-label col-form-label col-lg-4">체크인</label>
 						<div class="col-lg-12">
 							<div class="input-group date" >
-								<input type="text" id="chk_in_dt" name="chk_in_dt" class="form-control text-start text-center" placeholder="날짜를 선택하세요" readonly>
+								<input type="text" id="chk_in_dt" name="chk_in_dt" class="form-control text-start text-center" placeholder="날짜를 선택하세요" disabled="disabled">
 								<span class="input-group-text input-group-addon"><i class="fa fa-calendar"></i></span>
 							</div>
 						</div>
@@ -352,7 +385,7 @@ $(document).ready(function() {
 						<label class="form-label col-form-label col-lg-4">체크아웃</label>
 						<div class="col-lg-12">
 							<div class="input-group date" >
-								<input type="text" id="chk_out_dt" name="chk_out_dt" class="form-control text-start text-center" placeholder="날짜를 선택하세요" readonly>
+								<input type="text" id="chk_out_dt" name="chk_out_dt" class="form-control text-start text-center" placeholder="날짜를 선택하세요" disabled="disabled">
 								<span class="input-group-text input-group-addon"><i class="fa fa-calendar"></i></span>
 							</div>
 						</div>
