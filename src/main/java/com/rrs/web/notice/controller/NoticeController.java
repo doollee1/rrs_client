@@ -3,6 +3,7 @@ package com.rrs.web.notice.controller;
 import com.rrs.web.notice.service.NoticeService;
 import com.rrs.web.notice.service.vo.NoticeVO;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -112,6 +113,9 @@ public class NoticeController {
 	
 	@RequestMapping(value = {"/noticeView.do"}, method = RequestMethod.GET)
 	public ModelAndView noticeView(@RequestParam  Map<String, Object> map, Model model) throws Exception {
+		
+		logger.info("========== 공지상세 ===========");
+		
 		logger.info("noticeDetail");
 		
 		ModelAndView mav = new ModelAndView();
@@ -119,6 +123,22 @@ public class NoticeController {
 		NoticeVO vo = this.noticeService.noticeView((String)map.get("notice_no"));
 		mav.addObject("title", vo.getTitle());
 		mav.addObject("contents", vo.getContents());
+		
+		String fileNm = vo.getFile_nm();
+		String ext = fileNm.substring(fileNm.lastIndexOf(".")+1);
+		
+		logger.info("====== 첨부파일명 : "+fileNm);
+		logger.info("====== 파일확장자 : "+ext);
+		
+		String[] imgFormat = {"png", "jpg", "bmp", "gif"};		
+		List<String> imgFileFormat = Arrays.asList(imgFormat);  
+		
+		if(imgFileFormat.contains(ext.toLowerCase())) {
+			
+			logger.info("===== 이미지 화면으로 출력 =====");
+			mav.addObject("imagePath", "/upload/noticeFile/"+fileNm);
+		}
+		
 		mav.setViewName("notice/noticeView.view");
 		
 		return mav;

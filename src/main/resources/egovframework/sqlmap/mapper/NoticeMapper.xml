@@ -38,9 +38,11 @@
 <select id="noticeView" parameterType="String" resultType="com.rrs.web.notice.service.vo.NoticeVO">
 <![CDATA[
 	SELECT
-		title, contents, file_uid
+		A.title, 
+		A.contents, 
+		(SELECT NEW_FILE_NM FROM BC_FILE WHERE FILE_UID = A.file_uid) AS file_nm
 	FROM
-		bc_notice
+		bc_notice A
 	WHERE 
 		notice_no = #{notice_no}
 ]]>

@@ -33,10 +33,15 @@ $(window).ready( function() {
 					
 					<!-- BEGIN 공지사항 내용 -->
 					<p>
-						${contents }
+						${contents}
 					</p>
 					<!-- END 공지사항 내용 -->
-					
+					<c:if test="${imagePath != null}">
+						<div>
+		        			<img src="${imagePath}" alt="이미지" id="arr_img">
+		    			</div>
+	    			</c:if>
+	    			
 					<hr class="bg-gray-500">
 					<a href="#" class="btn btn-success btn-list" onclick="history.back();">목록</a>
 				</div>

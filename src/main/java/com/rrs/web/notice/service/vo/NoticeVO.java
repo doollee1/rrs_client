@@ -9,7 +9,8 @@ public class NoticeVO {
 	private int cnt;				//조회수
 	private String fromDate;		//시작일자
 	private String toDate;			//종료일자
-	private String file_uid;		//파일이름
+	private String file_uid;		//파일ID
+	private String file_nm;		    //파일명
 	private String status;			//게시상태 : 'A' 하드코딩
 	private String reg_dt;			//등록일자
 	private String reg_id;			//등록자
@@ -63,6 +64,12 @@ public class NoticeVO {
 	}
 	public void setFile_uid(String file_uid) {
 		this.file_uid = file_uid;
+	}		
+	public String getFile_nm() {
+		return file_nm;
+	}
+	public void setFile_nm(String file_nm) {
+		this.file_nm = file_nm;
 	}
 	public String getStatus() {
 		return status;
