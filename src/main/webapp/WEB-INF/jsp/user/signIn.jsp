@@ -23,6 +23,13 @@ $(window).ready( function() {
 <%//페이지 이벤트 설정 %>
 function setEvent(){
 	
+	<%-- 패스워드  이벤트--%>
+	$("#user_id").on("keyup", function(key) {
+		
+		if(key.keyCode == 13) {  //엔테키           			     
+			$("#password").focus();
+		}		
+	});
 }
 
 <%// 로그인 이벤트%>
@@ -77,6 +84,9 @@ function signIn(){
 				alert("ID 또는 비밀번호가 틀렸습니다.");
 			} else if(data == "Q"){
 				alert("에이전시 회원은 관리자에서만 가능합니다.");
+			} else if(data == "E"){
+				alert("세션이 종료되어 메인화면으로 이동합니다.");
+				location.href = "/main.do";
 			} else {
 				alert("존재하지 않는 회원입니다. 회원가입 후 이용해주세요.");
 			}
@@ -108,11 +118,11 @@ function signIn(){
 		<!-- BEGIN login-content -->
 		<div class="login-content">
 			<div class="form-floating mb-15px">
-				<input type="text" class="form-control h-45px fs-13px" placeholder="아이디" id="user_id" />
+				<input type="text" class="form-control h-45px fs-13px" placeholder="아이디" id="user_id"/>
 				<label for="user_id" class="d-flex align-items-center fs-13px text-gray-600">아이디</label>
 			</div>
 			<div class="form-floating mb-30px">
-				<input type="password" class="form-control h-45px fs-13px" placeholder="비밀번호" id="password" />
+				<input type="password" class="form-control h-45px fs-13px" placeholder="비밀번호" id="password" onKeyPress="if(event.keyCode == 13) javascript:signIn();"/>
 				<label for="password" class="d-flex align-items-center fs-13px text-gray-600">비밀번호</label>
 			</div>
 			<input type="hidden" id="RSAModulus" name="RSAModulus" value="${RSAModulus }"/>

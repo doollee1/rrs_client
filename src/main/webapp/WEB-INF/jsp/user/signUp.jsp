@@ -25,7 +25,7 @@ $(window).ready( function() {
 $(document).on("keyup", "input[noSpecial]", function() {$(this).val( $(this).val().replace(/[^ㄱ-힣a-zA-Z0-9]/gi,"") );});
 $(document).on("keyup", "input[onlyNum]", function() {$(this).val( $(this).val().replace(/[^0-9]/gi,"") );});
 $(document).on("keyup", "input[onlyKor]", function() {$(this).val( $(this).val().replace(/[a-z0-9]|[ \[\]{}()<>?|`~!@#$%^&*-_+=,.;:\"'\\]/g,"") );});
-$(document).on("keyup", "input[onlyEng]", function() {$(this).val( $(this).val().replace(/[^A-Za-z]/ig,"") );});
+$(document).on("keyup", "input[onlyEng]", function() {$(this).val( $(this).val().replace(/[^A-Z,a-z, ]/ig,"") );});
 
 function validChk_email(val){
 	var pattern = /([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
@@ -254,7 +254,7 @@ function pwChk(){
 					<input type="text" class="form-control fs-13px" placeholder="영문이름" id="eng_name" name="eng_name" onlyEng/>
 				</div>
 				<div class="mb-3">
-					<label class="mb-2">전화번호</label>
+					<label class="mb-2">전화번호(숫자만기입)</label>
 					<input type="tel" class="form-control fs-13px" placeholder="전화번호" id="tel_no" name="tel_no" onlyNum/>
 				</div>
 				<div class="mb-3">

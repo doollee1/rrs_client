@@ -154,6 +154,14 @@ public class SignController {
 		logger.info("========= SignVO : "+vo.toString());
 		
 		HttpSession session = req.getSession();
+		
+		logger.info("========= privateKey : "+session.getAttribute(SignController.RSA_WEB_KEY));		
+		if(ObjectUtils.isEmpty(session.getAttribute(SignController.RSA_WEB_KEY))) {
+			
+			//세션이 종료후 다시 로그인할 경우
+			return "E";
+		}
+		
 		PrivateKey privateKey = (PrivateKey) session.getAttribute(SignController.RSA_WEB_KEY);
 		vo.setPasswd(decryptRsa(privateKey, vo.getPasswd()));
 		vo.setPasswd(EgovFileScrty.encryptPassword(vo.getPasswd(), vo.getUser_id()));
