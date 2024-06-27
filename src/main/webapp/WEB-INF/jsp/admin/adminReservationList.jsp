@@ -117,7 +117,7 @@ function fn_adminReservationList(){
 			<input type="hidden" id="endDt"     name="endDt"    value= "${endDt}"   /> --%>
 			
 			<div class="form-group row mb-2">
-				<label class="form-label col-form-label col-lg-4">시작일자</label>
+				<label class="form-label col-form-label col-lg-4">시작일자(체크인)</label>
 				<div class="col-lg-12">
 					<div class="input-group date" >
 						<input type="text" id="start_dt" name="start_dt" class="form-control text-start" placeholder="날짜를 선택하세요" readonly>
@@ -126,7 +126,7 @@ function fn_adminReservationList(){
 				</div>
 			</div>
 			<div class="form-group row mb-2">
-				<label class="form-label col-form-label col-lg-4">종료일자</label>
+				<label class="form-label col-form-label col-lg-4">종료일자(체크인)</label>
 				<div class="col-lg-12">
 					<div class="input-group date" >
 						<input type="text" id="end_dt" name="end_dt" class="form-control text-start" placeholder="날짜를 선택하세요" readonly>
