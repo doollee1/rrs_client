@@ -20,6 +20,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -65,6 +66,9 @@ public class SignController {
 	
 	@Resource(name = "mailSendService")
 	MailSendService mailSendService;
+	
+	@Value("${spring.profiles.active}")
+	private String activeProfile;
 	
 	public static String RSA_WEB_KEY	= "_RSA_WEB_Key_";	// 개인키 session key
 	public static String RSA_INSTANCE	= "RSA";			// rsa transformation
@@ -140,6 +144,7 @@ public class SignController {
 	public String signInPage(HttpServletRequest req) throws Exception {
 		
 		logger.info("========= 로그인화면 진입 ===========");
+		logger.info("========= 프로파일 : "+activeProfile);
 		
 		initRsa(req);
 		return "user/signIn.view1";

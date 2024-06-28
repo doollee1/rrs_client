@@ -15,8 +15,8 @@ $(document).ready(function() {
 	setTitle("파일업로드");
 	fn_Init();   //최초세팅
 	setEvent();	//이벤트 설정
+
 	
-    
 	//최초 세팅
 	function fn_Init(){
 			
@@ -274,6 +274,10 @@ function isEmpty(value) {
 }
 
 
+$(document).on("keyup", "input[onlyNum]", function() {$(this).val( $(this).val().replace(/[^0-9]/gi,"") );});
+$(document).on("keyup", "input[onlyKor]", function() {$(this).val( $(this).val().replace(/[a-z0-9]|[ \[\]{}()<>?|`~!@#$%^&*-_+=,.;:\"'\\]/g,"") );});
+$(document).on("keyup", "input[onlyEng]", function() {$(this).val( $(this).val().replace(/[^A-Z,a-z, ]/ig,"") );});
+
 </script>
 
 <div id="content" class="app-content d-flex flex-column p-0">
@@ -306,19 +310,19 @@ function isEmpty(value) {
 							<div id="hanNameDiv" class="row mb-2">
 								<label class="form-label col-form-label col-md-3">한글이름</label>
 								<div class="col-sm-9">																		
-									<input type="text" class="form-control text-muted text-center" id="com_han_name" value="${list.COM_HAN_NM}">									
+									<input type="text" class="form-control text-muted text-center" id="com_han_name" value="${list.COM_HAN_NM}" onlyKor />									
 								</div>
 							</div>
 							<div id="engNameDiv" class="row mb-2">
 								<label class="form-label col-form-label col-md-3">영문이름</label>
 								<div class="col-sm-9">																		
-									<input type="text" class="form-control text-muted text-center" id="com_eng_name" value="${list.COM_ENG_NM}">									
+									<input type="text" class="form-control text-muted text-center" id="com_eng_name" value="${list.COM_ENG_NM}" onlyEng />									
 								</div>
 							</div>
 							<div id="telNoDiv" class="row mb-2">
 								<label class="form-label col-form-label col-md-3">전화번호</label>
 								<div class="col-sm-9">																		
-									<input type="text" class="form-control text-muted text-center" id="com_tel_no" value="${list.COM_TEL_NO}">										
+									<input type="text" class="form-control text-muted text-center" id="com_tel_no" value="${list.COM_TEL_NO}" onlyNum />										
 								</div>
 							</div>
 							<div class="row mb-2">

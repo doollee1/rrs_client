@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.rrs.web.product.service.impl.ProductMapper">
 	<select id="productList" parameterType="hashMap" resultType="hashMap">
-        SELECT CONCAT_WS('\\n', C.CODE_NM, NULLIF(A.COM_CNTN, '')) AS TITLE
+        SELECT CONCAT_WS(' ', C.CODE_NM, NULLIF(A.COM_CNTN, '')) AS TITLE
              , CASE WHEN C.REF_CHR3 = 'WON' 
                     THEN CONCAT_WS('/', CONCAT(FORMAT(A.COM_AMT, 0),'원'), NULLIF(C.REF_CHR4, ''), NULLIF(C.REF_CHR5, ''))
                     WHEN C.REF_CHR3 = 'USD'
@@ -72,5 +72,51 @@
                 , A.BAS_YY     ASC
                 , A.PROD_COND  ASC
                 , A.BAS_YY_SEQ ASC
+	</select>
+	
+	<select id="productCommonList" parameterType="hashMap" resultType="hashMap">
+		SELECT A.BAS_YY
+     		 , A.HDNG_GBN
+    		 , C.CODE_NM AS TITLE
+	 		 , A.COM_AMT
+     		 , A.COM_CNTN
+		     , C.REF_CHR3
+		     , C.REF_CHR4
+		     , C.REF_CHR5
+		     , CASE WHEN C.REF_CHR3 = 'WON' 
+		            THEN (CASE WHEN (COM_CNTN = '') OR ( COM_CNTN = NULL)
+							   THEN CONCAT_WS('/', CONCAT(FORMAT(A.COM_AMT, 0),'원'), NULLIF(C.REF_CHR4, ''), NULLIF(C.REF_CHR5, ''))
+							   ELSE CONCAT_WS('/', CONCAT(FORMAT(A.COM_AMT, 0),'원'), NULLIF(COM_CNTN, ''))
+						  END
+		                 )
+		         	WHEN C.REF_CHR3 = 'USD'
+		            THEN (CASE WHEN (COM_CNTN = '') OR ( COM_CNTN = NULL)
+							   THEN CONCAT_WS('/', CONCAT(C.REF_CHR3,FORMAT(A.COM_AMT, 0)), NULLIF(C.REF_CHR4, ''), NULLIF(C.REF_CHR5, ''))
+							   ELSE CONCAT_WS('/', CONCAT(C.REF_CHR3,FORMAT(A.COM_AMT, 0)), NULLIF(COM_CNTN, ''))
+							   END
+		                 )
+		            ELSE ''
+		            END AS CNTN
+     		 , A.PROD_COND
+     		 , A.SSN_GBN
+     		 , A.BAS_YY_SEQ
+     		 , DATE_FORMAT(B.ST_DT1,'%Y.%m.%d')  AS ST_DT1
+     		 , DATE_FORMAT(B.ED_DT1,'%Y.%m.%d')  AS ED_DT1
+     		 , DATE_FORMAT(B.ST_DT2,'%Y.%m.%d')  AS ST_DT2
+     		 , DATE_FORMAT(B.ED_DT2,'%Y.%m.%d')  AS ED_DT2
+  		  FROM TB_PROD_INFO   A
+     		 , TB_BAS_YY_INFO B
+     		 , BC_COMM_L      C
+ 		 WHERE 1=1
+   		   AND A.BAS_YY     = #{currentYear}
+   		   AND A.SSN_GBN    = #{ssnGbn}
+   		   AND A.PROD_COND != 'DU10'
+    	   AND A.BAS_YY     = B.BAS_YY
+    	   AND A.SSN_GBN    = B.SSN_GBN
+   		   AND A.BAS_YY_SEQ = B.BAS_YY_SEQ
+   		   AND A.HDNG_GBN   = C.CODE
+   		   AND C.HEAD_CD    = '500000'
+   		 ORDER BY A.HDNG_GBN  ASC
+   		        , A.PROD_COND DESC
 	</select>
 </mapper>

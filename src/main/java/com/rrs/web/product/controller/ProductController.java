@@ -30,31 +30,27 @@ public class ProductController {
 		paramMap.put("currentYear", EgovDateUtil.getNowYear());
 		
 		// 성수기
-		paramMap.put("ssnGbn", "1"); // 성수기
-		List<Map<String, Object>> productListTmp  = productService.productList(paramMap);
+		paramMap.put("ssnGbn", "1");
+		List<Map<String, Object>> productListTmp1  = productService.productCommonList(paramMap);
 
 		// 준성수기
-		paramMap.put("ssnGbn", "3"); // 준성수기
-		List<Map<String, Object>> productListTmp2 = productService.productList(paramMap);
+		paramMap.put("ssnGbn", "2");
+		List<Map<String, Object>> productListTmp2 = productService.productCommonList(paramMap);
 		
 		// 비수기
-		paramMap.put("ssnGbn", "2"); // 비수기
-		List<Map<String, Object>> productListTmp3 = productService.productList(paramMap);
+		paramMap.put("ssnGbn", "3");
+		List<Map<String, Object>> productListTmp3 = productService.productCommonList(paramMap);
 
 		// 리스트 merge
-		List<Map<String, Object>> tableList  = makeList(productListTmp );
+		List<Map<String, Object>> tableList = makeList(productListTmp1);
 		List<Map<String, Object>> tableList2 = makeList(productListTmp2);
 		List<Map<String, Object>> tableList3 = makeList(productListTmp3);
 
-		// 리스트 날짜별로 그룹핑
-		List<List<Map<String, Object>>> tableLists  = listGroupBy(tableList );
-		List<List<Map<String, Object>>> tableLists2 = listGroupBy(tableList2);
-		List<List<Map<String, Object>>> tableLists3 = listGroupBy(tableList3);
-
-		mav.addObject("tableLists" , tableLists );  // 성수기
-		mav.addObject("tableLists2", tableLists2);  // 준성수기
-		mav.addObject("tableLists3", tableLists3);  // 비수기
+		mav.addObject("tableLists" , tableList );  // 성수기
+		mav.addObject("tableLists2", tableList2);  // 준성수기
+		mav.addObject("tableLists3", tableList3);  // 비수기
 		mav.setViewName("product/product.view");
+
 		return mav;
 	}
 
@@ -100,8 +96,12 @@ public class ProductController {
 						newData = new HashMap<String, Object>();
 						dtNum1 = 1;
 					}
-					String dt   = EgovDateUtil.formatDate2((String)data.get("ST_DT" + dtNum2)) + "~" + EgovDateUtil.formatDate2((String)data.get("ED_DT" + dtNum2));
-					String cntn = (String)data.get("CNTN") + (String)data.get("CNTN2");
+					String dt   = data.get("ST_DT" + dtNum2) + " ~ " + data.get("ED_DT" + dtNum2);
+					// 기존
+					// String dt   = EgovDateUtil.formatDate2((String)data.get("ST_DT" + dtNum2)) + "~" + EgovDateUtil.formatDate2((String)data.get("ED_DT" + dtNum2));
+					String cntn = (String)data.get("CNTN");
+					// 기존
+					// String cntn = (String)data.get("CNTN") + (String)data.get("CNTN2");
 					newData.put("DT"   + dtNum1, dt  );
 					newData.put("CNTN" + dtNum1, cntn);
 					dtNum1++;
@@ -117,9 +117,10 @@ public class ProductController {
 						continue;
 					}
 				}
-				newData.put("PROD_COND", data.get("PROD_COND"));
-				newData.put("HDNG_GBN" , data.get("HDNG_GBN" ));
-				newData.put("TITLE"    , data.get("TITLE"    ));
+				newData.put("PROD_COND" , data.get("PROD_COND" ));
+				newData.put("HDNG_GBN"  , data.get("HDNG_GBN"  ));
+				newData.put("TITLE"     , data.get("TITLE"     ));
+				newData.put("BAS_YY_SEQ", data.get("BAS_YY_SEQ"));
 				tableList.add(newData);
 				break;
 			}

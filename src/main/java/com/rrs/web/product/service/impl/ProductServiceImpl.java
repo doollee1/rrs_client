@@ -14,4 +14,8 @@ public class ProductServiceImpl implements ProductService {
 	public List<Map<String, Object>> productList(Map<String, Object> map) throws Exception {
 		return this.productMapper.productList(map);
 	}
+	
+	public List<Map<String, Object>> productCommonList(Map<String, Object> map) throws Exception {
+		return this.productMapper.productCommonList(map);
+	}
 }

@@ -13,6 +13,10 @@ $(window).ready( function() {
 });
 </script>
 
+<style>
+	.table-success {border:1px solid var(--bs-component-table-border-color);}
+</style>
+
 <div id="content" class="app-content d-flex flex-column p-0">
 	<!-- BEGIN content-container -->
 	<div class="app-content-padding flex-grow-1 overflow-hidden" data-scrollbar="true" data-height="100%">
@@ -43,282 +47,442 @@ $(window).ready( function() {
 		<div class="tab-content panel rounded-0 p-3 m-0">
 			<!-- BEGIN tab-pane -->
 			<div class="tab-pane fade active show" id="default-tab-1">
-				<%-- forEach tableLists Start --%>
-				<c:forEach items="${tableLists}" var="tableList" varStatus="status">
-					<c:set var="headerSize" />
-						<c:choose>
-							<c:when test="${(not empty tableLists[status.index][0].DT1) and (empty tableLists[status.index][0].DT2) and (empty tableLists[status.index][0].DT3)}">
-								<c:set var="headerSize" value="1"/>
-							</c:when>
-							<c:when test="${(not empty tableLists[status.index][0].DT1) and (not empty tableLists[status.index][0].DT2) and (empty tableLists[status.index][0].DT3)}">
-								<c:set var="headerSize" value="2"/>
-							</c:when>
-							<c:otherwise>
-								<c:set var="headerSize" value="3"/>
-							</c:otherwise>
-						</c:choose>
-
-						<table class="table table-pk">
-						<colgroup>
-							<col style="width:50%">
-							<col style="width:50%">
-						</colgroup>
-						<thead>
+				<!-- <div>기본 패키지 포함 사항 : 팜리조트 2인 1실, 골프 그린피 및 카트비, 식사 3식 (조식 호텔식, 중석식 연식당 한식), 호텔 관광세 </div> -->
+				<!-- 기본 패키지 -->
+				<table class="table table-pk">
+					<colgroup>
+						<col style="width:30%">
+						<col style="width:35%">
+						<col style="width:35%">
+					</colgroup>
+					
+					<thead>
+						<tr class="table-success">
+							<th>기본 패키지</th>
 							<c:choose>
-								<c:when test="${headerSize eq 1}">
-									<tr class="table-success">
-										<th colspan="2"><span>${tableLists[status.index][0].DT1}</span></th>
-									</tr>
-								</c:when>
-								<c:when test="${headerSize eq 2}">
-									<tr class="table-success">
-										<th><span>${tableLists[status.index][0].DT1}</span></th>
-										<th><span>${tableLists[status.index][0].DT2}</span></th>
-									</tr>
+								<c:when test = "${(tableLists[0].DT1 eq tableLists[0].DT2) or (empty tableLists[0].DT2)}">
+									<th colspan="2">${tableLists[0].DT1}</th>
 								</c:when>
 								<c:otherwise>
-									<tr class="table-success">
-										<th><span>${tableLists[status.index][0].DT1}</span></th>
-										<th rowspan="2"><span>${tableLists[status.index][0].DT3}</span></th>
-									</tr>
-									<tr class="table-success">
-										<th><span>${tableLists[status.index][0].DT2}</span></th>
-									</tr>								
+									<th>${tableLists[0].DT1}</th>
+									<th>${tableLists[0].DT2}</th>
 								</c:otherwise>
 							</c:choose>
-						</thead>
-						<tbody>
-							<tr class="table-success">
-							<%-- forEach tableList Start --%>
-							<c:forEach items="${tableList}" var = "list">
+						</tr>
+					</thead>
+					
+					<tbody>
+						<c:forEach items="${tableLists}" var="tableList">
+							<c:set var = "hongGbnList" value = "01,02,03,04,05,06,07,28"/>
+							<c:if test="${fn:contains(hongGbnList, tableList.HDNG_GBN)}">
 								<tr>
-									<td colspan="2"><span>${fn:replace(list.TITLE, '\\n', '</br>')}</span></td>
+									<td class="table-light">${tableList.TITLE}</td>
+									<c:choose>
+										<c:when test="${(tableList.CNTN1 eq tableList.CNTN2) or (empty tableList.CNTN2)}">
+											<td colspan="2">${tableList.CNTN1}</td>
+										</c:when>
+										<c:otherwise>
+											<td>${tableList.CNTN1}</td>
+											<td>${tableList.CNTN2}</td>
+										</c:otherwise>
+									</c:choose>
 								</tr>
-								<c:choose>
-									<c:when test="${(headerSize eq 1) or ((list.CNTN1 eq list.CNTN2) and (list.CNTN1 eq list.CNTN3))}">
-										<tr class="bg">
-											<td colspan="2"><span>${fn:replace(list.CNTN1, '\\n', '</br>')}</span></td>
+							</c:if>
+						</c:forEach>
+					</tbody>
+				</table>
+				
+				<!-- 추가사항 -->
+				<table class="table table-pk">
+					<colgroup>
+						<col style="width:30%">
+						<col style="width:35%">
+						<col style="width:35%">
+					</colgroup>
+					
+					<thead>
+						<tr class="table-success">
+							<th>추가사항</th>
+							<c:choose>
+								<c:when test = "${(tableLists[0].DT1 eq tableLists[0].DT2) or (empty tableLists[0].DT2)}">
+									<th colspan="2">${tableLists[0].DT1}</th>
+								</c:when>
+								<c:otherwise>
+									<th>${tableLists[0].DT1}</th>
+									<th>${tableLists[0].DT2}</th>
+								</c:otherwise>
+							</c:choose>
+						</tr>
+					</thead>
+					<tbody>
+						<c:forEach items="${tableLists}" var="tableList">
+							<c:set var = "hongGbnList" value = "08,09,10,11,12,13,14,15,16,17,30,31,32"/>
+							<c:if test="${fn:contains(hongGbnList, tableList.HDNG_GBN)}">
+								<tr>
+									<td class="table-light">${tableList.TITLE}</td>
+									<c:choose>
+										<c:when test="${(tableList.CNTN1 eq tableList.CNTN2) or (empty tableList.CNTN2)}">
+											<td colspan="2">${tableList.CNTN1}</td>
+										</c:when>
+										<c:otherwise>
+											<td>${tableList.CNTN1}</td>
+											<td>${tableList.CNTN2}</td>
+										</c:otherwise>
+									</c:choose>
+								</tr>
+							</c:if>
+						</c:forEach>
+					</tbody>
+				</table>
+				
+				<!-- 미팅샌딩 -->
+				<table class="table table-pk">
+					<colgroup>
+						<col style="width:30%">
+						<col style="width:35%">
+						<col style="width:35%">
+					</colgroup>
+					
+					<thead>
+						<tr class="table-success">
+							<td>상품정보</td>
+							<td>차량</td>
+							<td>금액</td>
+						</tr>
+					</thead>
+					
+					<tbody>
+						<tr>
+							<c:forEach items="${tableLists}" var="tableList">
+								<c:set var = "hongGbnList" value = "18,19"/>
+								<c:if test="${fn:contains(hongGbnList, tableList.HDNG_GBN)}">
+									<c:if test="${tableList.PROD_COND eq '0'}" >
+										<tr>
+											<td rowspan="4"  class="table-light">미팅샌딩</td>
+											<td>스나이공항</td>
+											<td>${tableList.CNTN1}</td>
 										</tr>
-									</c:when>
-									<c:when test="${(headerSize eq 2) and ((list.CNTN1 eq list.CNTN2))}">
-										<tr class="bg">
-											<td colspan="2"><span>${fn:replace(list.CNTN1, '\\n', '</br>')}</span></td>
+									</c:if>
+									
+									<c:if test="${tableList.PROD_COND eq '4'}" >
+										<tr>
+											<td style="border-left:1px solid var(--bs-component-table-border-color);">싱가폴 (4인 기준)</td>
+											<td>${tableList.CNTN1}</td>
 										</tr>
-									</c:when>
-									<c:when test="${(headerSize eq 2) or (list.CNTN1 eq list.CNTN2)}">
-										<tr class="bg">
-											<c:if test = "${headerSize eq 2}">
-												<td><span>${fn:replace(list.CNTN1, '\\n', '</br>')}</span></td>
-												<td><span>${fn:replace(list.CNTN2, '\\n', '</br>')}</span></td>
-											</c:if>
-											<c:if test="${(headerSize ne 2) and (list.CNTN1 eq list.CNTN2)}">
-												<td><span>${fn:replace(list.CNTN1, '\\n', '</br>')}</span></td>
-												<td><span>${fn:replace(list.CNTN3, '\\n', '</br>')}</span></td>
-											</c:if>
+									</c:if>
+									
+									<c:if test="${tableList.PROD_COND eq '3'}" >
+										<tr>
+											<td style="border-left:1px solid var(--bs-component-table-border-color);">싱가폴  (3인 기준)</td>
+											<td>${tableList.CNTN1}</td>
 										</tr>
-									</c:when>
-									<c:otherwise>
-										<tr class="bg">
-											<td><span>${fn:replace(list.CNTN1, '\\n', '</br>')}</span></td>
-											<td rowspan="2"><span>${fn:replace(list.CNTN3, '\\n', '</br>')}</span></td>
+									</c:if>
+									
+									<c:if test="${tableList.PROD_COND eq '2'}" >
+										<tr>
+											<td style="border-left:1px solid var(--bs-component-table-border-color);">싱가폴 (2인 기준)</td>
+											<td>${tableList.CNTN1}</td>
 										</tr>
-										<tr class="bg">
-											<td><span>${fn:replace(list.CNTN2, '\\n', '</br>')}</span></td>
-										</tr>
-									</c:otherwise>
-								</c:choose>
+									</c:if>
+								</c:if>
 							</c:forEach>
-							<%-- forEach tableList End --%>
-						</tbody>
-					</table>
-				</c:forEach>
-				<%-- forEach tableLists End --%>
+						</tr>
+					</tbody>
+				</table>
 			</div>
 			<!-- END tab-pane -->
+			
 			<!-- BEGIN tab-pane -->
 			<div class="tab-pane fade" id="default-tab-2">
-				<%-- forEach tableLists2 Start --%>
-				<c:forEach items="${tableLists2}" var="tableList" varStatus="status">
-					<c:set var="headerSize" />
-						<c:choose>
-							<c:when test="${(not empty tableLists2[status.index][0].DT1) and (empty tableLists2[status.index][0].DT2) and (empty tableLists2[status.index][0].DT3)}">
-								<c:set var="headerSize" value="1"/>
-							</c:when>
-							<c:when test="${(not empty tableLists2[status.index][0].DT1) and (not empty tableLists2[status.index][0].DT2) and (empty tableLists2[status.index][0].DT3)}">
-								<c:set var="headerSize" value="2"/>
-							</c:when>
-							<c:otherwise>
-								<c:set var="headerSize" value="3"/>
-							</c:otherwise>
-						</c:choose>
-						<table class="table table-pk">
-						<colgroup>
-							<col style="width:50%">
-							<col style="width:50%">
-						</colgroup>
-						<thead>
+				<!-- <div>기본 패키지 포함 사항 : 팜리조트 2인 1실, 골프 그린피 및 카트비, 식사 3식 (조식 호텔식, 중석식 연식당 한식), 호텔 관광세 </div> -->
+				<!-- 기본 패키지 -->
+				<table class="table table-pk">
+					<colgroup>
+						<col style="width:30%">
+						<col style="width:35%">
+						<col style="width:35%">
+					</colgroup>
+					
+					<thead>
+						<tr class="table-success">
+							<th>기본 패키지</th>
 							<c:choose>
-								<c:when test="${headerSize eq 1}">
-									<tr class="table-warning">
-										<th colspan="2"><span>${tableLists2[status.index][0].DT1}</span></th>
-									</tr>
-								</c:when>
-								<c:when test="${headerSize eq 2}">
-									<tr class="table-warning">
-										<th><span>${tableLists2[status.index][0].DT1}</span></th>
-										<th><span>${tableLists2[status.index][0].DT2}</span></th>
-									</tr>
+								<c:when test = "${(tableLists2[0].DT1 eq tableLists2[0].DT2) or (empty tableLists2[0].DT2)}">
+									<th colspan="2">${tableLists2[0].DT1}</th>
 								</c:when>
 								<c:otherwise>
-									<tr class="table-warning">
-										<th><span>${tableLists2[status.index][0].DT1}</span></th>
-										<th rowspan="2"><span>${tableLists2[status.index][0].DT3}</span></th>
-									</tr>
-									<tr class="table-warning">
-										<th><span>${tableLists2[status.index][0].DT2}</span></th>
-									</tr>								
+									<th>${tableLists2[0].DT1}</th>
+									<th>${tableLists2[0].DT2}</th>
 								</c:otherwise>
 							</c:choose>
-						</thead>
-						<tbody>
-							<tr class="table-warning">
-							<%-- forEach tableList Start --%>
-							<c:forEach items="${tableList}" var = "list">
+						</tr>
+					</thead>
+					
+					<tbody>
+						<c:forEach items="${tableLists2}" var="tableList">
+							<c:set var = "hongGbnList" value = "01,02,03,04,05,06,07,28"/>
+							<c:if test="${fn:contains(hongGbnList, tableList.HDNG_GBN)}">
 								<tr>
-									<td colspan="2"><span>${fn:replace(list.TITLE, '\\n', '</br>')}</span></td>
+									<td class="table-light">${tableList.TITLE}</td>
+									<c:choose>
+										<c:when test="${(tableList.CNTN1 eq tableList.CNTN2) or (empty tableList.CNTN2)}">
+											<td colspan="2">${tableList.CNTN1}</td>
+										</c:when>
+										<c:otherwise>
+											<td>${tableList.CNTN1}</td>
+											<td>${tableList.CNTN2}</td>
+										</c:otherwise>
+									</c:choose>
 								</tr>
-								<c:choose>
-									<c:when test="${(headerSize eq 1) or ((list.CNTN1 eq list.CNTN2) and (list.CNTN1 eq list.CNTN3))}">
-										<tr class="bg">
-											<td colspan="2"><span>${fn:replace(list.CNTN1, '\\n', '</br>')}</span></td>
+							</c:if>
+						</c:forEach>
+					</tbody>
+				</table>
+				
+				<!-- 추가사항 -->
+				<table class="table table-pk">
+					<colgroup>
+						<col style="width:30%">
+						<col style="width:35%">
+						<col style="width:35%">
+					</colgroup>
+					
+					<thead>
+						<tr class="table-success">
+							<th>추가사항</th>
+							<c:choose>
+								<c:when test = "${(tableLists2[0].DT1 eq tableLists[0].DT2) or (empty tableLists2[0].DT2)}">
+									<th colspan="2">${tableLists2[0].DT1}</th>
+								</c:when>
+								<c:otherwise>
+									<th>${tableLists2[0].DT1}</th>
+									<th>${tableLists2[0].DT2}</th>
+								</c:otherwise>
+							</c:choose>
+						</tr>
+					</thead>
+					<tbody>
+						<c:forEach items="${tableLists2}" var="tableList">
+							<c:set var = "hongGbnList" value = "08,09,10,11,12,13,14,15,16,17,30,31,32"/>
+							<c:if test="${fn:contains(hongGbnList, tableList.HDNG_GBN)}">
+								<tr>
+									<td class="table-light">${tableList.TITLE}</td>
+									<c:choose>
+										<c:when test="${(tableList.CNTN1 eq tableList.CNTN2) or (empty tableList.CNTN2)}">
+											<td colspan="2">${tableList.CNTN1}</td>
+										</c:when>
+										<c:otherwise>
+											<td>${tableList.CNTN1}</td>
+											<td>${tableList.CNTN2}</td>
+										</c:otherwise>
+									</c:choose>
+								</tr>
+							</c:if>
+						</c:forEach>
+					</tbody>
+				</table>
+				
+				<!-- 미팅샌딩 -->
+				<table class="table table-pk">
+					<colgroup>
+						<col style="width:30%">
+						<col style="width:35%">
+						<col style="width:35%">
+					</colgroup>
+					
+					<thead>
+						<tr class="table-success">
+							<td>상품정보</td>
+							<td>차량</td>
+							<td>금액</td>
+						</tr>
+					</thead>
+					
+					<tbody>
+						<tr>
+							<c:forEach items="${tableLists2}" var="tableList">
+								<c:set var = "hongGbnList" value = "18,19"/>
+								<c:if test="${fn:contains(hongGbnList, tableList.HDNG_GBN)}">
+									<c:if test="${tableList.PROD_COND eq '0'}" >
+										<tr>
+											<td rowspan="4"  class="table-light">미팅샌딩</td>
+											<td>스나이공항</td>
+											<td>${tableList.CNTN1}</td>
 										</tr>
-									</c:when>
-									<c:when test="${(headerSize eq 2) and ((list.CNTN1 eq list.CNTN2))}">
-										<tr class="bg">
-											<td colspan="2"><span>${fn:replace(list.CNTN1, '\\n', '</br>')}</span></td>
+									</c:if>
+									
+									<c:if test="${tableList.PROD_COND eq '4'}" >
+										<tr>
+											<td style="border-left:1px solid var(--bs-component-table-border-color);">싱가폴 (4인 기준)</td>
+											<td>${tableList.CNTN1}</td>
 										</tr>
-									</c:when>
-									<c:when test="${(headerSize eq 2) or (list.CNTN1 eq list.CNTN2)}">
-										<tr class="bg">
-											<c:if test = "${headerSize eq 2}">
-												<td><span>${fn:replace(list.CNTN1, '\\n', '</br>')}</span></td>
-												<td><span>${fn:replace(list.CNTN2, '\\n', '</br>')}</span></td>
-											</c:if>
-											<c:if test="${(headerSize ne 2) and (list.CNTN1 eq list.CNTN2)}">
-												<td><span>${fn:replace(list.CNTN1, '\\n', '</br>')}</span></td>
-												<td><span>${fn:replace(list.CNTN3, '\\n', '</br>')}</span></td>
-											</c:if>
+									</c:if>
+									
+									<c:if test="${tableList.PROD_COND eq '3'}" >
+										<tr>
+											<td style="border-left:1px solid var(--bs-component-table-border-color);">싱가폴  (3인 기준)</td>
+											<td>${tableList.CNTN1}</td>
 										</tr>
-									</c:when>
-									<c:otherwise>
-										<tr class="bg">
-											<td><span>${fn:replace(list.CNTN1, '\\n', '</br>')}</span></td>
-											<td rowspan="2"><span>${fn:replace(list.CNTN3, '\\n', '</br>')}</span></td>
+									</c:if>
+									
+									<c:if test="${tableList.PROD_COND eq '2'}" >
+										<tr>
+											<td style="border-left:1px solid var(--bs-component-table-border-color);">싱가폴 (2인 기준)</td>
+											<td>${tableList.CNTN1}</td>
 										</tr>
-										<tr class="bg">
-											<td><span>${fn:replace(list.CNTN2, '\\n', '</br>')}</span></td>
-										</tr>
-									</c:otherwise>
-								</c:choose>
+									</c:if>
+								</c:if>
 							</c:forEach>
-							<%-- forEach tableList End --%>
-						</tbody>
-					</table>
-				</c:forEach>
-				<%-- forEach tableLists2 End --%>
+						</tr>
+					</tbody>
+				</table>
 			</div>
 			<!-- END tab-pane -->
+			
 			<!-- BEGIN tab-pane -->
 			<div class="tab-pane fade" id="default-tab-3">
-				<%-- forEach tableLists3 Start --%>
-				<c:forEach items="${tableLists3}" var="tableList" varStatus="status">
-					<c:set var="headerSize" />
-						<c:choose>
-							<c:when test="${(not empty tableLists3[status.index][0].DT1) and (empty tableLists3[status.index][0].DT2) and (empty tableLists3[status.index][0].DT3)}">
-								<c:set var="headerSize" value="1"/>
-							</c:when>
-							<c:when test="${(not empty tableLists3[status.index][0].DT1) and (not empty tableLists3[status.index][0].DT2) and (empty tableLists3[status.index][0].DT3)}">
-								<c:set var="headerSize" value="2"/>
-							</c:when>
-							<c:otherwise>
-								<c:set var="headerSize" value="3"/>
-							</c:otherwise>
-						</c:choose>
-						<table class="table table-pk">
-						<colgroup>
-							<col style="width:50%">
-							<col style="width:50%">
-						</colgroup>
-						<thead>
+				<!-- <div>기본 패키지 포함 사항 : 팜리조트 2인 1실, 골프 그린피 및 카트비, 식사 3식 (조식 호텔식, 중석식 연식당 한식), 호텔 관광세 </div> -->
+				<!-- 기본 패키지 -->
+				<table class="table table-pk">
+					<colgroup>
+						<col style="width:30%">
+						<col style="width:35%">
+						<col style="width:35%">
+					</colgroup>
+					
+					<thead>
+						<tr class="table-success">
+							<th>기본 패키지</th>
 							<c:choose>
-								<c:when test="${headerSize eq 1}">
-									<tr class="table-warning">
-										<th colspan="2"><span>${tableLists3[status.index][0].DT1}</span></th>
-									</tr>
-								</c:when>
-								<c:when test="${headerSize eq 2}">
-									<tr class="table-warning">
-										<th><span>${tableLists3[status.index][0].DT1}</span></th>
-										<th><span>${tableLists3[status.index][0].DT2}</span></th>
-									</tr>
+								<c:when test = "${(tableLists3[0].DT1 eq tableLists2[0].DT2) or (empty tableLists3[0].DT2)}">
+									<th colspan="2">${tableLists3[0].DT1}</th>
 								</c:when>
 								<c:otherwise>
-									<tr class="table-warning">
-										<th><span>${tableLists3[status.index][0].DT1}</span></th>
-										<th rowspan="2"><span>${tableLists3[status.index][0].DT3}</span></th>
-									</tr>
-									<tr class="table-warning">
-										<th><span>${tableLists3[status.index][0].DT2}</span></th>
-									</tr>								
+									<th>${tableLists3[0].DT1}</th>
+									<th>${tableLists3[0].DT2}</th>
 								</c:otherwise>
 							</c:choose>
-						</thead>
-						<tbody>
-							<tr class="table-warning">
-							<%-- forEach tableList Start --%>
-							<c:forEach items="${tableList}" var = "list">
+						</tr>
+					</thead>
+					
+					<tbody>
+						<c:forEach items="${tableLists3}" var="tableList">
+							<c:set var = "hongGbnList" value = "01,02,03,04,05,06,07,28"/>
+							<c:if test="${fn:contains(hongGbnList, tableList.HDNG_GBN)}">
 								<tr>
-									<td colspan="2"><span>${fn:replace(list.TITLE, '\\n', '</br>')}</span></td>
+									<td class="table-light">${tableList.TITLE}</td>
+									<c:choose>
+										<c:when test="${(tableList.CNTN1 eq tableList.CNTN2) or (empty tableList.CNTN2)}">
+											<td colspan="2">${tableList.CNTN1}</td>
+										</c:when>
+										<c:otherwise>
+											<td>${tableList.CNTN1}</td>
+											<td>${tableList.CNTN2}</td>
+										</c:otherwise>
+									</c:choose>
 								</tr>
-								<c:choose>
-									<c:when test="${(headerSize eq 1) or ((list.CNTN1 eq list.CNTN2) and (list.CNTN1 eq list.CNTN3))}">
-										<tr class="bg">
-											<td colspan="2"><span>${fn:replace(list.CNTN1, '\\n', '</br>')}</span></td>
+							</c:if>
+						</c:forEach>
+					</tbody>
+				</table>
+				
+				<!-- 추가사항 -->
+				<table class="table table-pk">
+					<colgroup>
+						<col style="width:30%">
+						<col style="width:35%">
+						<col style="width:35%">
+					</colgroup>
+					
+					<thead>
+						<tr class="table-success">
+							<th>추가사항</th>
+							<c:choose>
+								<c:when test = "${(tableLists3[0].DT1 eq tableLists[0].DT2) or (empty tableLists3[0].DT2)}">
+									<th colspan="2">${tableLists3[0].DT1}</th>
+								</c:when>
+								<c:otherwise>
+									<th>${tableLists3[0].DT1}</th>
+									<th>${tableLists3[0].DT2}</th>
+								</c:otherwise>
+							</c:choose>
+						</tr>
+					</thead>
+					<tbody>
+						<c:forEach items="${tableLists3}" var="tableList">
+							<c:set var = "hongGbnList" value = "08,09,10,11,12,13,14,15,16,17,30,31,32"/>
+							<c:if test="${fn:contains(hongGbnList, tableList.HDNG_GBN)}">
+								<tr>
+									<td class="table-light">${tableList.TITLE}</td>
+									<c:choose>
+										<c:when test="${(tableList.CNTN1 eq tableList.CNTN2) or (empty tableList.CNTN2)}">
+											<td colspan="2">${tableList.CNTN1}</td>
+										</c:when>
+										<c:otherwise>
+											<td>${tableList.CNTN1}</td>
+											<td>${tableList.CNTN2}</td>
+										</c:otherwise>
+									</c:choose>
+								</tr>
+							</c:if>
+						</c:forEach>
+					</tbody>
+				</table>
+				
+				<!-- 미팅샌딩 -->
+				<table class="table table-pk">
+					<colgroup>
+						<col style="width:30%">
+						<col style="width:35%">
+						<col style="width:35%">
+					</colgroup>
+					
+					<thead>
+						<tr class="table-success">
+							<td>상품정보</td>
+							<td>차량</td>
+							<td>금액</td>
+						</tr>
+					</thead>
+					
+					<tbody>
+						<tr>
+							<c:forEach items="${tableLists3}" var="tableList">
+								<c:set var = "hongGbnList" value = "18,19"/>
+								<c:if test="${fn:contains(hongGbnList, tableList.HDNG_GBN)}">
+									<c:if test="${tableList.PROD_COND eq '0'}" >
+										<tr>
+											<td class="table-light" rowspan="4">미팅샌딩</td>
+											<td>스나이공항</td>
+											<td>${tableList.CNTN1}</td>
 										</tr>
-									</c:when>
-									<c:when test="${(headerSize eq 2) and ((list.CNTN1 eq list.CNTN2))}">
-										<tr class="bg">
-											<td colspan="2"><span>${fn:replace(list.CNTN1, '\\n', '</br>')}</span></td>
+									</c:if>
+									
+									<c:if test="${tableList.PROD_COND eq '4'}" >
+										<tr>
+											<td style="border-left:1px solid var(--bs-component-table-border-color);">싱가폴 (4인 기준)</td>
+											<td>${tableList.CNTN1}</td>
 										</tr>
-									</c:when>
-									<c:when test="${(headerSize eq 2) or (list.CNTN1 eq list.CNTN2)}">
-										<tr class="bg">
-											<c:if test = "${headerSize eq 2}">
-												<td><span>${fn:replace(list.CNTN1, '\\n', '</br>')}</span></td>
-												<td><span>${fn:replace(list.CNTN2, '\\n', '</br>')}</span></td>
-											</c:if>
-											<c:if test="${(headerSize ne 2) and (list.CNTN1 eq list.CNTN2)}">
-												<td><span>${fn:replace(list.CNTN1, '\\n', '</br>')}</span></td>
-												<td><span>${fn:replace(list.CNTN3, '\\n', '</br>')}</span></td>
-											</c:if>
+									</c:if>
+									
+									<c:if test="${tableList.PROD_COND eq '3'}" >
+										<tr>
+											<td style="border-left:1px solid var(--bs-component-table-border-color);">싱가폴  (3인 기준)</td>
+											<td>${tableList.CNTN1}</td>
 										</tr>
-									</c:when>
-									<c:otherwise>
-										<tr class="bg">
-											<td><span>${fn:replace(list.CNTN1, '\\n', '</br>')}</span></td>
-											<td rowspan="2"><span>${fn:replace(list.CNTN3, '\\n', '</br>')}</span></td>
+									</c:if>
+									
+									<c:if test="${tableList.PROD_COND eq '2'}" >
+										<tr>
+											<td style="border-left:1px solid var(--bs-component-table-border-color);">싱가폴 (2인 기준)</td>
+											<td>${tableList.CNTN1}</td>
 										</tr>
-										<tr class="bg">
-											<td><span>${fn:replace(list.CNTN2, '\\n', '</br>')}</span></td>
-										</tr>
-									</c:otherwise>
-								</c:choose>
+									</c:if>
+								</c:if>
 							</c:forEach>
-							<%-- forEach tableList End --%>
-						</tbody>
-					</table>
-				</c:forEach>
-				<%-- forEach tableLists3 End --%>
+						</tr>
+					</tbody>
+				</table>
 			</div>
 			<!-- END tab-pane -->
 		</div>
