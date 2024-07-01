@@ -14,6 +14,13 @@
 	#reserve_popup .radioSet div {display:flex; justify-content: center; gap:7px;}
 	.find-btn {display: flex; justify-content: space-between;}
 	.find-btn button {width:49%;}
+	.reserve_count_box {width:auto; min-width:75%; margin:5px 0 0;}
+	@media (max-width: 767.98px) {
+		#reserve_count_input_box {width:100%;}
+		#reserve_count_input_box > .input-group-text {display:inline-block; width:100%;}
+	}
+	
+	#reserve_count_input_box > .input-group-text {padding : 0.5rem 0.1rem 0.5rem 0rem}
 </style>
 
 <script>
@@ -30,11 +37,11 @@ $(document).ready(function() {
 	var comProdSeq = "";
 	var nokidBasyy = "";
 	var nokidBasyySeq = "";
-	var nokidProdSeq = "";		// 비라운딩,소아 상품 항목
+	var nokidProdSeq = "";		// 성인,소아 상품 항목
 	var roomPlus = 1;			// 레이크인아웃 체크를위함
 	var roomChk = 0;			// 인원보다 방이 더 많을경우를 위한 체크변수
 	var roomPerson = 0;			// 숙박인원
-	var nokidPerson = 0;		// 비라운딩, 소아 인원
+	var nokidPerson = 0;		// 성인, 소아 인원
 	var prodCond = 0;			// 미팅샌딩 싱가폴 항목 금액산정을 위한 변수 
 	var twinCnt = 0;			// 숙박인원에따른 사용 트윈 갯수
 	var kingCnt = 0;			// 숙박인원에따른 사용 킹 갯수
@@ -143,7 +150,7 @@ $(document).ready(function() {
 		var $combo = $('<select id="list_num_gbn" name="list_num_gbn" style="min-width:70px;" disabled="disabled"/>');
 		    $combo.append($('<option/>',{'value':'01'}).text('멤버')); 
 		    $combo.append($('<option/>',{'value':'02'}).text('일반')); 
-		    $combo.append($('<option/>',{'value':'03'}).text('비라운딩')); 
+		    $combo.append($('<option/>',{'value':'03'}).text('성인')); 
 		    $combo.append($('<option/>',{'value':'04'}).text('소아')); 
 		    $combo.append($('<option/>',{'value':'05'}).text('영유아'));
 		    $combo.val(s_data); //여기서 seleted하고 싶은 값을 넣어줌.
@@ -491,7 +498,7 @@ $(document).ready(function() {
 			if(!isValidate()) {
 				return;
 			}
-			// 숙박인원 성인기준:(멤버 + 일반 + 비라운딩 + 소아)
+			// 숙박인원 성인기준:(멤버 + 일반 + 성인 + 소아)
 			roomPerson = Math.round((strToNum($("#m_person").val()) + strToNum($("#g_person").val()) + strToNum($("#n_person").val()) + strToNum($("#k_person").val()))/2);
 			roomPerson = roomPerson > 0 ? roomPerson : 1;
 			
@@ -598,7 +605,7 @@ $(document).ready(function() {
 				return;
 			}
 			
-			// 레이트 인아웃 산정을 위함 : 숙박인원 성인기준:(멤버 + 일반 + 비라운딩 + 소아)
+			// 레이트 인아웃 산정을 위함 : 숙박인원 성인기준:(멤버 + 일반 + 성인 + 소아)
 			roomPerson = Math.round((strToNum($("#m_person").val()) + strToNum($("#g_person").val()) + strToNum($("#n_person").val()) + strToNum($("#k_person").val()))/2);
 			roomPerson = roomPerson > 0 ? roomPerson : 1;
 			
@@ -646,7 +653,7 @@ $(document).ready(function() {
 					, flight_out_hh  : $("#flight_out_hh").val()					// 비행도착시간
 					, m_person       : Number($("#m_person"  ).val())				// 멤버(본인포함)
 					, g_person       : Number($("#g_person"  ).val())				// 일반
-					, n_person       : Number($("#n_person"  ).val())				// 비라운딩
+					, n_person       : Number($("#n_person"  ).val())				// 성인
 					, k_person       : Number($("#k_person"  ).val())				// 소아
 					, i_person       : Number($("#i_person"  ).val())				// 영유아
 					, tot_person     : Number($("#tot_person").val())				// 총인원					
@@ -1289,98 +1296,117 @@ $(document).ready(function() {
 					</div>
 				</div>
 				
-				<div class="total-people-wrap">
-					<div class="row mb-2" style = "justify-content:flex-end">
-						<label class="form-label col-form-label col-md-2"></label>
-						<div class="col-md-9 inline-flex">
-							<div class="input-group">
-								<div class="input-group-prepend">
-									<span class="input-group-text" style="padding : 0.5rem 0.1rem 0.5rem 0rem">멤　버　</span>
-								</div>
-								<select id="m_person" name="m_person" class="form-select text-center toNumbers addCom">
-									<c:forEach var="i" begin="1" end="15" step="1">
-										<option value="<fmt:formatNumber value="${i}" minIntegerDigits="2"/>">
-											<fmt:formatNumber value="${i}" minIntegerDigits="2" />
-										</option>
-									</c:forEach>
-								</select>명
-							</div>
-							<label class="form-label col-form-label  col-md-2"></label>
-							<div class="input-group">
-								<div class="input-group-prepend">
-									<span class="input-group-text" style="padding : 0.5rem 0.1rem 0.5rem 0rem">일　반　</span>
-								</div>
-								<select id="g_person" name="g_person" class="form-select text-center toNumbers addCom">
-									<c:forEach var="i" begin="0" end="15" step="1">
-										<option value="<fmt:formatNumber value="${i}" minIntegerDigits="2"/>">
-											<fmt:formatNumber value="${i}" minIntegerDigits="2" />
-										</option>
-									</c:forEach>
-								</select>명
-							</div>
-						</div>
-					</div>
-					
-					<div class="row mb-2" style = "justify-content:flex-end">
-						<label class="form-label col-form-label col-md-2"></label>
-						<div class="col-md-9 inline-flex">
-							<div class="input-group">
-								<div class="input-group-prepend">
-									<span class="input-group-text" style="padding : 0.5rem 0.1rem 0.5rem 0rem">비라운딩</span>
-								</div>
-								<select id="n_person" name="n_person" class="form-select text-center toNumbers addCom">
-									<c:forEach var="i" begin="0" end="15" step="1">
-										<option value="<fmt:formatNumber value="${i}" minIntegerDigits="2"/>">
-											<fmt:formatNumber value="${i}" minIntegerDigits="2" />
-										</option>
-									</c:forEach>
-								</select>명
-							</div>
-							<label class="form-label col-form-label  col-md-2"></label>
-							<div class="input-group">
-								<div class="input-group-prepend">
-									<span class="input-group-text" style="padding : 0.5rem 0.1rem 0.5rem 0rem">소　아　</span>
-								</div>
-								<select id="k_person" name="k_person" class="form-select text-center toNumbers addCom">
-									<c:forEach var="i" begin="0" end="15" step="1">
-										<option value="<fmt:formatNumber value="${i}" minIntegerDigits="2"/>">
-											<fmt:formatNumber value="${i}" minIntegerDigits="2" />
-										</option>
-									</c:forEach>
-								</select>명
+				<div>
+				
+				<div class="row mb-2">
+					<label class="form-label col-form-label col-md-3"></label>
+					<div class="total-people-wrap reserve_count_box">
+						<div class="row mb-2" style = "justify-content:center;">
+						<span class="input-group-text" style="position: relative; top: -10px; background-color:#008B8B; font-weight:bold; justify-content: center; height:25px">라운딩</span>
+							<div class="col-md-9 inline-flex">
+								<div class="input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text" style="padding : 0.5rem 0.1rem 0.5rem 0rem">멤　버　</span>
+									</div>
+									<select id="m_person" name="m_person" class="form-select text-center toNumbers addCom">
+										<c:forEach var="i" begin="1" end="15" step="1">
+											<option value="<fmt:formatNumber value="${i}" minIntegerDigits="2"/>">
+												<fmt:formatNumber value="${i}" minIntegerDigits="2" />
+											</option>
+										</c:forEach>
+									</select>
+								</div>명
+								
+								<label class="form-label col-form-label  col-md-2"></label>
+								<div class="input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text" style="padding : 0.5rem 0.1rem 0.5rem 0rem">일　반　</span>
+									</div>
+									<select id="g_person" name="g_person" class="form-select text-center toNumbers addCom">
+										<c:forEach var="i" begin="0" end="15" step="1">
+											<option value="<fmt:formatNumber value="${i}" minIntegerDigits="2"/>">
+												<fmt:formatNumber value="${i}" minIntegerDigits="2" />
+											</option>
+										</c:forEach>
+									</select>
+								</div>명
 							</div>
 						</div>
 					</div>
-					
-					<div class="row mb-2" style = "justify-content:flex-end">
-						<label class="form-label col-form-label col-md-2"></label>
-						<div class="col-md-9 inline-flex">
-							<div class="input-group">
-								<div class="input-group-prepend">
-									<span class="input-group-text" style="padding : 0.5rem 0.1rem 0.5rem 0rem">영유아　</span>
-								</div>
-								<select id="i_person" name="i_person" class="form-select text-center toNumbers addCom">
-									<c:forEach var="i" begin="0" end="15" step="1">
-										<option value="<fmt:formatNumber value="${i}" minIntegerDigits="2"/>">
-											<fmt:formatNumber value="${i}" minIntegerDigits="2" />
-										</option>
-									</c:forEach>
-								</select>명
-							</div>
-							<label class="form-label col-form-label  col-md-2"></label>
-							<div class="input-group">
-								<div class="input-group-prepend">
-									<span class="input-group-text" style="padding : 0.5rem 0.1rem 0.5rem 0rem">총인원　</span>
-								</div>
-								<input id="tot_person" name="tot_person" type="text" class="form-control text-center toNumbers" maxlength="2" value="01" readonly>명
-							</div>
-						</div>
-					</div>
-					<span style="text-align:left; opacity:30%; color:red; font-size:0.7rem">
-									         ※   인원 등록 시 [동반자]탭 내역이 자동생성 되며,<br/>
-					  &nbsp;&nbsp;&nbsp;&nbsp;수정 시 [동반자]탭 내역이 재생성 됩니다.
-					</span>
 				</div>
+					
+				<div class="row mb-2">
+					<label class="form-label col-form-label col-md-3"></label>
+					<div class="total-people-wrap reserve_count_box">
+						<div class="row mb-2" style = "justify-content:center;">
+							<span class="input-group-text" style="position: relative; top: -10px; background-color:#008B8B; font-weight:bold; justify-content: center; height:25px">비라운딩</span>
+							<div class="col-md-9 inline-flex">
+								<div class="input-group">
+									<div class="input-group-prepend"id="reserve_count_input_box">
+										<div class="input-group-text">성　인　</div>
+									</div>
+									
+									<select id="n_person" name="n_person" class="form-select text-center toNumbers addCom">
+										<c:forEach var="i" begin="0" end="15" step="1">
+											<option value="<fmt:formatNumber value="${i}" minIntegerDigits="2"/>">
+												<fmt:formatNumber value="${i}" minIntegerDigits="2" />
+											</option>
+										</c:forEach>
+									</select>
+								</div>명
+								
+								
+								<div class="input-group">
+									<div class="input-group-prepend"id="reserve_count_input_box">
+										<span class="input-group-text" style="">소　아　</span>
+										
+									</div>
+									<select id="k_person" name="k_person" class="form-select text-center toNumbers addCom">
+										<c:forEach var="i" begin="0" end="15" step="1">
+											<option value="<fmt:formatNumber value="${i}" minIntegerDigits="2"/>">
+												<fmt:formatNumber value="${i}" minIntegerDigits="2" />
+											</option>
+										</c:forEach>
+									</select>
+								</div>명
+								
+								
+								<div class="input-group">
+									<div class="input-group-prepend"id="reserve_count_input_box">
+										<span class="input-group-text">영유아　</span>
+									</div>
+									<select id="i_person" name="i_person" class="form-select text-center toNumbers addCom">
+										<c:forEach var="i" begin="0" end="15" step="1">
+											<option value="<fmt:formatNumber value="${i}" minIntegerDigits="2"/>">
+												<fmt:formatNumber value="${i}" minIntegerDigits="2" />
+											</option>
+										</c:forEach>
+									</select>
+								</div>명
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<div>
+					<label class="form-label col-form-label col-md-3"></label>
+					<span style="text-align:left; opacity:70%; color:red; font-size:0.8rem">
+					         ※   인원 등록 시 [동반자]탭 내역이 자동생성 되며, 수정 시 [동반자]탭 내역이 재생성 됩니다.
+					</span>	
+				</div>
+				
+				
+				<div class="row mb-2" style = "justify-content:flex-end">
+					<div class="col-md-9 inline-flex">
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text" id="reserve_select_box" style="padding : 0.5rem 0.1rem 0.5rem 0rem">총인원　</span>
+							</div>
+							<input id="tot_person" name="tot_person" type="text" class="form-control text-center toNumbers" maxlength="2" value="01" readonly>
+						</div>명
+					</div>
+				</div>
+				
 
 				<div id="packageDiv" class="row mb-2">
 					<label class="form-label col-form-label col-md-3">패키지</label>
@@ -1402,10 +1428,11 @@ $(document).ready(function() {
 				</div>
 				
 				<div class="mb-2">
-					<div class="inline-flex calc">
+					<div style="display:flex; justify-content:right; width:75%; margin-left:auto; gap:10px;">
 						<button id="calBtn" name="calBtn" type="button" class="btn btn-pink">가계산</button>
-						<input id="cal_amt" name="cal_amt" type="text" class="form-control text-end toNumber" value="0" readonly>원
+						<div class="inline-flex" style="flex-grow:1"><input id="cal_amt" name="cal_amt" type="text" class="form-control text-end toNumber" value="0" readonly>원</div>
 					</div>
+					<label class="form-label col-form-label col-md-3"></label>
 					<small class="text-theme">
 						계산 금액은 정확한 금액이 아닙니다. 예약전송해 주시면 추후 정확한 금액을 안내 드립니다.
 					</small>
@@ -1442,7 +1469,7 @@ $(document).ready(function() {
 											<option value="01" <c:if test="${sessionScope.login.mem_gbn eq '01' }">selected</c:if>>멤버</option>
 											<option value="02" <c:if test="${sessionScope.login.mem_gbn eq '02' }">selected</c:if>>일반</option>
 											<option value="04" <c:if test="${sessionScope.login.mem_gbn eq '04' }">selected</c:if>>소아</option>
-											<option value="03" <c:if test="${sessionScope.login.mem_gbn eq '03' }">selected</c:if>>비라운딩</option>									
+											<option value="03" <c:if test="${sessionScope.login.mem_gbn eq '03' }">selected</c:if>>성인</option>									
 											<option value="05" <c:if test="${sessionScope.login.mem_gbn eq '05' }">selected</c:if>>영유아</option>
 										</select>
 									</td>

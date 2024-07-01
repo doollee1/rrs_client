@@ -46,7 +46,7 @@ public class ProductController {
 		List<Map<String, Object>> tableList2 = makeList(productListTmp2);
 		List<Map<String, Object>> tableList3 = makeList(productListTmp3);
 
-		mav.addObject("tableLists" , tableList );  // 성수기
+		mav.addObject("tableLists"  , tableList );  // 성수기
 		mav.addObject("tableLists2", tableList2);  // 준성수기
 		mav.addObject("tableLists3", tableList3);  // 비수기
 		mav.setViewName("product/product.view");
@@ -60,16 +60,12 @@ public class ProductController {
 		ModelAndView mav = new ModelAndView();
 		param.put("currentYear", param.get("year"));
 
-		// 성수기
-		List<Map<String, Object>> productListTmp  = productService.productList(param);
-
+		List<Map<String, Object>> productListTmp1  = productService.productCommonList(param);
+		
 		// 리스트 merge
-		List<Map<String, Object>> tableList  = makeList(productListTmp );
+		List<Map<String, Object>> tableList = makeList(productListTmp1);
 
-		// 리스트 날짜별로 그룹핑
-		List<List<Map<String, Object>>> tableLists  = listGroupBy(tableList );
-
-		mav.addObject("tableLists" , tableLists          );
+		mav.addObject("tableLists" , tableList          );
 		mav.addObject("ssnGbn"     , param.get("ssnGbn") );  // 시즌구분
 		mav.setViewName("product/productView.view1");
 		return mav;
