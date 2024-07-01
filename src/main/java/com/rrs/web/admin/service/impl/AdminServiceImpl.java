@@ -4,6 +4,7 @@
 package com.rrs.web.admin.service.impl;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -54,10 +55,21 @@ public class AdminServiceImpl implements AdminService {
 		
 		//최초 조회일자가 없을시
 		if(param.isEmpty()) {
+													
+			Calendar cal = Calendar.getInstance();
+			cal.add(Calendar.MONTH, 1);
+			String afterMonthBaseDt = new SimpleDateFormat("yyyyMMdd").format(cal.getTime());
 			
-			String endDt   = new SimpleDateFormat("yyyyMMdd").format(new Date());
-			String startDt = endDt.substring(0, 6) + "01";
-					
+			cal.set(Calendar.YEAR,  Integer.parseInt(afterMonthBaseDt.substring(0, 4)));
+			cal.set(Calendar.MONTH, Integer.parseInt(afterMonthBaseDt.substring(4, 6)) - 1);
+			cal.set(Calendar.DATE,  Integer.parseInt(afterMonthBaseDt.substring(6, 8)));
+			cal.set(Calendar.DATE, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+			
+			
+			String startDt = new SimpleDateFormat("yyyyMMdd").format(new Date());		//현재일
+			String endDt   = new SimpleDateFormat("yyyyMMdd").format(cal.getTime());	//다음달 마지막일자
+			
+			
 			logger.info("===== startDt : "+startDt);
 			logger.info("===== endDt   : "+endDt);
 						

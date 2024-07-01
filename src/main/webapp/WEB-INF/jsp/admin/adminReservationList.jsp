@@ -26,6 +26,40 @@ function fn_Init(){
 		}
 				
 	});		
+	
+	
+	var startDt = "${param.start_dt}";
+	var endDt   = "${param.end_dt}"
+	
+	
+	console.log("화면로딩 start_dt : "+startDt);
+	console.log("화면로딩 end_dt : "+endDt)
+	
+	
+	if(isEmpty(startDt) || isEmpty(endDt)){
+		
+		//현재일
+		var day = new Date();
+		startDt = String(day.getFullYear()) + '-'+ String(("0" + (1 + day.getMonth())).slice(-2)) + '-' + String(("0" + day.getDate()).slice(-2));		
+		
+		//다음달 마지말날짜
+		endDt = getlastDayNextMonth();
+		
+		
+		console.log("수정 startDt : "+startDt);
+		console.log("수정 endDt : "+endDt)
+		
+		$("#start_dt").val(startDt);   	//조회시작일자를 현재일로 설정
+		$("#end_dt").val(endDt);  		//조회종료일자를 다음달 마지막날로 설정
+		
+	} else if(!isEmpty(startDt) && !isEmpty(endDt)){
+		
+		
+		$("#start_dt").val(startDt.substring(0, 4) + '-' + startDt.substring(4, 6) + '-' +startDt.substring(6));   	//조회시작일자를 현재일로 설정
+		$("#end_dt").val(endDt.substring(0, 4) + '-' + endDt.substring(4, 6) + '-' + endDt.substring(6));  			//조회종료일자를 다음달 마지막날로 설정
+		
+	}
+					
 } 
 
 
@@ -35,8 +69,9 @@ function setEvent() {
 	var curDate     = new Date();
 	var startDate = new Date();
 	var endDate   = new Date();
-	startDate.setDate(curDate.getDate() -30);     //오늘부터 1달전
-	endDate.setFullYear(curDate.getFullYear() + 1);
+	startDate.setDate(curDate.getDate() -30);       //오늘부터 1달전
+	endDate.setFullYear(curDate.getFullYear() + 1); //오늘부터 1년후
+	
 	
 	<%-- datepicker setting --%>
 	$(".input-daterange").datepicker({
@@ -79,10 +114,10 @@ function isEmpty(value) {
 	}
 }
 
-//관리자 예약목록 페이지 호출
+//관리자 예약목록 조회
 function fn_adminReservationList(){
 	
-	console.log("=== 관리자 예약목록 페이지 호출 ===")
+	console.log("=== 관리자 예약목록 조회 ===")
 	
 	if($("#start_dt").val() == "") {
 		alert("시작일자를 선택하세요.");
@@ -104,6 +139,24 @@ function fn_adminReservationList(){
 	location.href = "/adminReservationList.do?start_dt="+startDt+"&end_dt="+endDt;
 }
 
+
+//다음달 마지막날 구하기
+function getlastDayNextMonth(){
+	var today = new Date();
+	var mm = today.getMonth() + 2;
+	var yyyy = today.getFullYear();
+	var dd = new Date(yyyy, mm, 0).getDate();
+
+	if(dd < 10) {
+		dd='0'+dd
+	}
+	
+	if(mm < 10) {
+		mm='0'+mm
+	}
+	
+	return yyyy + '-'+ mm + '-'+ dd;
+}
 
 </script>
 
