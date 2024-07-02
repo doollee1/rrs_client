@@ -79,9 +79,10 @@ ul li {list-style:none;}
 
 @media (max-width: 767.98px) {
 	.app-header-fixed {padding-top:60px} 
+	.app-footer {left:0px !important;}
 }
 
-.app-footer {position:fixed;bottom:0;background-color:var(--bs-body-bg);border-top:none;padding:0.9375rem 20px;width:100%;display:flex;grid-column-gap:10px;}
+.app-footer {position:fixed;bottom:0;background-color:var(--bs-body-bg);border-top:none;padding:0.9375rem 20px;left:220px;right:0px;display:flex;grid-column-gap:10px;}
 .app-footer .btn {font-weight:500;font-size:1rem;flex:1;}
 .register.register-with-news-feed .app-footer{background-color:#fff}
 

@@ -28,7 +28,6 @@
 				<a href="/reservationList.do" class="btn btn-success"><i class="fas fa-calendar-days"></i>예약현황</a>
 						
 			</div>
-			<a href="/setting.do" class="btn btn-dark btn-sm btn-set">설정</a>
 		</div>
 	</c:if>
 	
