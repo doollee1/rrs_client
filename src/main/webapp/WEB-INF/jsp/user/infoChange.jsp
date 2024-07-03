@@ -157,9 +157,9 @@ function pwChk(){
 	 
 <!-- BEGIN register -->
 <div class="register register-with-news-feed set">
+	<div class="infoChange-background"></div>
 	<!-- BEGIN register-container -->
 	<div class="register-container">
-
 		<!-- BEGIN register-content -->
 		<div class="register-content">
 			<form action="index.html" method="GET" class="fs-13px">

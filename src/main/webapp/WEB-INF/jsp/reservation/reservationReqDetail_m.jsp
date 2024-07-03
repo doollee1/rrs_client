@@ -14,7 +14,20 @@
 	#reserve_popup .radioSet div {display:flex; justify-content: center; gap:7px;}
 	.find-btn {display: flex; justify-content: space-between;}
 	.find-btn button {width:49%;}
+	.reserve_count_box {margin:5px 0 0; flex:1;}
+	
+	@media (max-width: 767.98px) {
+		#comPlusBtn {top:122px !important; right:36px !important;}
+		#reserve_cal_box {width:100% !important;}
+		#display_label {display:none;}
+	}
+	
+	#comPlusBtn {opacity:30%; background-color:#348FE2; width:22px; height:22px; font-size:12px; line-height:22px; right:45px; top:110px;}
+	
+	#reserve_count_input_box {width:100%;}
+	#reserve_count_input_box > .input-group-text {display:inline-block; width:100%;}
 </style>
+
 
 <script>
 $(document).ready(function() {
@@ -69,13 +82,15 @@ $(document).ready(function() {
 			
 			if($("#chk_in_dt").val() == "") {
 				alert("체크인 날짜를 선택하세요.");
-				$("#g_person").val("00")
+				$("#g_person").val("00");
+				$("#packageDiv").hide();
 				return false;
 			}
 			
 			if($("#chk_out_dt").val() == "") {
 				alert("체크아웃 날짜를 선택하세요.");
-				$("#g_person").val("00")
+				$("#g_person").val("00");
+				$("#packageDiv").hide();
 				return false;
 			}
 			
@@ -1156,95 +1171,100 @@ $(document).ready(function() {
 			<div class="tab-pane fade active show" id="default-tab-1">
 				<div class="input-daterange">
 					<div class="form-group row mb-2">
-						<label class="form-label col-form-label col-lg-4">체크인</label>
+						<label class="form-label col-form-label col-lg-4" style="font-size: 1rem;font-weight:bold;"><span style="box-shadow: inset 0 -2px 0 #dcdcdc;">체크인</span></label>
 						<div class="col-lg-12">
 							<div class="input-group date" >
-								<input type="text" id="chk_in_dt" name="chk_in_dt" class="form-control text-start" placeholder="날짜를 선택하세요" disabled="disabled">
+								<input type="text" id="chk_in_dt" name="chk_in_dt" class="form-control text-center" placeholder="날짜를 선택하세요" disabled="disabled">
 								<span class="input-group-text input-group-addon"><i class="fa fa-calendar"></i></span>
 							</div>
 						</div>
 					</div>
 					<div class="form-group row mb-2">
-						<label class="form-label col-form-label col-lg-4">체크아웃</label>
+						<label class="form-label col-form-label col-lg-4" style="font-size: 1rem;font-weight:bold;"><span style="box-shadow: inset 0 -2px 0 #dcdcdc;">체크아웃</span></label>
 						<div class="col-lg-12">
 							<div class="input-group date" >
-								<input type="text" id="chk_out_dt" name="chk_out_dt" class="form-control text-start" placeholder="날짜를 선택하세요" disabled="disabled">
+								<input type="text" id="chk_out_dt" name="chk_out_dt" class="form-control text-center" placeholder="날짜를 선택하세요" disabled="disabled">
 								<span class="input-group-text input-group-addon"><i class="fa fa-calendar"></i></span>
 							</div>
 						</div>
 					</div>
 				</div>
 				<div class="row mb-2">
-					<label class="form-label col-form-label col-md-3" style="display: flex; align-items: center;" >객실타입
+					<label class="form-label col-form-label col-md-3" style="display: flex; align-items: center; font-size: 1rem;font-weight:bold;"><span style="box-shadow: inset 0 -2px 0 #dcdcdc;">객실타입</span>
 					<input type="text" id="no_room_chk" name="no_room_chk" class="form-control text-center" value="Check OK"
-						   style="border:none;border-right:0px; border-top:0px; boder-left:0px; boder-bottom:0px; width:85px; background: #FFFFFF; opacity:30%; color: green;" readonly></label>
+						   style="border:none;border-right:0px; border-top:0px; boder-left:0px; boder-bottom:0px; width:85px; background: #FFFFFF; opacity:60%; color: green;" readonly></label>
 					<div class="col-md-9">
 						<select id="room_type" name="room_type" class="form-select text-center readonly">
-							<option value="">-선택-</option>
+							<option value="" style="font-size: 0.9rem;font-weight:bold;">-선택-</option>
 							<c:forEach items="${roomTypeList}" var="room" varStatus="status">
-								<option value="${room.CODE}">${room.CODE_NM}</option>
+								<option value="${room.CODE}" style="font-size: 0.9rem;font-weight:bold;">${room.CODE_NM}</option>
 							</c:forEach>
 						</select>
 					</div>
 				</div>
+				
 				<div class="row mb-2">
-					<label class="form-label col-form-label col-md-3">Flight In</label>
+					<label class="form-label col-form-label col-md-3" style="font-size: 1rem;font-weight:bold;"><span style="box-shadow: inset 0 -2px 0 #dcdcdc;">Flight In</span></label>
 					<div class="col-md-9 inline-flex">
-						<select id="flight_in" name="flight_in" class="form-select readonly">
-							<option value="">-선택-</option>
+						<select id="flight_in" name="flight_in" class="form-select text-center readonly">
+							<option value="" style="font-size: 0.9rem;font-weight:bold;">-선택-</option>
 							<c:forEach items="${fligthInList}" var="fligthIn" varStatus="status">
-								<option value="${fligthIn.CODE}">${fligthIn.CODE_NM}</option>
+								<option value="${fligthIn.CODE}" style="font-size: 0.9rem;font-weight:bold;">${fligthIn.CODE_NM}</option>
 							</c:forEach>
 						</select>
-						<select id="flight_in_hh" name="flight_in_hh" class="form-select readonly">
-							<option value="">-선택-</option>
+						<select id="flight_in_hh" name="flight_in_hh" class="form-select text-center readonly">
+							<option value="" style="font-size: 0.9rem;font-weight:bold;">-선택-</option>
 							<c:forEach var="i" begin="0" end="23" step="1">
-								<option value="<fmt:formatNumber value="${i}" minIntegerDigits="2" />">
+								<option value="<fmt:formatNumber value="${i}" minIntegerDigits="2" />" style="font-size: 0.9rem;font-weight:bold;">
 									<fmt:formatNumber value="${i}" minIntegerDigits="2" />시
 								</option>
 							</c:forEach>
 						</select>
 					</div>
 				</div>
+				
 				<div class="row mb-2">
-					<label class="form-label col-form-label col-md-3">Flight Out</label>
+					<label class="form-label col-form-label col-md-3" style="font-size: 1rem;font-weight:bold;"><span style="box-shadow: inset 0 -2px 0 #dcdcdc;">Flight Out</span></label>
 					<div class="col-md-9 inline-flex">
-						<select id="flight_out" name="flight_out" class="form-select readonly">
-							<option value="">-선택-</option>
+						<select id="flight_out" name="flight_out" class="form-select text-center readonly">
+							<option value="" style="font-size: 0.9rem;font-weight:bold;">-선택-</option>
 							<c:forEach items="${fligthOutList}" var="fligthOut" varStatus="status">
-								<option value="${fligthOut.CODE}">${fligthOut.CODE_NM}</option>
+								<option value="${fligthOut.CODE}" style="font-size: 0.9rem;font-weight:bold;">${fligthOut.CODE_NM}</option>
 							</c:forEach>
 						</select>
-						<select id="flight_out_hh" name="flight_out_hh" class="form-select readonly">
-							<option value="">-선택-</option>
+						<select id="flight_out_hh" name="flight_out_hh" class="form-select text-center readonly">
+							<option value="" style="font-size: 0.9rem;font-weight:bold;">-선택-</option>
 							<c:forEach var="i" begin="0" end="23" step="1">
-								<option value="<fmt:formatNumber value="${i}" minIntegerDigits="2" />">
+								<option value="<fmt:formatNumber value="${i}" minIntegerDigits="2" />" style="font-size: 0.9rem;font-weight:bold;">
 									<fmt:formatNumber value="${i}" minIntegerDigits="2" />시
 								</option>
 							</c:forEach>
 						</select>
 					</div>
 				</div>
+				
 				<div class="row mb-2">
-					<label class="form-label col-form-label col-md-3">항공권 첨부</label>
+					<label class="form-label col-form-label col-md-3" style="font-size: 1rem;font-weight:bold;"><span style="box-shadow: inset 0 -2px 0 #dcdcdc;">항공권 첨부</span></label>
 					<div class="col-sm-9" style="display:none;">
-						<input id="fligthImage" name="fligthImage" type="file" accept="image/*" class="form-control"/>
+						<input id="fligthImage" name="fligthImage" type="file" accept="image/*" class="form-control text-center"/>
 						수정 시 필수 사항이 아닙니다.
 					</div>
 					<div class="col-sm-9">
-						<input id="fligth_image" name="fligth_image" type="text" class="form-control" readonly>
+						<input id="fligth_image" name="fligth_image" type="text" class="form-control text-center" readonly>
 					</div>
 				</div>
+				
 				<div class="row mb-2">
-					<label class="form-label col-form-label col-md-3">한글이름</label>
+					<label class="form-label col-form-label col-md-3" style="font-size: 1rem;font-weight:bold;"><span style="box-shadow: inset 0 -2px 0 #dcdcdc;">한글이름</span></label>
 					<div class="col-sm-9">
-						<input id="req_han_nm" name="req_han_nm" type="text" class="form-control" readonly>
+						<input id="req_han_nm" name="req_han_nm" type="text" class="form-control text-center" readonly>
 					</div>
 				</div>
+				
 				<div class="row mb-2">
-					<label class="form-label col-form-label col-md-3">영문이름</label>
+					<label class="form-label col-form-label col-md-3" style="font-size: 1rem;font-weight:bold;"><span style="box-shadow: inset 0 -2px 0 #dcdcdc;">영문이름</span></label>
 					<div class="col-sm-9">
-						<input id="req_eng_nm" name="req_eng_nm" type="text" class="form-control" readonly>
+						<input id="req_eng_nm" name="req_eng_nm" type="text" class="form-control text-center" readonly>
 					</div>
 				</div>
 			</div>
@@ -1253,17 +1273,17 @@ $(document).ready(function() {
 			<!-- BEGIN tab-pane -->
 			<div class="tab-pane fade" id="default-tab-2">
 				<div class="row mb-2">
-					<label class="form-label col-form-label col-md-3">미팅샌딩</label>
+					<label class="form-label col-form-label col-md-3" style="font-size: 1rem;font-weight:bold;"><span style="box-shadow: inset 0 -2px 0 #dcdcdc;">미팅샌딩</span></label>
 					<div class="col-md-9 inline-flex">
-						<select id="pick_gbn" name="pick_gbn" class="form-select readonly">
+						<select id="pick_gbn" name="pick_gbn" class="form-select text-center readonly">
 							<c:forEach items="${pickupSvcList}" var="pickupSvc" varStatus="status">
-								<option value="${pickupSvc.CODE}">${pickupSvc.CODE_NM}</option>
+								<option value="${pickupSvc.CODE}" style="font-size: 0.9rem;font-weight:bold;">${pickupSvc.CODE_NM}</option>
 							</c:forEach>
 						</select>
 						<select id="per_num" name="per_num" class="form-select text-center toNumbers">
-							<option value="0">00</option>
+							<option value="0" style="font-size: 0.9rem;font-weight:bold;">00</option>
 							<c:forEach var="i" begin="1" end="30" step="1">
-								<option value="<fmt:formatNumber value="${i}"/>">
+								<option value="<fmt:formatNumber value="${i}"/>" style="font-size: 0.9rem;font-weight:bold;">
 									<fmt:formatNumber value="${i}" minIntegerDigits="2" />
 								</option>
 							</c:forEach>
@@ -1272,18 +1292,18 @@ $(document).ready(function() {
 				</div>
 				
 				<div class="row mb-2">
-					<label class="form-label col-form-label col-md-3">싱글룸 추가</label>
+					<label class="form-label col-form-label col-md-3" style="font-size: 1rem;font-weight:bold;"><span style="box-shadow: inset 0 -2px 0 #dcdcdc;">싱글룸 추가</span></label>
 					<div class="col-md-9 inline-flex">
 						<select id="add_r_s_day" name="add_r_s_day" class="form-select text-center toNumbers readonly">
 							<c:forEach var="i" begin="0" end="30" step="1">
-								<option value="<fmt:formatNumber value="${i}"/>">
+								<option value="<fmt:formatNumber value="${i}"/>" style="font-size: 0.9rem;font-weight:bold;">
 									<fmt:formatNumber value="${i}" minIntegerDigits="2" />
 								</option>
 							</c:forEach>
 						</select>일
 						<select id="add_r_s_per" name="add_r_s_per" class="form-select text-center toNumbers readonly">
 							<c:forEach var="i" begin="0" end="10" step="1">
-								<option value="<fmt:formatNumber value="${i}"/>">
+								<option value="<fmt:formatNumber value="${i}"/>" style="font-size: 0.9rem;font-weight:bold;">
 									<fmt:formatNumber value="${i}" minIntegerDigits="2" />
 								</option>
 							</c:forEach>
@@ -1292,18 +1312,18 @@ $(document).ready(function() {
 				</div>
 				
 				<div class="row mb-2">
-					<label class="form-label col-form-label col-md-3">프리미엄 추가</label>
+					<label class="form-label col-form-label col-md-3" style="font-size: 1rem;font-weight:bold;"><span style="box-shadow: inset 0 -2px 0 #dcdcdc;">프리미엄 추가</span></label>
 					<div class="col-md-9 inline-flex">
 						<select id="add_r_p_day" name="add_r_p_day" class="form-select text-center toNumbers readonly">
 							<c:forEach var="i" begin="0" end="30" step="1">
-								<option value="<fmt:formatNumber value="${i}"/>">
+								<option value="<fmt:formatNumber value="${i}"/>" style="font-size: 0.9rem;font-weight:bold;">
 									<fmt:formatNumber value="${i}" minIntegerDigits="2" />
 								</option>
 							</c:forEach>
 						</select>일
 						<select id="add_r_p_per" name="add_r_p_per" class="form-select text-center toNumbers readonly">
 							<c:forEach var="i" begin="0" end="10" step="1">
-								<option value="<fmt:formatNumber value="${i}"/>">
+								<option value="<fmt:formatNumber value="${i}"/>" style="font-size: 0.9rem;font-weight:bold;">
 									<fmt:formatNumber value="${i}" minIntegerDigits="2" />
 								</option>
 							</c:forEach>
@@ -1313,142 +1333,162 @@ $(document).ready(function() {
 				</div>
 				
 				<div class="row mb-2">
-					<label class="form-label col-form-label col-md-3">Late Check In</label>
+					<label class="form-label col-form-label col-md-3" style="font-size: 1rem;font-weight:bold;"><span style="box-shadow: inset 0 -2px 0 #dcdcdc;">Early Check In</span></label>
 					<div class="col-md-9">
-						<select id="late_check_in" name="late_check_in" style="text-align: center" class="form-select readonly">
+						<select id="late_check_in" name="late_check_in" style="text-align: center" class="form-select text-center readonly">
 							<c:forEach items="${lateInYnList}" var="lateInYn" varStatus="status">
-								<option value="${lateInYn.CODE}">${lateInYn.CODE_NM}</option>
+								<option value="${lateInYn.CODE}" style="font-size: 0.9rem;font-weight:bold;">${lateInYn.CODE_NM}</option>
 							</c:forEach>
 						</select>
 					</div>
 				</div>
 				
 				<div class="row mb-2">
-					<label class="form-label col-form-label col-md-3">Late Check Out</label>
+					<label class="form-label col-form-label col-md-3" style="font-size: 1rem;font-weight:bold;"><span style="box-shadow: inset 0 -2px 0 #dcdcdc;">Late Check Out</span></label>
 					<div class="col-md-9">
-						<select id="late_check_out" name="late_check_out" style="text-align: center" class="form-select readonly">
+						<select id="late_check_out" name="late_check_out" style="text-align: center" class="form-select text-center readonly">
 							<c:forEach items="${lateOutYnList}" var="lateOutYn" varStatus="status">
-								<option value="${lateOutYn.CODE}">${lateOutYn.CODE_NM}</option>
+								<option value="${lateOutYn.CODE}" style="font-size: 0.9rem;font-weight:bold;">${lateOutYn.CODE_NM}</option>
 							</c:forEach>
 						</select>
 					</div>
 				</div>
 				
-				<div class="total-people-wrap">
-					<div class="row mb-2" style = "justify-content:flex-end">
-						<label class="form-label col-form-label col-md-2"></label>
-						<div class="col-md-9 inline-flex">
-							<div class="input-group">
-								<div class="input-group-prepend">
-									<span class="input-group-text" style="padding : 0.5rem 0.1rem 0.5rem 0rem">멤　버　</span>
-								</div>
-								<select id="m_person" name="m_person" class="form-select text-center toNumbers addCom readonly">
-									<c:forEach var="i" begin="1" end="15" step="1">
-										<option value="<fmt:formatNumber value="${i}"/>">
-											<fmt:formatNumber value="${i}" minIntegerDigits="2" />
-										</option>
-									</c:forEach>
-								</select>명
-							</div>
-							<label class="form-label col-form-label  col-md-2"></label>
-							<div class="input-group">
-								<div class="input-group-prepend">
-									<span class="input-group-text" style="padding : 0.5rem 0.1rem 0.5rem 0rem">일　반　</span>
-								</div>
-								<select id="g_person" name="g_person" class="form-select text-center toNumbers addCom readonly">
-									<c:forEach var="i" begin="0" end="15" step="1">
-										<option value="<fmt:formatNumber value="${i}"/>">
-											<fmt:formatNumber value="${i}" minIntegerDigits="2" />
-										</option>
-									</c:forEach>
-								</select>명
+				<div class="row mb-2" style="display:flex;">
+					<label class="form-label col-form-label col-md-3" style="font-size: 1rem;font-weight:bold;">
+						<span style="box-shadow: inset 0 -2px 0 #dcdcdc;">인원내역</span>
+						
+					</label>
+					<div class="total-people-wrap reserve_count_box">
+						<div class="row mb-2" style = "justify-content:center">
+						<span class="input-group-text" style="color: white; font-size: 1rem; position: relative; top: -10px; opacity:85%; background-color:#008B8B; font-weight:bold; justify-content: center; height:25px">라운딩</span>
+							<div class="col-md-9 inline-flex">
+								<div class="input-group">
+									<div class="input-group-prepend" id="reserve_count_input_box">
+										<span class="input-group-text" style="padding : 0.5rem 0.1rem 0.5rem 0rem">멤　버　</span>
+									</div>
+									<select id="m_person" name="m_person" class="form-select text-center toNumbers addCom readonly">
+										<c:forEach var="i" begin="1" end="15" step="1">
+											<option value="<fmt:formatNumber value="${i}"/>" style="font-size: 0.9rem;font-weight:bold;">
+												<fmt:formatNumber value="${i}" minIntegerDigits="2" />
+											</option>
+										</c:forEach>
+									</select>
+								</div>명
+								
+								<label class="form-label col-form-label  col-md-2"></label>
+								<label class="form-label col-form-label  col-md-2"></label>
+								<div class="input-group">
+									<div class="input-group-prepend" id="reserve_count_input_box">
+										<span class="input-group-text" style="padding : 0.5rem 0.1rem 0.5rem 0rem">일　반　</span>
+									</div>
+									<select id="g_person" name="g_person" class="form-select text-center toNumbers addCom readonly">
+										<c:forEach var="i" begin="0" end="15" step="1">
+											<option value="<fmt:formatNumber value="${i}"/>" style="font-size: 0.9rem;font-weight:bold;">
+												<fmt:formatNumber value="${i}" minIntegerDigits="2" />
+											</option>
+										</c:forEach>
+									</select>
+								</div>명
 							</div>
 						</div>
 					</div>
+				</div>
 					
-					<div class="row mb-2" style = "justify-content:flex-end">
-						<label class="form-label col-form-label col-md-2"></label>
-						<div class="col-md-9 inline-flex">
-							<div class="input-group">
-								<div class="input-group-prepend">
-									<span class="input-group-text" style="padding : 0.5rem 0.1rem 0.5rem 0rem">비라운딩</span>
-								</div>
-								<select id="n_person" name="n_person" class="form-select text-center toNumbers addCom readonly">
-									<c:forEach var="i" begin="0" end="15" step="1">
-										<option value="<fmt:formatNumber value="${i}"/>">
-											<fmt:formatNumber value="${i}" minIntegerDigits="2" />
-										</option>
-									</c:forEach>
-								</select>명
-							</div>
-							<label class="form-label col-form-label  col-md-2"></label>
-							<div class="input-group">
-								<div class="input-group-prepend">
-									<span class="input-group-text" style="padding : 0.5rem 0.1rem 0.5rem 0rem">소　아　</span>
-								</div>
-								<select id="k_person" name="k_person" class="form-select text-center toNumbers addCom readonly">
-									<c:forEach var="i" begin="0" end="15" step="1">
-										<option value="<fmt:formatNumber value="${i}"/>">
-											<fmt:formatNumber value="${i}" minIntegerDigits="2" />
-										</option>
-									</c:forEach>
-								</select>명
+				<div class="row mb-2">
+					<label class="form-label col-form-label col-md-3" id="display_label" style="padding:0px;">　</label>
+					<div class="total-people-wrap reserve_count_box">
+						<div class="row mb-2" style = "justify-content:center">
+							<span class="input-group-text" style="color: white; font-size: 1rem; position: relative; top: -10px; opacity:85%; background-color:#008B8B; font-weight:bold; justify-content: center; height:25px">비라운딩</span>
+							<div class="col-md-9 inline-flex" style="grid-column-gap: 7px;">
+								<div class="input-group">
+									<div class="input-group-prepend" id="reserve_count_input_box">
+										<span class="input-group-text" style="padding : 0.5rem 0.1rem 0.5rem 0rem">성　인　</span>
+									</div>
+									
+									<select id="n_person" name="n_person" class="form-select text-center toNumbers addCom readonly">
+										<c:forEach var="i" begin="0" end="15" step="1">
+											<option value="<fmt:formatNumber value="${i}"/>" style="font-size: 0.9rem;font-weight:bold;">
+												<fmt:formatNumber value="${i}" minIntegerDigits="2" />
+											</option>
+										</c:forEach>
+									</select>
+								</div>명
+								
+								<label class="form-label col-form-label  col-md-2"></label>
+								<div class="input-group">
+									<div class="input-group-prepend" id="reserve_count_input_box">
+										<span class="input-group-text" style="padding : 0.5rem 0.1rem 0.5rem 0rem">소　아　</span>
+									</div>
+									<select id="k_person" name="k_person" class="form-select text-center toNumbers addCom readonly">
+										<c:forEach var="i" begin="0" end="15" step="1">
+											<option value="<fmt:formatNumber value="${i}"/>" style="font-size: 0.9rem;font-weight:bold;">
+												<fmt:formatNumber value="${i}" minIntegerDigits="2" />
+											</option>
+										</c:forEach>
+									</select>
+								</div>명
+								
+								<label class="form-label col-form-label  col-md-2"></label>
+								<div class="input-group">
+									<div class="input-group-prepend" id="reserve_count_input_box">
+										<span class="input-group-text" style="padding : 0.5rem 0.1rem 0.5rem 0rem">영유아　</span>
+									</div>
+									<select id="i_person" name="i_person" class="form-select text-center toNumbers addCom readonly">
+										<c:forEach var="i" begin="0" end="15" step="1">
+											<option value="<fmt:formatNumber value="${i}"/>" style="font-size: 0.9rem;font-weight:bold;">
+												<fmt:formatNumber value="${i}" minIntegerDigits="2" />
+											</option>
+										</c:forEach>
+									</select>
+								</div>명
 							</div>
 						</div>
 					</div>
+				</div>
 					
-					<div class="row mb-2" style = "justify-content:flex-end">
-						<label class="form-label col-form-label col-md-2"></label>
-						<div class="col-md-9 inline-flex">
-							<div class="input-group">
-								<div class="input-group-prepend">
-									<span class="input-group-text" style="padding : 0.5rem 0.1rem 0.5rem 0rem">영유아　</span>
-								</div>
-								<select id="i_person" name="i_person" class="form-select text-center toNumbers addCom readonly">
-									<c:forEach var="i" begin="0" end="15" step="1">
-										<option value="<fmt:formatNumber value="${i}"/>">
-											<fmt:formatNumber value="${i}" minIntegerDigits="2" />
-										</option>
-									</c:forEach>
-								</select>명
+				<div class="row mb-2" style = "justify-content:flex-end;">
+					<div class="col-md-9 inline-flex">
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text" id="reserve_select_box" style="height: 2.5rem; padding : 0.5rem 0.1rem 0.5rem 0rem">총　인　원　　　</span>
 							</div>
-							<label class="form-label col-form-label  col-md-2"></label>
-							<div class="input-group">
-								<div class="input-group-prepend">
-									<span class="input-group-text" style="padding : 0.5rem 0.1rem 0.5rem 0rem">총인원　</span>
-								</div>
-								<input id="tot_person" name="tot_person" type="text" class="form-control text-end toNumbers" maxlength="2" value="01" readonly>명
-							</div>
-						</div>
+							<input id="tot_person" name="tot_person" type="text" class="form-control text-center toNumbers" style="font-size: 0.9rem;font-weight:bold;" maxlength="2" value="01" readonly>
+						</div>명
 					</div>
-					<span style="text-align:left; opacity:30%; color:red; font-size:0.7rem">
-									         ※   인원 등록 시 [동반자]탭 내역이 자동생성 되며,<br/>
-					  &nbsp;&nbsp;&nbsp;&nbsp;수정 시 [동반자]탭 내역이 재생성 됩니다.
-					</span>
+				</div>
+				
+				<div style="display:flex; gap:3px; margin-bottom:10px;">
+					<label class="form-label col-form-label  col-md-3"></label>
+					<span style="color:red;">※</span>
+					<span style="text-align:left; opacity:90%; color:red; font-size:0.8rem; word-break:keep-all; padding-right:5%;">
+						인원 등록 시 [동반자]탭 내역이 자동생성 되며, 수정 시 [동반자]탭 내역이 재생성 됩니다.
+					</span>	
 				</div>
 				
 				<div id="packageDiv" class="row mb-2">
-					<label class="form-label col-form-label col-md-3">패키지</label>
+					<label class="form-label col-form-label col-md-3" style="font-size: 1rem;font-weight:bold;"><span style="box-shadow: inset 0 -2px 0 #dcdcdc;">패키지</span></label>
 					<div class="col-md-9">
 						<select id="add_hdng_gbn" name="add_hdng_gbn" class="form-select text-center readonly">
-							<option value="">-선택-</option>
+							<option value="" style="font-size: 0.9rem;font-weight:bold;">-선택-</option>
 							<c:forEach items="${packageList}" var="add_hdng_gbn" varStatus="status">
-								<option value="${add_hdng_gbn.CODE}">${add_hdng_gbn.CODE_NM}</option>
+								<option value="${add_hdng_gbn.CODE}" style="font-size: 0.9rem;font-weight:bold;">${add_hdng_gbn.CODE_NM}</option>
 							</c:forEach>
 						</select>
 					</div>
 				</div>
 				
 				<div class="row mb-2">
-					<label class="form-label col-form-label col-md-3">추가 요청사항</label>
+					<label class="form-label col-form-label col-md-3" style="font-size: 1rem;font-weight:bold;"><span style="box-shadow: inset 0 -2px 0 #dcdcdc;">추가 요청사항</span></label>
 					<div class="col-md-9">
 						<textarea id="remark" name="remark" class="form-control readonly" rows="3"></textarea>
 					</div>
 				</div>
+				
 				<div class="mb-2">
-					<div class="inline-flex calc">
-						<button id="calBtn" name="calBtn" type="button" class="btn btn-pink" disabled="disabled">가계산</button>
-						<input id="cal_amt" name="cal_amt" type="text" class="form-control text-end toNumber" readonly>원
+					<div class="inline-flex calc" id="reserve_cal_box"style="display:flex; justify-content:right; width:75%; margin-left:auto; gap:10px;">
+						<button id="calBtn" name="calBtn" type="button" class="btn btn-pink" style="min-width:60px;" disabled="disabled">가계산</button>
+						<div class="inline-flex" style="flex-grow:1"><input id="cal_amt" name="cal_amt" type="text" class="form-control text-end toNumber" value="0" readonly>원</div>
 					</div>
 					<small class="text-theme">
 						계산 금액은 정확한 금액이 아닙니다. 예약전송해 주시면 추후 정확한 금액을 안내 드립니다.
@@ -1459,7 +1499,7 @@ $(document).ready(function() {
 			
 			<!-- BEGIN tab-pane -->
 			<div class="tab-pane fade" id="default-tab-3">
-				<button id="comPlusBtn" name="comPlusBtn" type="button" class="btn btn-success btn-icon btn-lg btn-write readonly" style="opacity:30%; background-color:#348FE2; width:22px; height:22px; font-size:12px; line-height:22px; right:2rem; top:122px;">
+				<button id="comPlusBtn" name="comPlusBtn" type="button" class="btn btn-success btn-icon btn-lg btn-write readonly">
 					<i class="fas fa-plus"></i>
 				</button>
 				<div class="total-people-wrap">

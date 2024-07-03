@@ -145,9 +145,9 @@ $(window).ready( function() {
 					
 					<thead>
 						<tr class="table-success">
-							<td>상품정보</td>
-							<td>차량</td>
-							<td>금액</td>
+							<th>상품정보</th>
+							<th>차량</th>
+							<th>금액</th>
 						</tr>
 					</thead>
 					
@@ -292,9 +292,9 @@ $(window).ready( function() {
 					
 					<thead>
 						<tr class="table-success">
-							<td>상품정보</td>
-							<td>차량</td>
-							<td>금액</td>
+							<th>상품정보</th>
+							<th>차량</th>
+							<th>금액</th>
 						</tr>
 					</thead>
 					
@@ -439,9 +439,9 @@ $(window).ready( function() {
 					
 					<thead>
 						<tr class="table-success">
-							<td>상품정보</td>
-							<td>차량</td>
-							<td>금액</td>
+							<th>상품정보</th>
+							<th>차량</th>
+							<th>금액</th>
 						</tr>
 					</thead>
 					

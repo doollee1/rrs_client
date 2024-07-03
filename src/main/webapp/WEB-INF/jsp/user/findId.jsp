@@ -79,12 +79,12 @@ function findId(){
 
 <!-- BEGIN register -->
 <div class="register register-with-news-feed find">
+	<div class="register-background"></div>
 	<!-- BEGIN register-container --> 
 	<div class="register-container"> 
-
 		<!-- BEGIN register-content -->
 		<div class="register-content">
-			<form >
+			<form>
 				<div class="text"><i class="fa-solid fa-check"></i> 등록된 회원정보로 아이디를 찾아 드립니다.</div>
 				<div class="mb-3">
 					<label class="mb-2">이름 </label>
@@ -104,16 +104,12 @@ function findId(){
 		<!-- END register-content -->
 
 	</div>
-	<!-- END register-container -->
+	<!-- END register-container -->	
 	
 	<!-- BEGIN #footer -->
 	<div id="footer" class="app-footer m-0">
-		<a href="#" class="btn btn-success btn-lg" id="submit" onclick="findId();">완   료</a>
-		<!-- 
-		<a href="#" class="btn btn-success btn-lg" id="test" onclick="test();">테스트</a>
-		 -->
+		<a href="#" class="btn btn-success btn-lg" onclick="findId();">완료</a>
 	</div>
 	<!-- END #footer -->
-	
 </div>
 <!-- END #register -->

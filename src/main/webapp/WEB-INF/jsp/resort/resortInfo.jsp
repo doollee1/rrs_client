@@ -26,11 +26,13 @@ $(window).ready( function() {
 			<li class="nav-item">
 				<a href="#default-tab-1" data-bs-toggle="tab" class="nav-link active">
 					<span class="d-sm-none">Le Grandeur Hotel</span>
+					<span class="d-sm-block d-none">Le Grandeur Hotel</span>
 				</a>
 			</li>
 			<li class="nav-item">
 				<a href="#default-tab-2" data-bs-toggle="tab" class="nav-link">
 					<span class="d-sm-none">Golf Country Club</span>
+					<span class="d-sm-block d-none">Golf Country Club</span>
 				</a>
 			</li>
 		</ul>

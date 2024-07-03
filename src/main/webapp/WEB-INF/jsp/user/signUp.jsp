@@ -239,9 +239,9 @@ function pwChk(){
 	 
 <!-- BEGIN register -->
 <div class="register register-with-news-feed">
+	<div class="register-background"></div>
 	<!-- BEGIN register-container -->
 	<div class="register-container">
-
 		<!-- BEGIN register-content -->
 		<div class="register-content">
 <!-- 			<form action="index.html" method="GET" class="fs-13px"> -->
@@ -282,14 +282,13 @@ function pwChk(){
 					<input type="checkbox" id="privacy" name="privacy" value="privacyYN">
 					<a href="/policy.do" style="text-decoration-line:underline;float:right">상세보기</a>
 				</div>
-				<input type="hidden" id="mem_gbn" name="mem_gbn" class="form-control" placeholder="회원구분"><BR></BR>
-				<input type="hidden" id="ret_yn" name="ret_yn" class="form-control" placeholder="탈퇴여부"><BR></BR>
-				<input type="hidden" id="reg_dtm" name="reg_dtm" class="form-control" placeholder="등록일시"><BR></BR>
-				<input type="hidden" id="upd_dtm" name="upd_dtm" class="form-control" placeholder="수정일시"><BR></BR>
+				<input type="hidden" id="mem_gbn" name="mem_gbn" class="form-control" placeholder="회원구분">
+				<input type="hidden" id="ret_yn" name="ret_yn" class="form-control" placeholder="탈퇴여부">
+				<input type="hidden" id="reg_dtm" name="reg_dtm" class="form-control" placeholder="등록일시">
+				<input type="hidden" id="upd_dtm" name="upd_dtm" class="form-control" placeholder="수정일시">
 				<input type="hidden" id="RSAModulus" name="RSAModulus" value="${RSAModulus }"/>
 				<input type="hidden" id="RSAExponent" name="RSAExponent" value="${RSAExponent}"/>
 <!-- 			</form> -->
-			
 		</div>
 		<!-- END register-content -->
 

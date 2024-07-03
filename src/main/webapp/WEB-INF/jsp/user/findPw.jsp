@@ -78,9 +78,9 @@ function findPw(){
 
 <!-- BEGIN register -->
 <div class="register register-with-news-feed find">
+	<div class="register-background"></div>
 	<!-- BEGIN register-container -->
 	<div class="register-container">
-
 		<!-- BEGIN register-content -->
 		<div class="register-content">
 			<form >
@@ -97,21 +97,17 @@ function findPw(){
 					<label class="mb-2">이메일 </label>
 					<input type="email" class="form-control fs-13px" placeholder="이메일" id="email"/>
 				</div> 
-				<div>초기화된 비밀번호를 회원가입시 입력한 이메일로 보내 드립니다. 초기화된 비밀번호를 받으시고 변경해서 사용하세요.</div>
-				
 			</form>
 			
 		</div>
 		<!-- END register-content -->
-
 	</div>
 	<!-- END register-container -->
 	
 	<!-- BEGIN #footer -->
 	<div id="footer" class="app-footer m-0">
-		<a href="#" class="btn btn-success btn-lg" onclick="findPw();">완   료</a>
+		<a href="#" class="btn btn-success btn-lg" onclick="findPw();">완료</a>
 	</div>
 	<!-- END #footer -->
-	
 </div>
 <!-- END #register -->

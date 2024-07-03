@@ -26,7 +26,6 @@
 	
 	#reserve_count_input_box {width:100%;}
 	#reserve_count_input_box > .input-group-text {display:inline-block; width:100%;}
-
 </style>
 
 <script>
@@ -68,13 +67,15 @@ $(document).ready(function() {
 			
 			if($("#chk_in_dt").val() == "") {
 				alert("체크인 날짜를 선택하세요.");
-				$("#g_person").val("00")
+				$("#g_person").val("00");
+				$("#packageDiv").hide();
 				return false;
 			}
 			
 			if($("#chk_out_dt").val() == "") {
 				alert("체크아웃 날짜를 선택하세요.");
-				$("#g_person").val("00")
+				$("#g_person").val("00");
+				$("#packageDiv").hide();
 				return false;
 			}
 			
@@ -277,7 +278,7 @@ $(document).ready(function() {
 					prodCond = 0;
 					twinCnt = 0;
 					kingCnt = 0;
-					alert("등록이 완료되었습니다.");
+					alert("등록이 완료되었습니다.\n예약 현황에서 등록해주신\n예약 요청에 대한 확인이 가능하며,\n관리자가 예약 확정을 하면\n다음 단계로 진행 가능합니다.");
 					location.replace("/main.do");
 				} else {
 					chkReqDt = "";
@@ -1176,6 +1177,7 @@ $(document).ready(function() {
 						</select>
 					</div>
 				</div>
+				
 				<div class="row mb-2">
 					<label class="form-label col-form-label col-md-3" style="font-size: 1rem;font-weight:bold;"><span style="box-shadow: inset 0 -2px 0 #dcdcdc;">Flight Out</span></label>
 					<div class="col-md-9 inline-flex">
@@ -1195,18 +1197,21 @@ $(document).ready(function() {
 						</select>
 					</div>
 				</div>
+				
 				<div class="row mb-2">
 					<label class="form-label col-form-label col-md-3" style="font-size: 1rem;font-weight:bold;"><span style="box-shadow: inset 0 -2px 0 #dcdcdc;">항공권 첨부</span></label>
 					<div class="col-sm-9">
 						<input id="fligthImage" name="fligthImage" type="file" accept="image/*" class="form-control" />
 					</div>
 				</div>
+				
 				<div class="row mb-2">
 					<label class="form-label col-form-label col-md-3" style="font-size: 1rem;font-weight:bold;"><span style="box-shadow: inset 0 -2px 0 #dcdcdc;">한글이름</span></label>
 					<div class="col-sm-9">
 						<input type="text" class="form-control text-muted text-center" value="${sessionScope.login.han_name}" readonly>
 					</div>
 				</div>
+				
 				<div class="row mb-2">
 					<label class="form-label col-form-label col-md-3" style="font-size: 1rem;font-weight:bold;"><span style="box-shadow: inset 0 -2px 0 #dcdcdc;">영문이름</span></label>
 					<div class="col-sm-9">
@@ -1283,7 +1288,7 @@ $(document).ready(function() {
 				<div class="row mb-2">
 					<label class="form-label col-form-label col-md-3" style="font-size: 1rem;font-weight:bold;"><span style="box-shadow: inset 0 -2px 0 #dcdcdc;">Early Check In</span></label>
 					<div class="col-md-9">
-						<select id="late_check_in" name="late_check_in" style="text-align: center" class="form-select">
+						<select id="late_check_in" name="late_check_in" style="text-align: center" class="form-select text-center">
 							<c:forEach items="${lateInYnList}" var="lateInYn" varStatus="status">
 								<option value="${lateInYn.CODE}" style="font-size: 0.9rem;font-weight:bold;">${lateInYn.CODE_NM}</option>
 							</c:forEach>
@@ -1294,7 +1299,7 @@ $(document).ready(function() {
 				<div class="row mb-2">
 					<label class="form-label col-form-label col-md-3" style="font-size: 1rem;font-weight:bold;"><span style="box-shadow: inset 0 -2px 0 #dcdcdc;">Late Check Out</span></label>
 					<div class="col-md-9">
-						<select id="late_check_out" name="late_check_out" style="text-align: center" class="form-select">
+						<select id="late_check_out" name="late_check_out" style="text-align: center" class="form-select text-center">
 							<c:forEach items="${lateOutYnList}" var="lateOutYn" varStatus="status">
 								<option value="${lateOutYn.CODE}" style="font-size: 0.9rem;font-weight:bold;">${lateOutYn.CODE_NM}</option>
 							</c:forEach>
@@ -1325,7 +1330,6 @@ $(document).ready(function() {
 								</div>명
 								
 								<label class="form-label col-form-label  col-md-2"></label>
-								
 								<label class="form-label col-form-label  col-md-2"></label>
 								<div class="input-group">
 									<div class="input-group-prepend" id="reserve_count_input_box">
@@ -1400,7 +1404,7 @@ $(document).ready(function() {
 					<div class="col-md-9 inline-flex">
 						<div class="input-group">
 							<div class="input-group-prepend">
-								<span class="input-group-text" id="reserve_select_box" style="padding : 0.5rem 0.1rem 0.5rem 0rem">총인원　</span>
+								<span class="input-group-text" id="reserve_select_box" style="height: 2.5rem; padding : 0.5rem 0.1rem 0.5rem 0rem">총　인　원　　　</span>
 							</div>
 							<input id="tot_person" name="tot_person" type="text" class="form-control text-center toNumbers" style="font-size: 0.9rem;font-weight:bold;" maxlength="2" value="01" readonly>
 						</div>명
@@ -1412,11 +1416,11 @@ $(document).ready(function() {
 					<span style="color:red;">※</span>
 					<span style="text-align:left; opacity:90%; color:red; font-size:0.8rem; word-break:keep-all; padding-right:5%;">
 						인원 등록 시 [동반자]탭 내역이 자동생성 되며, 수정 시 [동반자]탭 내역이 재생성 됩니다.
-					<span>	
+					</span>	
 				</div>
 
 				<div id="packageDiv" class="row mb-2">
-					<label class="form-label col-form-label col-md-3" style="font-size: 1rem;font-weight:bold;"><span style="box-shadow: inset 0 -2px 0 #dcdcdc;;">패키지</span></label>
+					<label class="form-label col-form-label col-md-3" style="font-size: 1rem;font-weight:bold;"><span style="box-shadow: inset 0 -2px 0 #dcdcdc;">패키지</span></label>
 					<div class="col-md-9">
 						<select id="add_hdng_gbn" class="form-select text-center">
 							<option value="">-선택-</option>

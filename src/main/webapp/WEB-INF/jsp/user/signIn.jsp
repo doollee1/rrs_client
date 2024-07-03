@@ -95,14 +95,6 @@ function signIn(){
 }
 </script>
 
-<style>
-@media (min-width: 767.98px) {
-	.login.login-with-news-feed {display:flex;}
-	.login-container {min-width: 500px;}
-	.login-background {border:double 4px; flex:1;}
-}
-</style>
-
 <!-- BEGIN login -->
 <div class="login login-with-news-feed">
 	<div class="login-background"></div>
@@ -135,7 +127,7 @@ function signIn(){
 			<input type="hidden" id="RSAModulus" name="RSAModulus" value="${RSAModulus }"/>
 			<input type="hidden" id="RSAExponent" name="RSAExponent" value="${RSAExponent}"/>
 			<label>
-                  <input type="checkbox" name="useCookie"> 자동로그인
+                  <input type="checkbox" name="useCookie" style="margin-bottom:.9375rem"> 자동로그인
             </label>
 			<div class="mb-15px">
 				<button type="button" class="btn btn-theme h-45px w-100 btn-lg fs-14px" onclick="signIn()">로그인</button>				

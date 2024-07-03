@@ -85,6 +85,7 @@ ul li {list-style:none;}
 .app-footer {position:fixed;bottom:0;background-color:var(--bs-body-bg);border-top:none;padding:0.9375rem 20px;left:220px;right:0px;display:flex;grid-column-gap:10px;}
 .app-footer .btn {font-weight:500;font-size:1rem;flex:1;}
 .register.register-with-news-feed .app-footer{background-color:#fff}
+.register .app-footer {width:100%; max-width:500px; left:auto;}
 
 
 /*page loader hidden*/
@@ -133,8 +134,9 @@ ul li {list-style:none;}
 .login.login-with-news-feed, .register.register-with-news-feed.find {min-height:unset;}
 .login.login-with-news-feed .login-container, .login.login-with-news-feed .register-container, .register.register-with-news-feed .login-container, .register.register-with-news-feed .register-container
 {min-height:calc(100vh - 60px);}
-.login-background {background:url('../img/golf02.jpg') no-repeat center fixed; background-size:cover;}
-.register.register-with-news-feed.find .register-container {min-height:calc(100vh - 120px);}
+.login-background, .register-background {background:url('../img/golf02.jpg') no-repeat center fixed; background-size:cover;}
+.infoChange-background {background:url('../img/golf06.png') no-repeat center fixed; background-size:cover;}
+.register.register-with-news-feed.find .register-container {min-height:calc(100vh - 60px);}
 .btn-links {display:flex;}
 .btn-links a:first-child {margin-right:15px}
 .btn-links .btn-join{margin-left:auto}
@@ -142,6 +144,12 @@ ul li {list-style:none;}
 .register-content .text > i {margin-right:5px}
 .register.register-with-news-feed.set {min-height:unset;}
 .register.register-with-news-feed.set .register-container{justify-content:flex-start;}
+
+@media (min-width: 767.98px) {
+	.login.login-with-news-feed, .register.register-with-news-feed, register.register-with-news-feed {display:flex;}
+	.login-container, .register-container {min-width: 500px;}
+	.login-background, .register-background, .infoChange-background {border:double 4px; flex:1;}
+}
 
 
 /* 04. Index =================================*/
