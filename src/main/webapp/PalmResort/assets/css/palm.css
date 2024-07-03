@@ -130,9 +130,10 @@ ul li {list-style:none;}
 
 /* 03. Login =================================*/
 .login.login-with-news-feed .login-header .brand .logo, .register.register-with-news-feed .login-header .brand .logo {border:none;background-color:transparent;font-size:unset;}
-.login.login-with-news-feed, .register.register-with-news-feed.find {min-height:unset}
+.login.login-with-news-feed, .register.register-with-news-feed.find {min-height:unset;}
 .login.login-with-news-feed .login-container, .login.login-with-news-feed .register-container, .register.register-with-news-feed .login-container, .register.register-with-news-feed .register-container
 {min-height:calc(100vh - 60px);}
+.login-background {background:url('../img/golf02.jpg') no-repeat center fixed; background-size:cover;}
 .register.register-with-news-feed.find .register-container {min-height:calc(100vh - 120px);}
 .btn-links {display:flex;}
 .btn-links a:first-child {margin-right:15px}

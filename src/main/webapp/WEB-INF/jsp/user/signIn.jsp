@@ -95,9 +95,17 @@ function signIn(){
 }
 </script>
 
+<style>
+@media (min-width: 767.98px) {
+	.login.login-with-news-feed {display:flex;}
+	.login-container {min-width: 500px;}
+	.login-background {border:double 4px; flex:1;}
+}
+</style>
+
 <!-- BEGIN login -->
 <div class="login login-with-news-feed">
-
+	<div class="login-background"></div>
 	<!-- BEGIN login-container -->
 	<div class="login-container">
 		<!-- BEGIN login-header -->
@@ -114,7 +122,6 @@ function signIn(){
 			</div>
 		</div>
 		<!-- END login-header -->
-		
 		<!-- BEGIN login-content -->
 		<div class="login-content">
 			<div class="form-floating mb-15px">
