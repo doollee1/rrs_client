@@ -146,10 +146,10 @@ ul li {list-style:none;}
 .register.register-with-news-feed.set .register-container{justify-content:flex-start;}
 
 @media (min-width: 767.98px) {
-	.login.login-with-news-feed, .register.register-with-news-feed, register.register-with-news-feed {display:flex;}
+	.login.login-with-news-feed, .register.register-with-news-feed, register.register-with-news-feed {display:flex; background:#FFFFFF;}
 	.login-container, .register-container {min-width: 500px;}
-	.login-background, .register-background, .infoChange-background {border:double 4px; flex:1;}
-}
+	.login-background, .register-background, .infoChange-background {border:double 4px; flex:1; margin:0 0 0.9375rem 0.9375rem;}
+	.infoChange-background {heigth:calc(100vh - 67px)}
 
 
 /* 04. Index =================================*/

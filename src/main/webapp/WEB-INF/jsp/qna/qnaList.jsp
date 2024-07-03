@@ -163,11 +163,13 @@ function nextPage(){
 			<li class="nav-item">
 				<a href="#default-tab-1" data-bs-toggle="tab" class="nav-link active">
 					<span class="d-sm-none">전체</span>
+					<span class="d-sm-block d-none">전체</span>
 				</a>
 			</li>
 			<li class="nav-item" onclick="myQnaList()">
 				<a href="#default-tab-2" data-bs-toggle="tab" class="nav-link">
 					<span class="d-sm-none">MY</span>
+					<span class="d-sm-block d-none">MY</span>
 				</a>
 			</li>
 		</ul>
