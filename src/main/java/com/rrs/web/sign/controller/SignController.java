@@ -168,7 +168,17 @@ public class SignController {
 		}
 		
 		PrivateKey privateKey = (PrivateKey) session.getAttribute(SignController.RSA_WEB_KEY);
-		vo.setPasswd(decryptRsa(privateKey, vo.getPasswd()));
+		
+		//비밀번호 복호와 오류발생시(
+		try {
+			vo.setPasswd(decryptRsa(privateKey, vo.getPasswd()));
+		} catch(Exception e) {
+			
+			e.printStackTrace();
+			//세션이 종료후 다시 로그인할 경우
+			return "E";
+		}
+		
 		vo.setPasswd(EgovFileScrty.encryptPassword(vo.getPasswd(), vo.getUser_id()));
 		
 		SignVO login = this.signService.signIn(vo);
