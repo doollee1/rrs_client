@@ -76,7 +76,7 @@ function infoChange(){
 	rsa.setPublic($('#RSAModulus').val(),$('#RSAExponent').val());
 	
 	var user_id		= $("#user_id").val();						<%//사용자id%>
-	var han_name	= $("#han_name").val();						<%//한글이름%>
+	/* var han_name	= $("#han_name").val();		  */				<%//한글이름%>
 	var passwd		= rsa.encrypt($("#passwd").val());			<%//비밀번호%>
 	var passwdChk	= rsa.encrypt($("#passwdChk").val());		<%//비밀번호중복확인%>
 	var passwdOri	= rsa.encrypt($("#passwdOri").val());		<%//기존비밀번호%>
@@ -84,6 +84,11 @@ function infoChange(){
 	var upd_dtm		= $("#upd_dtm").val();						<%//수정일시%>
 	var email		= $("#email").val();						<%//이메일 %>
 	
+	if(user_id == null || user_id == ''){
+		$("#user_id").focus();
+		alert("사용자ID를 입력해주세요.");
+		return;
+	}
 	if(email == null || email == ''){
 		$("#email").focus();
 		alert("이메일을 입력해주세요.");
@@ -111,7 +116,7 @@ function infoChange(){
 			type:"POST",
 			url:"/infoChange.do",
 			data:{"user_id":user_id
-				, "han_name" : han_name
+				//, "han_name" : han_name
 				, "email" : email
 				, "passwd" : passwd
 				, "upd_dtm" : upd_dtm
@@ -163,9 +168,13 @@ function pwChk(){
 		<!-- BEGIN register-content -->
 		<div class="register-content">
 			<form action="index.html" method="GET" class="fs-13px">
-				<div class="mb-3">
+				<%-- <div class="mb-3">
 					<label class="mb-2">이름</label>
 					<input type="text" class="form-control fs-13px" placeholder="이름" readonly value="${sessionScope.han_name }" id="han_name">
+				</div> --%>
+				<div class="mb-3">
+					<label class="mb-2">아이디</label>
+					<input type="text" class="form-control fs-13px" placeholder="아아디" value="${sessionScope.user_id}" id="user_id">
 				</div>
 				<div class="mb-3">
 					<label class="mb-2">이메일 </label>
@@ -186,7 +195,7 @@ function pwChk(){
 				<div class="small" id="passwdChkText">
 					비밀번호는 8자리 이상 영문과 숫자를 포함해야 합니다.
 				</div>
-				<input type="hidden" id="user_id" name="user_id" value="${sessionScope.user_id }"/>
+				<%-- <input type="hidden" id="user_id" name="user_id" value="${sessionScope.user_id }"/> --%>
 				<input type="hidden" id="upd_dtm" name="upd_dtm" class="form-control" placeholder="수정일시"><BR></BR>
 				<input type="hidden" id="RSAModulus" name="RSAModulus" value="${RSAModulus }"/>
 				<input type="hidden" id="RSAExponent" name="RSAExponent" value="${RSAExponent}"/>
