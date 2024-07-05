@@ -150,7 +150,7 @@ ul li {list-style:none;}
 	.login-container, .register-container {min-width: 500px;}
 	.login-background, .register-background, .infoChange-background {border:double 4px; flex:1; margin:0 0 0.9375rem 0.9375rem;}
 	.infoChange-background {heigth:calc(100vh - 67px)}
-
+}
 
 /* 04. Index =================================*/
 .app-content-full-height .index-wrap {height:100%;background:url(../img/palm01.png) no-repeat center;background-size:cover;overflow:hidden;display:flex;flex-flow:column;}
