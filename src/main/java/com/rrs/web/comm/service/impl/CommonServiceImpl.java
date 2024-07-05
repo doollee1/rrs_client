@@ -86,9 +86,9 @@ public class CommonServiceImpl implements CommonService {
 					logger.info("ok : "+okJson);
 					
 					//응답결과 false
-					if(!okJson) {
-						return "N";
-					}
+					//if(!okJson) {
+						//return "N";
+					//}
 					
 					JSONArray jsonArray = (JSONArray) jsonObj.get("result");
 					int size = jsonArray.size();
@@ -96,9 +96,9 @@ public class CommonServiceImpl implements CommonService {
 					
 					
 					//채팅방이 없을 경우
-					if(size < 1) {
-						return "N";
-					}
+					//if(size < 1) {
+						//return "N";
+					//}
 					
 					//텔리그램 전송
 					url = new URL("https://api.telegram.org/bot" + token + "/sendmessage?chat_id=" + chatId + "&text=" + message); // 호출할 url
