@@ -38,7 +38,7 @@ $(window).ready( function() {
 					<!-- END 공지사항 내용 -->
 					<c:if test="${imagePath != null}">
 						<div>
-		        			<img src="${imagePath}" alt="이미지" id="arr_img">
+		        			<img src="${imagePath}" alt="이미지" id="arr_img" style="width:100%;">
 		    			</div>
 	    			</c:if>
 	    			

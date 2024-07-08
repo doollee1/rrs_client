@@ -24,8 +24,8 @@ $(window).ready( function() {
 			
 				<!-- BEGIN panel -->
 				<div class="panel panel-inverse">
-					<div class="panel-body">
-						<button class="btn btn-primary" style="float:right" onclick="history.back()">이전화면</button>
+					<div class="panel-body" style="position: relative;">
+						<button class="btn btn-primary" style="position: absolute;right: .9375rem;" onclick="history.back()">이전화면</button>
 						<div class="policy-wrap">
 <pre>						
 <span class="title">둘리정보통신 개인정보 처리방침</span>

@@ -243,7 +243,7 @@ function pwChk(){
 	<!-- BEGIN register-container -->
 	<div class="register-container">
 		<!-- BEGIN register-content -->
-		<div class="register-content">
+		<div class="register-content" style="margin-bottom: .9375rem !important;">
 <!-- 			<form action="index.html" method="GET" class="fs-13px"> -->
 				<div class="mb-3">
 					<label class="mb-2">이름 </label>
