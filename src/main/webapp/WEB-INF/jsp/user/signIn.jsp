@@ -32,6 +32,30 @@ function setEvent(){
 	});
 }
 
+//RSA 초기화
+function initRsa(){
+		
+	console.log("======== RSA초기화 ========");
+	
+	$.ajax({
+		type: "POST",
+		url : "/initRsaAjax.do",
+		data: 
+			{},
+		dataType:"json",
+		success:function(data){
+			
+			//console.log("data : "+JSON.stringify(data));
+			
+			$("#RSAModulus").val(data.RSAModulus);
+			$("#RSAExponent").val(data.RSAExponent);
+			
+			signIn();  //로그인 진행
+		}
+	});		
+}
+
+
 <%// 로그인 이벤트%>
 function signIn(){
 	
@@ -44,8 +68,8 @@ function signIn(){
 	var passwd = rsa.encrypt($("#password").val());
 	var useCookie = $("input[name=useCookie]:checked").val();
 	
-	console.log("=== user_id : "+user_id);
-	console.log("=== passwd : "+passwd);
+	//console.log("=== user_id : "+user_id);
+	//console.log("=== passwd : "+passwd);
 	console.log("=== useCookie : "+useCookie);
 	
 	
@@ -121,16 +145,16 @@ function signIn(){
 				<label for="user_id" class="d-flex align-items-center fs-13px text-gray-600">아이디</label>
 			</div>
 			<div class="form-floating mb-30px">
-				<input type="password" class="form-control h-45px fs-13px" placeholder="비밀번호" id="password" onKeyPress="if(event.keyCode == 13) javascript:signIn();"/>
+				<input type="password" class="form-control h-45px fs-13px" placeholder="비밀번호" id="password" onKeyPress="if(event.keyCode == 13) javascript:initRsa();"/>
 				<label for="password" class="d-flex align-items-center fs-13px text-gray-600">비밀번호</label>
 			</div>
-			<input type="hidden" id="RSAModulus" name="RSAModulus" value="${RSAModulus }"/>
-			<input type="hidden" id="RSAExponent" name="RSAExponent" value="${RSAExponent}"/>
+			<input type="hidden" id="RSAModulus" name="RSAModulus" />
+			<input type="hidden" id="RSAExponent" name="RSAExponent" />
 			<label>
                   <input type="checkbox" name="useCookie" style="margin-bottom:.9375rem"> 자동로그인
             </label>
 			<div class="mb-15px">
-				<button type="button" class="btn btn-theme h-45px w-100 btn-lg fs-14px" onclick="signIn()">로그인</button>				
+				<button type="button" class="btn btn-theme h-45px w-100 btn-lg fs-14px" onclick="initRsa()">로그인</button>				
 			</div>
 			<div class="mb-40px pb-40px text-dark btn-links">
 				<a href="/findId.do">아이디찾기</a>

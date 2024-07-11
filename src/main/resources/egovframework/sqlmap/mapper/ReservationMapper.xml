@@ -288,8 +288,10 @@
          , ROOM_TYPE       /* 객실타입 */
          , FLIGHT_IN       /* 도착항공기편 */
          , FLIGHT_IN_HH    /* 도착항공기시각 */
+         , FLIGHT_IN_MM    /* 도착항공기시각 */
          , FLIGHT_OUT      /* 출발항공기편 */
          , FLIGHT_OUT_HH   /* 출발항공기시각 */
+         , FLIGHT_OUT_MM   /* 출발항공기시각 */
          , M_PERSON        /* 멤버인원 */
          , G_PERSON        /* 일반인원 */
          , N_PERSON        /* 비라운딩인원 */
@@ -341,8 +343,10 @@
          , #{room_type	   }			/* 객실타입             */
          , #{flight_in	   }			/* 비행출발일자        */
          , #{flight_in_hh  }			/* 비행출발시간        */
+         , #{flight_in_mm  }			/* 비행출발시간        */
          , #{flight_out	   }			/* 비행도착일자        */
          , #{flight_out_hh }			/* 비행도착시간        */
+         , #{flight_out_mm }			/* 비행도착시간        */
          , #{m_person	   }			/* 멤버                 */
          , #{g_person	   }			/* 일반                 */
          , #{n_person	   }			/* 비라운딩            */
@@ -386,8 +390,10 @@
              , ROOM_TYPE		= #{room_type     }
              , FLIGHT_IN		= #{flight_in     }
              , FLIGHT_IN_HH		= #{flight_in_hh  }
+             , FLIGHT_IN_MM		= #{flight_in_mm  }
              , FLIGHT_OUT		= #{flight_out    }
 			 , FLIGHT_OUT_HH	= #{flight_out_hh }
+			 , FLIGHT_OUT_MM	= #{flight_out_mm }
              , M_PERSON			= #{m_person      }
              , G_PERSON			= #{g_person      }
              , N_PERSON			= #{n_person      }
@@ -557,8 +563,10 @@
              , A.ROOM_TYPE								/* 객실타입 */
              , A.FLIGHT_IN								/* 도착항공기편 */
              , A.FLIGHT_IN_HH							/* 도착항공기시각 */
+             , A.FLIGHT_IN_MM							/* 도착항공기시각 */
              , A.FLIGHT_OUT								/* 출발항공기편 */
              , A.FLIGHT_OUT_HH							/* 출발항공기시각 */
+             , A.FLIGHT_OUT_MM							/* 출발항공기시각 */
              , IFNULL(A.M_PERSON , 0) AS M_PERSON		/* 멤버인원 */
              , IFNULL(A.G_PERSON , 0) AS G_PERSON		/* 일반인원 */
              , IFNULL(A.N_PERSON , 0) AS N_PERSON		/* 비라운딩인원 */
@@ -627,8 +635,10 @@
 			,CHK_OUT_DT
 			,FLIGHT_IN
 			,FLIGHT_IN_HH
+			,FLIGHT_IN_MM
 			,FLIGHT_OUT
 			,FLIGHT_OUT_HH
+			,FLIGHT_OUT_MM
 			,BAS_YY
 			,BAS_YY_SEQ
 			,PROD_SEQ
@@ -657,8 +667,10 @@
 			,#{item.chk_out_dt}
 			,#{item.flight_in}
 			,#{item.flight_in_hh}
+			,#{item.flight_in_mm}
 			,#{item.flight_out}
 			,#{item.flight_out_hh}
+			,#{item.flight_out_mm}
 			,#{item.bas_yy}
 			,#{item.bas_yy_seq}
 			,#{item.prod_seq}

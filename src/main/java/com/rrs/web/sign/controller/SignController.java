@@ -145,10 +145,53 @@ public class SignController {
 		
 		logger.info("========= 로그인화면 진입 ===========");
 		logger.info("========= 프로파일 : "+activeProfile);
-		
-		initRsa(req);
+				
 		return "user/signIn.view1";
 	}
+	
+	
+	/**
+	 * RSA 초기화
+	 * 
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/initRsaAjax.do", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> initRsaAjax(HttpServletRequest request) throws Exception{
+		
+		logger.info("======== RSA 초기화  =======");
+		
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		HttpSession session = request.getSession();
+		 
+		KeyPairGenerator generator;
+		try {
+			generator = KeyPairGenerator.getInstance(SignController.RSA_INSTANCE);
+			generator.initialize(1024);
+
+			KeyPair keyPair = generator.genKeyPair();
+			KeyFactory keyFactory = KeyFactory.getInstance(SignController.RSA_INSTANCE);
+			PublicKey publicKey = keyPair.getPublic();
+			PrivateKey privateKey = keyPair.getPrivate();
+
+			session.setAttribute(SignController.RSA_WEB_KEY, privateKey); // session에 RSA 개인키를 세션에 저장
+
+			RSAPublicKeySpec publicSpec = (RSAPublicKeySpec) keyFactory.getKeySpec(publicKey, RSAPublicKeySpec.class);
+			String publicKeyModulus = publicSpec.getModulus().toString(16);
+			String publicKeyExponent = publicSpec.getPublicExponent().toString(16);
+
+			resultMap.put("RSAModulus", publicKeyModulus); 	//rsa modulus 
+			resultMap.put("RSAExponent", publicKeyExponent); //rsa exponent
+            
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+        return resultMap;        
+	}
+	
 	
 	// 로그인 처리
 	@RequestMapping(value = {"/signIn.do"}, method = {RequestMethod.POST})
