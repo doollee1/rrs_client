@@ -37,9 +37,7 @@ import java.math.BigDecimal;
 import java.security.SecureRandom;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 public class EgovStringUtil {
 	/**
