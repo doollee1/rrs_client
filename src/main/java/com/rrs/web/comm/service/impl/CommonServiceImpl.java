@@ -10,6 +10,7 @@ import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -189,5 +190,44 @@ public class CommonServiceImpl implements CommonService {
 			return rMap;
 		}
 		return rMap;
+	}
+	
+	
+	/**
+	 * 클라이언트IP 확인
+	 * 
+	 * @param request
+	 * @return
+	 */
+	public String getClientIP(HttpServletRequest request) {
+		
+		logger.info("===== 클라이언트IP 확인 =====");
+		
+	    String ip = request.getHeader("X-Forwarded-For");
+	    logger.info("> X-FORWARDED-FOR : " + ip);
+
+	    if (ip == null) {
+	        ip = request.getHeader("Proxy-Client-IP");
+	        logger.info("> Proxy-Client-IP : " + ip);
+	    }
+	    if (ip == null) {
+	        ip = request.getHeader("WL-Proxy-Client-IP");
+	        logger.info(">  WL-Proxy-Client-IP : " + ip);
+	    }
+	    if (ip == null) {
+	        ip = request.getHeader("HTTP_CLIENT_IP");
+	        logger.info("> HTTP_CLIENT_IP : " + ip);
+	    }
+	    if (ip == null) {
+	        ip = request.getHeader("HTTP_X_FORWARDED_FOR");
+	        logger.info("> HTTP_X_FORWARDED_FOR : " + ip);
+	    }
+	    if (ip == null) {
+	        ip = request.getRemoteAddr();
+	        logger.info("> getRemoteAddr : "+ip);
+	    }
+	    logger.info("> Result : IP Address : "+ip);
+
+	    return ip;
 	}
 }

@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.rrs.web.admin.service.AdminService;
+import com.rrs.web.comm.service.CommonService;
 
 /**
  * 관리자 Controller
@@ -37,6 +38,9 @@ public class AdminController {
 		
 	@Resource(name = "adminService")
 	AdminService adminService;   //관리자 서비스
+	
+	@Resource(name = "commonService")
+	CommonService commonService;	   //공통 서비스
 	
 	
 	/**
@@ -53,7 +57,8 @@ public class AdminController {
 		
 		logger.info("======= 관리자 예약목록 화면으로 이동 =======");
 		logger.info("======= param : "+param);
-						 
+		logger.info("======= 클라이언트IP : "+commonService.getClientIP(req));
+		
 				
 		//관리자 예약 리스트
 		List<Map<String, Object>> reservationList =  adminService.adminReservationList(param);
@@ -76,7 +81,7 @@ public class AdminController {
 	public String adminImageUploadList(Model model, @RequestParam Map<String, Object> param, HttpServletRequest req) throws Exception {
 		
 		logger.info("======= 관리자 이미지업로드 화면으로 이동 =======");
-		logger.info("======= param : "+param);
+		logger.info("======= param : "+param);		
 		
 		//관리자 이미지업로드 목록조회
 		List<Map<String, Object>> adminImageUploadList =  adminService.adminImageUploadList(param);
