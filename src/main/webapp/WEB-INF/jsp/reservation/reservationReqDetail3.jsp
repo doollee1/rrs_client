@@ -4,7 +4,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-
 <style type="text/css">
 	#wrapper_popup div[id ^= 'layerPop'] {position:absolute; width:86%; left:7%; top:30%; padding:0px 8px; background:#fff; z-index:100000;border-radius:10px;overflow:auto;display:none;border:double;}
 	#wrapper_popup div[id ^= 'layerPop'] h2 {display:block;margin:10px 0 0;padding-bottom:15px;border-bottom:1px #d8d8d8 solid;font-size:1.1em;font-weight:bold}
@@ -31,6 +30,7 @@
 <script>
 $(document).ready(function() {
 	var isCal    = false;
+	var isCom    = false;
 	var formData = new FormData();
 	var comBasyy = "";
 	var comBasyySeq = "";
@@ -66,6 +66,12 @@ $(document).ready(function() {
 		}
 	}
 	
+	/******************************************** 
+	 * @Subject : INPUT 값 체크
+	 * @Content : 한글, 영문, 숫자 입력 값 유효성 체크
+	 * @Since   : 2024.07.11
+	 * @Author  : K.J.T 
+	 ********************************************/
 	$(document).on("focusout", '[id^=onlyKor]', function() {
 		const regExp = /^[가-힣]+$/; 
 		if($(this).val() != "" && !regExp.test($(this).val())){
@@ -75,7 +81,7 @@ $(document).ready(function() {
 	});
 	
 	$(document).on("focusout", '[id^=onlyEng]', function() {
-		const regExp =  /^[a-zA-Z]*$/; 
+		const regExp = /^[A-Z,a-z, ]*$/;
 		if($(this).val() != "" && !regExp.test($(this).val())){
 	    	alert("영문으로 작성해주세요.");
 	    	$(this).val("");
@@ -92,7 +98,12 @@ $(document).ready(function() {
 	    }
 	});
 	
-	// 동반자목록 등록
+	/******************************************** 
+	 * @Subject : 예약 [저장] 진행 시
+	 * @Content : [동반자] 탭 내 등록 값 Detail 테이블 등록 
+	 * @Since   : 2024.07.11
+	 * @Author  : K.J.T 
+	 ********************************************/
 	function addCompanion() {
     	// 객체 담을 배열
         let tableArr = new Array();
@@ -100,42 +111,48 @@ $(document).ready(function() {
         	let parmBasyy = null;
         	let parmBasyyseq = null;
         	let parmProdseq = null;
-        	let parmhdngGbn = null;
+        	let parmHdngGbn = null;
             let td = $(this).children();
 
             if(td.eq(2).find('#list_num_gbn option:selected').val() == "02"){
             	parmBasyy    = comBasyy;
             	parmBasyyseq = comBasyySeq;
             	parmProdseq  = comProdSeq;
-            	parmhdngGbn  = $("#package_" ).val();
             }else if(td.eq(2).find('#list_num_gbn option:selected').val() == "03" || td.eq(2).find('#list_num_gbn option:selected').val() == "04"){
             	parmBasyy    = nokidBasyy
             	parmBasyyseq = nokidBasyySeq;
             	parmProdseq  = nokidProdSeq;
-            	parmhdngGbn  = "30";
             }
             if(typeof td.eq(2).find('#list_num_gbn option:selected').val() != "undefined"){
-	            // 테이블 객체
+            	
+            	if(td.eq(6).find('#com_hdng_gbn option:selected').val() != ""){
+            		parmHdngGbn = td.eq(6).find('#com_hdng_gbn option:selected').val();
+            	}else{
+            		parmHdngGbn = $("#package_" ).val();
+            	}
+            	
 	            let td_obj = {
 					req_dt 			: $("#req_dt" ).val(), 											// 예약일자
 					seq 			: $("#seq" ).val(),												// 예약일련번호
 					bas_yy			: parmBasyy,													// 기준년도
 					bas_yy_seq		: parmBasyyseq,													// 기준년도순번
 					prod_seq		: parmProdseq,													// 상품순번
-					hdng_gbn		: parmhdngGbn,													// 항목구분
 					dseq 			: td.eq(0).text(),												// 상세일련번호
 					com_gbn 		: td.eq(1).text(),												// 동반자구분
 					num_gbn			: td.eq(2).find('#list_num_gbn option:selected').val(),			// 인원구분
 					com_han_name	: td.eq(3).text(),							  					// 동반자한글명
 					com_eng_name	: td.eq(4).text(),							  					// 동반자영문명
 					comn_tel_no 	: td.eq(5).text().replace(/-/gi, ""),							// 동반자전화번호
-					user_id			: td.eq(6).text(),												// 신청자ID
+					hdng_gbn		: parmHdngGbn,													// 항목구분
+					user_id			: td.eq(7).text(),												// 신청자ID
 					chk_in_dt   	: $("#chk_in_dt" ).val().replace(/-/gi, ""),					// 체크인일자
 					chk_out_dt  	: $("#chk_out_dt").val().replace(/-/gi, ""),					// 체크아웃일자
 					flight_in   	: $("#flight_in" ).val(),										// 도착항공기편
-					flight_in_hh	: $("#flight_in_hh" ).val(),									// 도착항공기시각
+					flight_in_hh	: $("#flight_in_hh" ).val(),									// 도착항공기시각(시)
+					flight_in_mm	: $("#flight_in_mm" ).val(),									// 도착항공기시각(분)
 					flight_out  	: $("#flight_out").val(),										// 출발항공기편
-					flight_out_hh	: $("#flight_out_hh" ).val(),									// 도착항공기편
+					flight_out_hh	: $("#flight_out_hh" ).val(),									// 도착항공기편(시)
+					flight_out_mm	: $("#flight_out_mm" ).val(),									// 도착항공기편(분)
 					late_check_in   : $("#late_check_in").val(),									// 레이트체크인
 					late_check_out  : $("#late_check_out").val(),									// 레이트체크아웃
 					room_type  		: $("#room_type" ).val() 										// 출발항공기시각
@@ -144,6 +161,7 @@ $(document).ready(function() {
 	            tableArr.push(td_obj);
             }
         });
+        
 		$.ajax({
 			type : "POST",
 			url : "reservationComInsert.do",
@@ -164,7 +182,7 @@ $(document).ready(function() {
 					prodCond = 0;
 					twinCnt = 0;
 					kingCnt = 0;
-					alert("수정이 완료되었습니다.");
+					alert("수정이 완료되었습니다.\n예약 현황에서 등록해주신\n수정 건에 대한 확인이 가능하며,\n관리자가 예약 확정을 하면\n다음 단계로 진행 가능합니다.");
 					location.replace("/main.do");
 				} else {
 					comBasyy = "";
@@ -185,7 +203,15 @@ $(document).ready(function() {
 		});
 	}
 	
-	<%-- 이미지 변경  --%>
+	/******************************************** 
+	 * @Subject : [항공권] 파일 업로드 시
+	 * @Content : 항공권 이미지 용량 및 지원형식 체크
+	 * @Since   : 2024.07.11
+	 * @Author  : K.J.T 
+	 ********************************************/
+	<%-- 이미지 이벤트 --%>
+	$("#fligthImage").on("change", handleImgInput);
+	
 	function handleImgInput() {
 		var file = this.files[0];
 		$("#preview").attr("src", "");
@@ -218,7 +244,12 @@ $(document).ready(function() {
 		}
 	}
 
-	<%-- 이미지 rezise --%>
+	/******************************************** 
+	 * @Subject : [항공권] 파일 업로드 시
+	 * @Content : 항공권 이미지 rezise
+	 * @Since   : 2024.07.11
+	 * @Author  : K.J.T 
+	 ********************************************/
 	function resizeImage(settings) {
 		var file = settings.file;
 		var maxSize = settings.maxSize;
@@ -265,7 +296,12 @@ $(document).ready(function() {
 		});
 	}
 
-	<%-- validate --%>
+	/******************************************** 
+	* @Subject : [수정] 진행 시
+	* @Content : 필수값 및 데이터 유효성 체크
+	* @Since   : 2024.07.11
+	* @Author  : K.J.T 
+	********************************************/
 	function isValidate() {
 		if($("#chk_in_dt").val() == "") {
 			alert("체크인 날짜를 선택하세요.");
@@ -343,13 +379,41 @@ $(document).ready(function() {
 			 return false;
 		}
 		
+		$("tr#com_board").each(function (index, item) {
+			let td = $(this).children();
+			let comListNum = td.eq(0).text();
+			let comListHan = td.eq(3).text();
+			let comListEng = td.eq(4).text();
+			
+			if (comListHan == ""){
+				alert("[동반자] 탭에서 " + comListNum + "번째 동반자의 한글명을 작성해주세요.")
+				isCom = false;
+				return false;
+			}else if (comListEng == ""){
+				alert("[동반자] 탭에서 "+ comListNum + "번째 동반자의 영문명을 작성해주세요.")
+				isCom = false;
+				return false;
+			}else{
+				isCom = true;
+			}
+		});
+		
 		return true;
 	}
 
-	<%-- 이벤트 함수 --%>
+	/******************************************** 
+	 * @Subject : 이벤트 함수
+	 * @Content : 버튼, ID, CLASS 등 이벤트 정의
+	 * @Since   : 2024.07.11
+	 * @Author  : K.J.T 
+	 ********************************************/
 	function setEvent() {
-
-		<%-- 수정버튼 클릭 --%>
+		/******************************************** 
+		 * @Subject : [수정]버튼 이벤트 #1
+		 * @Content : readonly / disabled 해지
+		 * @Since   : 2024.07.11
+		 * @Author  : K.J.T 
+		 ********************************************/
 		$("#reservationUpdateBtn").on("click", function() {
 			var btnText = $(this).text();
 			
@@ -374,10 +438,12 @@ $(document).ready(function() {
 								$("#fligthImage").removeClass("readonly");
 								$("#fligthImage").parent().show();
 								$("#fligth_image").parent().hide();
-								$("#flight_in, #flight_in_hh, #flight_out, #flight_out_hh").removeClass("readonly");
-								$("#calBtn").removeAttr("disabled"); /* 가계산 버튼 */
+								
+								$("#flight_in, #flight_in_hh, #flight_in_mm, #flight_out, #flight_out_hh, #flight_out_mm").removeClass("readonly");
 								$("#list_table, #pick_gbn, #add_r_s_day, #add_r_s_day, #add_r_s_per, #add_r_p_per, #add_r_p_day, #comDelete").removeClass("readonly");
 								$("#late_check_in, #late_check_out, #remark").removeClass("readonly");
+
+								$("#calBtn").removeAttr("disabled"); /* 가계산 버튼 */
 								$("#append_row").removeAttr("disabled"); /* 동반자 추가 버튼 */
 								
 								if($("#pick_gbn").val() == "01") {
@@ -394,16 +460,26 @@ $(document).ready(function() {
 				 	}
 				});
 			} else {
+				/******************************************** 
+				 * @Subject : [수정]버튼 이벤트 #2
+				 * @Content : UPDATE 시작 
+				 * @Since   : 2024.07.11
+				 * @Author  : K.J.T 
+				 ********************************************/
 				if(!isValidate()) {
 					return;
 				}
-
-				if(!isCal) {
+				
+				if(!isCom) {
+					return;
+				}
+				
+				 if(!isCal) {
 					alert("가계산을 확인해주세요.");
 					return;
 				}
 				
-				// 숙박인원 성인기준:(일반 + 비라운딩)
+				// 숙박인원 성인기준:(일반 + 성인)
 				roomPerson = Math.round((strToNum($("#g_person").val()) + strToNum($("#n_person").val()) + strToNum($("#k_person").val())) /2);
 				roomPerson = roomPerson > 0 ? roomPerson : 1;
 				
@@ -443,12 +519,14 @@ $(document).ready(function() {
 						, chk_out_dt     : $("#chk_out_dt"    ).val().replace(/-/gi, "")
 						, room_type      : $("#room_type" ).val()						// 객실타입
 						, flight_in      : $("#flight_in" ).val()						// 비행출발일자
-						, flight_in_hh   : $("#flight_in_hh" ).val()					// 비행출발시간
+						, flight_in_hh   : $("#flight_in_hh" ).val()					// 비행출발시간(시)
+						, flight_in_mm   : $("#flight_in_mm" ).val()					// 비행출발시간(분)
 						, flight_out     : $("#flight_out").val()						// 비행도착일자
-						, flight_out_hh  : $("#flight_out_hh").val()					// 비행도착시간
+						, flight_out_hh  : $("#flight_out_hh").val()					// 비행도착시간(시)
+						, flight_out_mm  : $("#flight_out_mm").val()					// 비행도착시간(분)
 						, m_person       : 0											// 멤버는없음
 						, g_person       : Number($("#g_person"  ).val())				// 일반
-						, n_person       : Number($("#n_person"  ).val())				// 비라운딩
+						, n_person       : Number($("#n_person"  ).val())				// 성인
 						, k_person       : Number($("#k_person"  ).val())				// 소아
 						, i_person       : Number($("#i_person"  ).val())				// 영유아
 						, tot_person     : Number($("#tot_person").val())				// 총인원					
@@ -505,7 +583,12 @@ $(document).ready(function() {
 			}
 		});
 
-		<%-- 예약취소 버튼 --%>
+		/******************************************** 
+		 * @Subject : [예약취소]버튼 이벤트 함수
+		 * @Content : [예약취소]버튼 클릭 시 이벤트 정의
+		 * @Since   : 2024.07.11
+		 * @Author  : K.J.T 
+		 ********************************************/
 		$("#reservationCancelBtn").on("click", function() {
 			var data = {
 				  req_dt  : $("#req_dt").val()
@@ -547,12 +630,22 @@ $(document).ready(function() {
 			})
 		});
 
-		<%-- 가계산 버튼 클릭 --%>
+		/******************************************** 
+		 * @Subject : [가계산] 버튼 이벤트
+		 * @Content : [옵션] 탭 내 가계산 버튼 클릭 시 진행 이벤트
+		 * @Since   : 2024.07.11 
+		 * @Author  : K.J.T 
+		 ********************************************/
 		$("#calBtn").on("click", function() {
 			if(!isValidate()) {
 				return;
 			}
-			// 숙박인원 성인기준:(일반 + 비라운딩)
+			
+			if(!isCom) {
+				return;
+			}
+			
+			// 숙박인원 성인기준:(일반 + 성인)
 			roomPerson = Math.round((strToNum($("#g_person").val()) + strToNum($("#n_person").val()) + strToNum($("#k_person").val())) /2);
 			roomPerson = roomPerson > 0 ? roomPerson : 1;
 			
@@ -629,17 +722,24 @@ $(document).ready(function() {
 			 	}
 			});
 		});
-
-
-		<%-- 이미지 이벤트 --%>
-		$("#fligthImage").on("change", handleImgInput);
 		
-		$("#flight_in, #flight_out, #late_check_out").on("change", function() {
+		/******************************************** 
+		 * @Subject : 항공기 정보 및 late_check 변경 시
+		 * @Content : 항공기/LateCheck 변경 시 가계산 초기화
+		 * @Since   : 2024.07.11
+		 * @Author  : K.J.T 
+		 ********************************************/
+		$("#flight_in, #flight_out, #late_check_in, #late_check_out").on("change", function() {
 			isCal = false;
 			$("#cal_amt").val(0);
 		});
 
-		<%-- 미팅센드 변경 이벤트 --%>
+		/******************************************** 
+		 * @Subject : 미팅샌딩 변경 이벤트
+		 * @Content : [옵션]탭 내 미팅샌딩 변경 시
+		 * @Since   : 2024.07.11
+		 * @Author  : K.J.T 
+		 ********************************************/
 		$("#pick_gbn").on("change", function() {
 			isCal = false;
 			$("#cal_amt").val(0);
@@ -651,7 +751,12 @@ $(document).ready(function() {
 			}
 		});
 
-		<%-- toNumber class 이벤트 1 --%>
+		/******************************************** 
+		 * @Subject : input 이벤트
+		 * @Content : [.toNumber] Class에 대한 이벤트
+		 * @Since   : 2024.07.11
+		 * @Author  : K.J.T 
+		 ********************************************/
 		$(".toNumber").on("focus focusout", function(e) {
 			if(e.type == "focus") {
 				if(this.value == "0") {
@@ -670,14 +775,12 @@ $(document).ready(function() {
 			}
 		});
 
-		<%-- toNumber class 이벤트 2 --%>
 		$(".toNumber").on("propertychange change keyup input", function() {
 			isCal = false;
 			$("#cal_amt").val(0);
 			this.value = numberComma(this.value);
 		});
 		
-		<%-- input 이벤트 --%>
 		$(".toNumbers").change(function(){  
 			isCal = false;
 			$("#cal_amt").val(0);
@@ -693,20 +796,33 @@ $(document).ready(function() {
 			}
 		});
 		
-		<%-- input 이벤트 --%>
+		/******************************************** 
+		 * @Subject : input 이벤트
+		 * @Content : [addCom]Class 이벤트
+		 * @Since   : 2024.07.11
+		 * @Author  : K.J.T 
+		 ********************************************/
 		$(".addcom").click(function(){
 			var comChkCnt = 0;
 			$('tr#com_board td:first-child').each(function() {
 				comChkCnt++
 			});
 			if(comChkCnt == 1){
+				$("#com_hdng_gbn").val($("#package_").val());
 				addComPerson();
 			}
 		});
 		
+		/******************************************** 
+		 * @Subject : [동반자] 탭 내 인원내역 자동 추가
+		 * @Content : [동반자] 탭 내 인원내역 자동 추가
+		 * @Since   : 2024.07.11
+		 * @Author  : K.J.T 
+		 ********************************************/
 		function addComPerson(){
 			$("tr#com_board").each(function (index, item) {
 				let td = $(this).children();
+				// 예약자가 아니면 재생성을 위해 삭제처리(초기화)
 				if(td.eq(1).text() == "2"){
 					td.remove();
 				}
@@ -721,12 +837,13 @@ $(document).ready(function() {
 	 			for (var i = 0; i < gPerson-1; i++){
 					$("#list_table").append(
 							$("<tr id=com_board>").append(
-								$("<td style=min-width:45px>").append(),										// 순번
-								$("<td style=display:none >").append( "2" ),			// 예약자구분 (1:예약자,2:동반자')
-								$("<td>").append(setPeopleGbn("02") ),					// 인원구분
-								$("<td style=min-width:70px>").append(""),// 한글명
-								$("<td style=min-width:70px>").append(""),// 영문명
-								$("<td style=min-width:120px>").append(""),// 연락처
+								$("<td style=min-width:45px>").append(),						// 순번
+								$("<td style=display:none >").append( "2" ),					// 예약자구분 (1:예약자,2:동반자')
+								$("<td>").append(setPeopleGbn("02") ),							// 인원구분
+								$("<td style=min-width:70px>").append(""),						// 한글명
+								$("<td style=min-width:70px>").append(""),						// 영문명
+								$("<td style=min-width:120px>").append(""),						// 연락처
+								$("<td>").append(setHdngGbn($("#package_" ).val())),			// 동반자 패키지
 								$("<td style=display:none>").append( $("#req_user_id").val() ),	// 등록자
 							)	
 					);
@@ -737,12 +854,13 @@ $(document).ready(function() {
 	 			for (var i = 0; i < nPerson; i++){
 					$("#list_table").append(
 							$("<tr id=com_board>").append(
-								$("<td style=min-width:45px>").append(),										// 순번
-								$("<td style=display:none >").append( "2" ),			// 예약자구분 (1:예약자,2:동반자')
-								$("<td>").append(setPeopleGbn("03") ),					// 인원구분
-								$("<td style=min-width:70px>").append(""),// 한글명
-								$("<td style=min-width:70px>").append(""),// 영문명
-								$("<td style=min-width:120px>").append(""),// 연락처
+								$("<td style=min-width:45px>").append(),						// 순번
+								$("<td style=display:none >").append( "2" ),					// 예약자구분 (1:예약자,2:동반자')
+								$("<td>").append(setPeopleGbn("03") ),							// 인원구분
+								$("<td style=min-width:70px>").append(""),						// 한글명
+								$("<td style=min-width:70px>").append(""),						// 영문명
+								$("<td style=min-width:120px>").append(""),						// 연락처
+								$("<td>").append(setHdngGbn("30")),								// 동반자 패키지
 								$("<td style=display:none>").append( $("#req_user_id").val() ),	// 등록자
 							)	
 					);
@@ -753,12 +871,13 @@ $(document).ready(function() {
 	 			for (var i = 0; i < kPerson; i++){
 					$("#list_table").append(
 							$("<tr id=com_board>").append(
-								$("<td style=min-width:45px>").append(),										// 순번
-								$("<td style=display:none >").append( "2" ),			// 예약자구분 (1:예약자,2:동반자')
-								$("<td>").append(setPeopleGbn("04") ),					// 인원구분
-								$("<td style=min-width:70px>").append(""),// 한글명
-								$("<td style=min-width:70px>").append(""),// 영문명
-								$("<td style=min-width:120px>").append(""),// 연락처
+								$("<td style=min-width:45px>").append(),						// 순번
+								$("<td style=display:none >").append( "2" ),					// 예약자구분 (1:예약자,2:동반자')
+								$("<td>").append(setPeopleGbn("04") ),							// 인원구분
+								$("<td style=min-width:70px>").append(""),						// 한글명
+								$("<td style=min-width:70px>").append(""),						// 영문명
+								$("<td style=min-width:120px>").append(""),						// 연락처
+								$("<td>").append(setHdngGbn("30")),								// 동반자 패키지
 								$("<td style=display:none>").append( $("#req_user_id").val() ),	// 등록자
 							)	
 					);
@@ -769,12 +888,13 @@ $(document).ready(function() {
 	 			for (var i = 0; i < iPerson; i++){
 					$("#list_table").append(
 							$("<tr id=com_board>").append(
-								$("<td style=min-width:45px>").append(),										// 순번
-								$("<td style=display:none >").append( "2" ),			// 예약자구분 (1:예약자,2:동반자')
-								$("<td>").append(setPeopleGbn("05") ),					// 인원구분
-								$("<td style=min-width:70px>").append(""),// 한글명
-								$("<td style=min-width:70px>").append(""),// 영문명
-								$("<td style=min-width:120px>").append(""),// 연락처
+								$("<td style=min-width:45px>").append(),						// 순번
+								$("<td style=display:none >").append( "2" ),					// 예약자구분 (1:예약자,2:동반자')
+								$("<td>").append(setPeopleGbn("05") ),							// 인원구분
+								$("<td style=min-width:70px>").append(""),						// 한글명
+								$("<td style=min-width:70px>").append(""),						// 영문명
+								$("<td style=min-width:120px>").append(""),						// 연락처
+								$("<td>").append(setHdngGbn("")),								// 동반자 패키지
 								$("<td style=display:none>").append( $("#req_user_id").val() ),	// 등록자
 							)	
 					);
@@ -783,7 +903,12 @@ $(document).ready(function() {
 			numbering(); 
 		}
 		
-		// 동반자 등록 순번
+		/********************************************
+		 * @Subject : [동반자] 탭 함수
+		 * @Content : 동반자 등록 순번
+		 * @Since   : 2024.07.11
+		 * @Author  : K.J.T 
+		 ********************************************/
 		function numbering(){
 			var cnt = 1;
 			$('tr#com_board td:first-child').each(function() {
@@ -795,18 +920,50 @@ $(document).ready(function() {
 			$("#com_tel_no").val("");
 		}
 		
-		// 동반자 목록 내 구분추가
-		function setPeopleGbn(s_data) {
-			var $combo = $('<select id="list_num_gbn" name="list_num_gbn" style="min-width:70px;" disabled="disabled"/>');
-			    $combo.append($('<option/>',{'value':'02'}).text('일반')); //여기는 value 없는 그냥 기본 셋팅 값
-			    $combo.append($('<option/>',{'value':'03'}).text('비라운딩')); //여기는 value 없는 그냥 기본 셋팅 값
-			    $combo.append($('<option/>',{'value':'04'}).text('소아')); //여기는 value 없는 그냥 기본 셋팅 값
-			    $combo.append($('<option/>',{'value':'05'}).text('영유아')); //여기는 value 없는 그냥 기본 셋팅 값
-			  $combo.val(s_data); //여기서 seleted하고 싶은 값을 넣어줌.
+		/********************************************
+		 * @Subject : [동반자] 탭 함수
+		 * @Content : 동반자 목록 내 패키지 추가
+		 * @Since   : 2024.07.11
+		 * @Author  : K.J.T 
+		 ********************************************/
+		function setHdngGbn(s_data) {
+			var $combo = $('<select id="com_hdng_gbn" name="com_hdng_gbn" class="form-select text-center" style="min-width:70px;" disabled="disabled"/>');
+				$combo.append($('<option/>',{'value':''}).text('-선택-')); 
+			    $combo.append($('<option/>',{'value':'01'}).text('주중 36홀, 주말 오후 18홀')); 
+			    $combo.append($('<option/>',{'value':'02'}).text('주중 27홀, 주말 오후 18홀')); 
+			    $combo.append($('<option/>',{'value':'03'}).text('주중 18홀, 주말 오후 18홀')); 
+			    $combo.append($('<option/>',{'value':'04'}).text('주중 36홀, 주말 노라운딩')); 
+			    $combo.append($('<option/>',{'value':'05'}).text('주중 27홀, 주말 노라운딩'));
+			    $combo.append($('<option/>',{'value':'06'}).text('주중 18홀, 주말 노라운딩'));
+			    $combo.append($('<option/>',{'value':'07'}).text('주중 18홀, 토요일 노라운딩, 일요일 오후 18홀'));
+			    $combo.append($('<option/>',{'value':'29'}).text('숙박(일반)'));
+			    $combo.append($('<option/>',{'value':'30'}).text('숙박+식사 OLNY'));
+			    $combo.val(s_data); //여기서 seleted하고 싶은 값을 넣어줌.
 			  return $combo; //리턴
 		}
 		
-		<%-- room_type 이벤트 --%>
+		/********************************************
+		 * @Subject : [동반자] 탭 함수
+		 * @Content : 동반자 목록 내 구분 추가
+		 * @Since   : 2024.07.11
+		 * @Author  : K.J.T 
+		 ********************************************/
+		function setPeopleGbn(s_data) {
+			var $combo = $('<select id="list_num_gbn" name="list_num_gbn" style="min-width:70px;" disabled="disabled"/>');
+			    $combo.append($('<option/>',{'value':'02'}).text('일반')); 
+			    $combo.append($('<option/>',{'value':'03'}).text('성인')); 
+			    $combo.append($('<option/>',{'value':'04'}).text('소아')); 
+			    $combo.append($('<option/>',{'value':'05'}).text('영유아'));
+			    $combo.val(s_data);
+			  return $combo; //리턴
+		}
+		
+		/******************************************** 
+		 * @Subject : input 이벤트
+		 * @Content : [객실타입]항목 변경에 대한 이벤트
+		 * @Since   : 2024.07.11
+		 * @Author  : K.J.T 
+		 ********************************************/
 		$("#room_type").on("change", function() {
 			if($("#chk_in_dt").val() == "") {
 				alert("체크인 날짜를 선택하세요.");
@@ -855,15 +1012,32 @@ $(document).ready(function() {
 			}
 		});
 		
+		/******************************************** 
+		 * @Subject : 체크인 날짜 등록 이벤트
+		 * @Content : [체크인]항목 변경에 대한 이벤트
+		 * @Since   : 2024.07.11
+		 * @Author  : K.J.T 
+		 ********************************************/
 		$("#chk_in_dt").on("change", function() {
 			$("#room_type").val("")
 		});
 		
+		/******************************************** 
+		 * @Subject : 체크아웃 날짜 등록 이벤트
+		 * @Content : [체크아웃]항목 변경에 대한 이벤트
+		 * @Since   : 2024.07.11
+		 * @Author  : K.J.T 
+		 ********************************************/
 		$("#chk_out_dt").on("change", function() {
 			$("#room_type").val("")
 		});
 		
-		// 동반자 상세 이벤트
+		/******************************************** 
+		 * @Subject : [동반자]탭 상세내역 팝업   
+		 * @Content : [동반자]탭 내 등록된 동반자 항목 클릭시 상세 화면 
+		 * @Since   : 2024.07.11
+		 * @Author  : K.J.T 
+		 ********************************************/
 		$("#list_table").on('click', 'tr', function(){
 			comTemp = $(this).children().eq(0).text();
 			if(comTemp != "번호"){
@@ -872,14 +1046,34 @@ $(document).ready(function() {
 				}else{
 					$("#comNumChk span").text( "# " + comTemp + "번째 동반자");	
 				}
+				
+				$("#set_hdng_gbn").append("<option value=29>숙박(일반)</option>");
+				$("#set_hdng_gbn").append("<option value=30>숙박+식사 OLNY</option>");
+				
 				$('input[name="add_han_name"]').val($(this).children().eq(3).text());
 				$('input[name="add_eng_name"]').val($(this).children().eq(4).text());
 				$('input[name="add_telno"]').val($(this).children().eq(5).text());
+				
+				$("#set_hdng_gbn").val($(this).children().eq(6).find('#com_hdng_gbn option:selected').val());
+				
+				if($(this).children().eq(2).find('#list_num_gbn option:selected').val() != "02"){
+					$("#set_hdng_gbn").attr("disabled", true);
+				}else{
+					$("#set_hdng_gbn").attr("disabled", false);
+					$("#set_hdng_gbn option[value='29']").remove();
+					$("#set_hdng_gbn option[value='30']").remove();
+				}
+				
 				$("#layerPop").css("display","block");
 			}
 		});
 		
-		// 동반자 상세 입력
+		/******************************************** 
+		 * @Subject : 동반자 상세화면 내 정보 등록 이벤트
+		 * @Content : 동반자 상세화면에서 [입력]버튼 클릭 시
+		 * @Since   : 2024.07.11
+		 * @Author  : K.J.T 
+		 ********************************************/
 		$("#comAddBtn").on("click", function() {
 			$('tr#com_board').each(function() {
 				comTempChk = $(this).children().eq(0).text();
@@ -887,12 +1081,19 @@ $(document).ready(function() {
 					$(this).children().eq(3).text($('input[name="add_han_name"]').val());
 					$(this).children().eq(4).text($('input[name="add_eng_name"]').val());
 					$(this).children().eq(5).text($('input[name="add_telno"]').val());
+					$(this).children().eq(6).find('#com_hdng_gbn').val($("#set_hdng_gbn").find('option:selected').val());
 				}
 				
 			});
 			$("#layerPop").css("display","none");
 		});
 		
+		/******************************************** 
+		 * @Subject : layer팝업 Close 이벤트
+		 * @Content : layerPop / layerPop2 / list_table
+		 * @Since   : 2024.07.11
+		 * @Author  : K.J.T 
+		 ********************************************/
 		$("#popup_close_btn").on("click", function() {
 			$("#layerPop").css("display","none");
 		});
@@ -1016,10 +1217,18 @@ $(document).ready(function() {
 							</c:forEach>
 						</select>
 						<select id="flight_in_hh" name="flight_in_hh" class="form-select text-center readonly">
-							<option value="" style="font-size: 0.9rem;font-weight:bold;">-선택-</option>
+							<option value="" style="font-size: 0.9rem;font-weight:bold;">-선택(시)-</option>
 							<c:forEach var="i" begin="0" end="23" step="1">
 								<option value="<fmt:formatNumber value="${i}" minIntegerDigits="2" />" style="font-size: 0.9rem;font-weight:bold;">
 									<fmt:formatNumber value="${i}" minIntegerDigits="2" />시
+								</option>
+							</c:forEach>
+						</select>
+						<select id="flight_in_mm" name="flight_in_mm" class="form-select text-center readonly">
+							<option value="" style="font-size: 0.9rem;font-weight:bold;">-선택(분)-</option>
+							<c:forEach var="i" begin="0" end="60" step="1">
+								<option value="<fmt:formatNumber value="${i}" minIntegerDigits="2" />" style="font-size: 0.9rem;font-weight:bold;">
+									<fmt:formatNumber value="${i}" minIntegerDigits="2" />분
 								</option>
 							</c:forEach>
 						</select>
@@ -1036,10 +1245,18 @@ $(document).ready(function() {
 							</c:forEach>
 						</select>
 						<select id="flight_out_hh" name="flight_out_hh" class="form-select text-center readonly">
-							<option value="" style="font-size: 0.9rem;font-weight:bold;">-선택-</option>
+							<option value="" style="font-size: 0.9rem;font-weight:bold;">-선택(시)-</option>
 							<c:forEach var="i" begin="0" end="23" step="1">
 								<option value="<fmt:formatNumber value="${i}" minIntegerDigits="2" />" style="font-size: 0.9rem;font-weight:bold;">
 									<fmt:formatNumber value="${i}" minIntegerDigits="2" />시
+								</option>
+							</c:forEach>
+						</select>
+						<select id="flight_out_mm" name="flight_out_mm" class="form-select text-center readonly">
+							<option value="" style="font-size: 0.9rem;font-weight:bold;">-선택(분)-</option>
+							<c:forEach var="i" begin="0" end="60" step="1">
+								<option value="<fmt:formatNumber value="${i}" minIntegerDigits="2" />" style="font-size: 0.9rem;font-weight:bold;">
+									<fmt:formatNumber value="${i}" minIntegerDigits="2" />분
 								</option>
 							</c:forEach>
 						</select>
@@ -1255,8 +1472,8 @@ $(document).ready(function() {
 				</div>
 				<div class="mb-2">
 					<div class="inline-flex calc">
-						<button id="calBtn" name="calBtn" type="button" class="btn btn-pink addcom" disabled="disabled">가계산</button>
-						<input id="cal_amt" name="cal_amt" type="text" class="form-control text-end toNumber" value="0" readonly>원
+						<button id="calBtn" name="calBtn" type="button" class="btn btn-pink" style="min-width: 9rem; height: 2.5rem;">가계산</button>
+						<div class="inline-flex" style="flex-grow:1; margin-left: -60px;"><input id="cal_amt" name="cal_amt" type="text" class="form-control text-end toNumber" value="0" readonly>원</div>
 					</div>
 					<small class="text-theme">
 						계산 금액은 정확한 금액이 아닙니다. 예약전송해 주시면 추후 정확한 금액을 안내 드립니다.
@@ -1278,6 +1495,7 @@ $(document).ready(function() {
 									<th>한글이름</th>
 									<th>영문이름</th>
 									<th>전화번호</th>
+									<th>패 키 지 </th>
 									<th style="display:none">등록자</th>
 								</tr>
 							</thead>
@@ -1290,7 +1508,7 @@ $(document).ready(function() {
 										<td >
 											<select id="list_num_gbn" name="list_num_gbn" disabled="disabled" style="min-width:70px;">
 												<option value="02" <c:if test="${list.NUM_GBN eq '02' }">selected</c:if>>일반</option>
-												<option value="03" <c:if test="${list.NUM_GBN eq '03' }">selected</c:if>>비라운딩</option>
+												<option value="03" <c:if test="${list.NUM_GBN eq '03' }">selected</c:if>>성인</option>
 												<option value="04" <c:if test="${list.NUM_GBN eq '04' }">selected</c:if>>소아</option>
 												<option value="05" <c:if test="${list.NUM_GBN eq '05' }">selected</c:if>>영유아</option>
 											</select>
@@ -1298,6 +1516,16 @@ $(document).ready(function() {
 										<td style="min-width:70px;">${list.COM_HAN_NM}</td>
 										<td style="min-width:70px;">${list.COM_ENG_NM}</td>
 										<td style="min-width:120px;">${list.COM_TEL_NO}</td>
+										<td style="min-width:200px;">
+											<select id="com_hdng_gbn" name="com_hdng_gbn" class="form-select text-center" disabled="disabled">
+												<option value="" <c:if test="${list.HDNG_GBN eq '' }">selected</c:if>>-선택-</option>
+												<option value="29" <c:if test="${list.HDNG_GBN eq '29' }">selected</c:if>>숙박(일반)</option>
+												<option value="30" <c:if test="${list.HDNG_GBN eq '30' }">selected</c:if>>숙박+식사 OLNY</option>
+												<c:forEach items="${packageList}" var="add_hdng_gbn" varStatus="status">
+													<option value="${add_hdng_gbn.CODE}" <c:if test="${list.HDNG_GBN eq add_hdng_gbn.CODE}">selected</c:if>>${add_hdng_gbn.CODE_NM}</option>
+												</c:forEach>
+											</select>
+										</td>
 										<td style="display:none">${sessionScope.login.user_id}</td>
 									</tr>
 								</c:forEach>
@@ -1330,6 +1558,20 @@ $(document).ready(function() {
 											<span class="input-group-text">전화번호</span>
 										</div>
 										<input id="onlyNum" name="add_telno" type="text" class="form-control text-center" style="min-width:70px;">
+									</div>
+									<div class="input-group">
+										<div class="input-group-prepend">
+											<span class="input-group-text">패키지　</span>
+										</div>
+										<select id="set_hdng_gbn" name="set_hdng_gbn" class="form-select text-center">
+											<option value="">-선택-</option>
+											<c:forEach items="${packageList}" var="add_hdng_gbn" varStatus="status">
+												<option value="${add_hdng_gbn.CODE}">${add_hdng_gbn.CODE_NM}</option>
+											</c:forEach>
+											<option value="28" >숙박(멤버)</option>
+											<option value="29" >숙박(일반)</option>
+											<option value="30" >숙박+식사 OLNY</option>
+										</select>
 									</div>
 									<div class="find-btn">	
 										<button id="comAddBtn" name="comAddBtn" type="button" class="btn btn-primary btn-lg">입력</button>

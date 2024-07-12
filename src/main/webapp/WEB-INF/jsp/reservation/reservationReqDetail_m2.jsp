@@ -97,9 +97,19 @@ $(document).ready(function() {
 		}
 	}
 	
-	<%-- 이벤트 함수 --%>
+	/******************************************** 
+	 * @Subject : 이벤트 함수
+	 * @Content : 버튼, ID, CLASS 등 이벤트 정의
+	 * @Since   : 2024.07.11
+	 * @Author  : K.J.T 
+	 ********************************************/
 	function setEvent() {
-		<%-- 예약취소 버튼 --%>
+		/******************************************** 
+		 * @Subject : [예약취소]버튼 이벤트 #1
+		 * @Content : reservationCancel.do
+		 * @Since   : 2024.07.11
+		 * @Author  : K.J.T 
+		 ********************************************/
 		$("#reservationCancelBtn").on("click", function() {
 			var data = {
 				  req_dt  : $("#req_dt").val()
@@ -222,6 +232,14 @@ $(document).ready(function() {
 								</option>
 							</c:forEach>
 						</select>
+						<select id="flight_in_mm" name="flight_in_mm" class="form-select text-center text-muted readonly">
+							<option value="" style="font-size: 0.9rem;font-weight:bold;">-선택(분)-</option>
+							<c:forEach var="i" begin="0" end="60" step="1">
+								<option value="<fmt:formatNumber value="${i}" minIntegerDigits="2" />" style="font-size: 0.9rem;font-weight:bold;">
+									<fmt:formatNumber value="${i}" minIntegerDigits="2" />분
+								</option>
+							</c:forEach>
+						</select>
 					</div>
 				</div>
 				
@@ -239,6 +257,14 @@ $(document).ready(function() {
 							<c:forEach var="i" begin="0" end="23" step="1">
 								<option value="<fmt:formatNumber value="${i}" minIntegerDigits="2" />" style="font-size: 0.9rem;font-weight:bold;">
 									<fmt:formatNumber value="${i}" minIntegerDigits="2" />시
+								</option>
+							</c:forEach>
+						</select>
+						<select id="flight_out_mm" name="flight_out_mm" class="form-select text-center text-muted readonly">
+							<option value="" style="font-size: 0.9rem;font-weight:bold;">-선택(분)-</option>
+							<c:forEach var="i" begin="0" end="60" step="1">
+								<option value="<fmt:formatNumber value="${i}" minIntegerDigits="2" />" style="font-size: 0.9rem;font-weight:bold;">
+									<fmt:formatNumber value="${i}" minIntegerDigits="2" />분
 								</option>
 							</c:forEach>
 						</select>
@@ -358,7 +384,7 @@ $(document).ready(function() {
 									<div class="input-group-prepend" id="reserve_count_input_box">
 										<span class="input-group-text" style="padding : 0.5rem 0.1rem 0.5rem 0rem">멤　버　</span>
 									</div>
-									<select id="m_person" name="m_person" class="form-select text-center toNumbers addCom readonly">
+									<select id="m_person" name="m_person" class="form-select text-center text-muted toNumbers addCom readonly">
 										<c:forEach var="i" begin="1" end="15" step="1">
 											<option value="<fmt:formatNumber value="${i}"/>" style="font-size: 0.9rem;font-weight:bold;">
 												<fmt:formatNumber value="${i}" minIntegerDigits="2" />
@@ -373,7 +399,7 @@ $(document).ready(function() {
 									<div class="input-group-prepend" id="reserve_count_input_box">
 										<span class="input-group-text" style="padding : 0.5rem 0.1rem 0.5rem 0rem">일　반　</span>
 									</div>
-									<select id="g_person" name="g_person" class="form-select text-center toNumbers addCom readonly">
+									<select id="g_person" name="g_person" class="form-select text-center text-muted toNumbers addCom readonly">
 										<c:forEach var="i" begin="0" end="15" step="1">
 											<option value="<fmt:formatNumber value="${i}"/>" style="font-size: 0.9rem;font-weight:bold;">
 												<fmt:formatNumber value="${i}" minIntegerDigits="2" />
@@ -397,7 +423,7 @@ $(document).ready(function() {
 										<span class="input-group-text" style="padding : 0.5rem 0.1rem 0.5rem 0rem">성　인　</span>
 									</div>
 									
-									<select id="n_person" name="n_person" class="form-select text-center toNumbers addCom readonly">
+									<select id="n_person" name="n_person" class="form-select text-center text-muted toNumbers addCom readonly">
 										<c:forEach var="i" begin="0" end="15" step="1">
 											<option value="<fmt:formatNumber value="${i}"/>" style="font-size: 0.9rem;font-weight:bold;">
 												<fmt:formatNumber value="${i}" minIntegerDigits="2" />
@@ -411,7 +437,7 @@ $(document).ready(function() {
 									<div class="input-group-prepend" id="reserve_count_input_box">
 										<span class="input-group-text" style="padding : 0.5rem 0.1rem 0.5rem 0rem">소　아　</span>
 									</div>
-									<select id="k_person" name="k_person" class="form-select text-center toNumbers addCom readonly">
+									<select id="k_person" name="k_person" class="form-select text-center text-muted toNumbers addCom readonly">
 										<c:forEach var="i" begin="0" end="15" step="1">
 											<option value="<fmt:formatNumber value="${i}"/>" style="font-size: 0.9rem;font-weight:bold;">
 												<fmt:formatNumber value="${i}" minIntegerDigits="2" />
@@ -425,7 +451,7 @@ $(document).ready(function() {
 									<div class="input-group-prepend" id="reserve_count_input_box">
 										<span class="input-group-text" style="padding : 0.5rem 0.1rem 0.5rem 0rem">영유아　</span>
 									</div>
-									<select id="i_person" name="i_person" class="form-select text-center toNumbers addCom readonly">
+									<select id="i_person" name="i_person" class="form-select text-center text-muted toNumbers addCom readonly">
 										<c:forEach var="i" begin="0" end="15" step="1">
 											<option value="<fmt:formatNumber value="${i}"/>" style="font-size: 0.9rem;font-weight:bold;">
 												<fmt:formatNumber value="${i}" minIntegerDigits="2" />
@@ -444,17 +470,9 @@ $(document).ready(function() {
 							<div class="input-group-prepend">
 								<span class="input-group-text" id="reserve_select_box" style="height: 2.5rem; padding : 0.5rem 0.1rem 0.5rem 0rem">총　인　원　　　</span>
 							</div>
-							<input id="tot_person" name="tot_person" type="text" class="form-control text-center toNumbers" style="font-size: 0.9rem;font-weight:bold;" maxlength="2" value="01" readonly>
+							<input id="tot_person" name="tot_person" type="text" class="form-control text-center text-muted toNumbers" style="font-size: 0.9rem;font-weight:bold;" maxlength="2" value="01" readonly>
 						</div>명
 					</div>
-				</div>
-				
-				<div style="display:flex; gap:3px; margin-bottom:10px;">
-					<label class="form-label col-form-label  col-md-3"></label>
-					<span style="color:red;">※</span>
-					<span style="text-align:left; opacity:90%; color:red; font-size:0.8rem; word-break:keep-all; padding-right:5%;">
-						인원 등록 시 [동반자]탭 내역이 자동생성 되며, 수정 시 [동반자]탭 내역이 재생성 됩니다.
-					</span>	
 				</div>
 				
 				<div id="packageDiv" class="row mb-2">
@@ -503,6 +521,7 @@ $(document).ready(function() {
 									<th>한글이름</th>
 									<th>영문이름</th>
 									<th>전화번호</th>
+									<th>패 키 지 </th>
 									<th style="display:none">등록자</th>
 								</tr>
 							</thead>
@@ -516,7 +535,7 @@ $(document).ready(function() {
 											<select id="list_num_gbn" name="list_num_gbn" class="readonly" style="min-width:70px;">
 												<option value="01" <c:if test="${list.NUM_GBN eq '01' }">selected</c:if>>멤버</option>
 												<option value="02" <c:if test="${list.NUM_GBN eq '02' }">selected</c:if>>일반</option>
-												<option value="03" <c:if test="${list.NUM_GBN eq '03' }">selected</c:if>>비라운딩</option>
+												<option value="03" <c:if test="${list.NUM_GBN eq '03' }">selected</c:if>>성인</option>
 												<option value="04" <c:if test="${list.NUM_GBN eq '04' }">selected</c:if>>소아</option>
 												<option value="05" <c:if test="${list.NUM_GBN eq '05' }">selected</c:if>>영유아</option>
 											</select>
@@ -524,6 +543,17 @@ $(document).ready(function() {
 										<td style="min-width:70px;">${list.COM_HAN_NM}</td>
 										<td style="min-width:70px;">${list.COM_ENG_NM}</td>
 										<td style="min-width:120px;">${list.COM_TEL_NO}</td>
+										<td style="min-width:200px;">
+											<select id="com_hdng_gbn" name="com_hdng_gbn" class="form-select text-center" disabled="disabled">
+												<option value="" <c:if test="${list.HDNG_GBN eq '' }">selected</c:if>>-선택-</option>
+												<option value="28" <c:if test="${list.HDNG_GBN eq '28' }">selected</c:if>>숙박(멤버)</option>
+												<option value="29" <c:if test="${list.HDNG_GBN eq '29' }">selected</c:if>>숙박(일반)</option>
+												<option value="30" <c:if test="${list.HDNG_GBN eq '30' }">selected</c:if>>숙박+식사 OLNY</option>
+												<c:forEach items="${packageList}" var="add_hdng_gbn" varStatus="status">
+													<option value="${add_hdng_gbn.CODE}" <c:if test="${list.HDNG_GBN eq add_hdng_gbn.CODE}">selected</c:if>>${add_hdng_gbn.CODE_NM}</option>
+												</c:forEach>
+											</select>
+										</td>
 										<td style="display:none">${sessionScope.login.user_id}</td>
 									</tr>
 								</c:forEach>

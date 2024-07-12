@@ -702,7 +702,8 @@
 				NUM_GBN,			<!-- 회원구분 01 멤버 / 02 일반 / 03 비라운딩 / 04 소아 / 05 영유아  -->
 				COM_HAN_NM,			<!-- 동반자한글명 -->
 				COM_ENG_NM,			<!-- 동반자영문명 -->
-				REGEXP_REPLACE(COM_TEL_NO, '(02|.{3})(.+)(.{4})', '\\1-\\2-\\3') AS COM_TEL_NO			<!-- 동반자전화번호 -->
+				REGEXP_REPLACE(COM_TEL_NO, '(02|.{3})(.+)(.{4})', '\\1-\\2-\\3') AS COM_TEL_NO,			<!-- 동반자전화번호 -->
+				HDNG_GBN
 		   FROM tb_req_booking_d
 		 WHERE REQ_DT   = #{req_dt }
 		   AND SEQ      = #{seq    }

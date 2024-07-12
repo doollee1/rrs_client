@@ -4,6 +4,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+
 <style type="text/css">
 	#wrapper_popup div[id ^= 'layerPop'] {position:absolute; width:86%; left:7%; top:30%; padding:0px 8px; background:#fff; z-index:100000;border-radius:10px;overflow:auto;display:none;border:double;}
 	#wrapper_popup div[id ^= 'layerPop'] h2 {display:block;margin:10px 0 0;padding-bottom:15px;border-bottom:1px #d8d8d8 solid;font-size:1.1em;font-weight:bold}
@@ -66,6 +67,9 @@ $(document).ready(function() {
 		setTitle("예약취소");
 	</c:if>
 	setEvent();
+	if($("#footer").length == 0) {
+		$(".app-content-padding").addClass("none-footer");
+	}
 
 	<%-- 데이터 셋팅 --%>
 	var detailData = JSON.parse('${strReservationDetail}');
@@ -84,9 +88,19 @@ $(document).ready(function() {
 		}
 	}
 
-	<%-- 이벤트 함수 --%>
+	/******************************************** 
+	 * @Subject : 이벤트 함수
+	 * @Content : 버튼, ID, CLASS 등 이벤트 정의
+	 * @Since   : 2024.07.11
+	 * @Author  : K.J.T 
+	 ********************************************/
 	function setEvent() {
-		<%-- 예약취소 버튼 --%>
+		/******************************************** 
+		 * @Subject : [예약취소]버튼 이벤트 #1
+		 * @Content : reservationCancel.do
+		 * @Since   : 2024.07.11
+		 * @Author  : K.J.T 
+		 ********************************************/
 		$("#reservationCancelBtn").on("click", function() {
 			var data = {
 				  req_dt  : $("#req_dt").val()
@@ -237,10 +251,18 @@ $(document).ready(function() {
 							</c:forEach>
 						</select>
 						<select id="flight_in_hh" name="flight_in_hh" class="form-select text-muted text-center readonly">
-							<option value="" style="font-size: 0.9rem;font-weight:bold;">-선택-</option>
+							<option value="" style="font-size: 0.9rem;font-weight:bold;">-선택(시)-</option>
 							<c:forEach var="i" begin="0" end="23" step="1">
 								<option value="<fmt:formatNumber value="${i}" minIntegerDigits="2" />" style="font-size: 0.9rem;font-weight:bold;">
 									<fmt:formatNumber value="${i}" minIntegerDigits="2" />시
+								</option>
+							</c:forEach>
+						</select>
+						<select id="flight_in_mm" name="flight_in_mm" class="form-select text-center text-muted readonly">
+							<option value="" style="font-size: 0.9rem;font-weight:bold;">-선택(분)-</option>
+							<c:forEach var="i" begin="0" end="60" step="1">
+								<option value="<fmt:formatNumber value="${i}" minIntegerDigits="2" />" style="font-size: 0.9rem;font-weight:bold;">
+									<fmt:formatNumber value="${i}" minIntegerDigits="2" />분
 								</option>
 							</c:forEach>
 						</select>
@@ -257,12 +279,20 @@ $(document).ready(function() {
 							</c:forEach>
 						</select>
 						<select id="flight_out_hh" name="flight_out_hh" class="form-select text-muted text-center readonly">
-							<option value="" style="font-size: 0.9rem;font-weight:bold;">-선택-</option>
+							<option value="" style="font-size: 0.9rem;font-weight:bold;">-선택(시)-</option>
 							<c:forEach var="i" begin="0" end="23" step="1">
 								<option value="<fmt:formatNumber value="${i}" minIntegerDigits="2" />" style="font-size: 0.9rem;font-weight:bold;">
 									<fmt:formatNumber value="${i}" minIntegerDigits="2" />시
 								</option>
 							</c:forEach>
+						</select>
+						<select id="flight_out_mm" name="flight_out_mm" class="form-select text-center text-muted readonly">
+							<option value="" style="font-size: 0.9rem;font-weight:bold;">-선택(분)-</option>
+							<c:forEach var="i" begin="0" end="60" step="1">
+								<option value="<fmt:formatNumber value="${i}" minIntegerDigits="2" />" style="font-size: 0.9rem;font-weight:bold;">
+									<fmt:formatNumber value="${i}" minIntegerDigits="2" />분
+								</option>
+						</c:forEach>
 						</select>
 					</div>
 				</div>
@@ -466,31 +496,22 @@ $(document).ready(function() {
 				</div>
 				<div class="mb-2">
 					<div class="inline-flex calc">
-						<button id="calBtn" name="calBtn" type="button" class="btn btn-pink addcom" disabled="disabled">가계산</button>
-						<input id="cal_amt" name="cal_amt" type="text" class="form-control text-end toNumber" value="0" readonly>원
+						<label class="form-label col-form-label col-md-3" style="font-size: 1rem;font-weight:bold;"><span style="box-shadow: inset 0 -2px 0 #dcdcdc;">계약금</span></label>
+						<input type="text" id="dep_amt" name="dep_amt" class="toNumber form-control text-end" readonly>원
 					</div>
-					<small class="text-theme">
-						계산 금액은 정확한 금액이 아닙니다. 예약전송해 주시면 추후 정확한 금액을 안내 드립니다.
-					</small>
 				</div>
-					<div class="mb-2">
-						<div class="inline-flex calc">
-							<label class="form-label col-form-label col-md-3" style="font-size: 1rem;font-weight:bold;"><span style="box-shadow: inset 0 -2px 0 #dcdcdc;">계약금</span></label>
-							<input type="text" id="dep_amt" name="dep_amt" class="toNumber form-control text-end" readonly>원
-						</div>
+				<div class="mb-2">
+					<div class="inline-flex calc">
+						<label class="form-label col-form-label col-md-3" style="font-size: 1rem;font-weight:bold;"><span style="box-shadow: inset 0 -2px 0 #dcdcdc;">잔금</span></label>
+						<input type="text" id="bal_amt" name="bal_amt" class="form-control text-end" readonly>원
 					</div>
-					<div class="mb-2">
-						<div class="inline-flex calc">
-							<label class="form-label col-form-label col-md-3" style="font-size: 1rem;font-weight:bold;"><span style="box-shadow: inset 0 -2px 0 #dcdcdc;">잔금</span></label>
-							<input type="text" id="bal_amt" name="bal_amt" class="form-control text-end" readonly>원
-						</div>
+				</div>
+				<div class="mb-2">
+					<div class="inline-flex calc">
+						<label class="form-label col-form-label col-md-3" style="font-size: 1rem;font-weight:bold;"><span style="box-shadow: inset 0 -2px 0 #dcdcdc;">총액</span></label>
+						<input type="text" id="cal_amt" name="cal_amt" class="toNumber form-control text-end" value="" readonly>원
 					</div>
-					<div class="mb-2">
-						<div class="inline-flex calc">
-							<label class="form-label col-form-label col-md-3" style="font-size: 1rem;font-weight:bold;"><span style="box-shadow: inset 0 -2px 0 #dcdcdc;">총액</span></label>
-							<input type="text" id="cal_amt" name="cal_amt" class="toNumber form-control text-end" value="" readonly>원
-						</div>
-					</div>
+				</div>
 			</div>
 			<!-- END tab-pane -->
 			
@@ -507,6 +528,7 @@ $(document).ready(function() {
 									<th>한글이름</th>
 									<th>영문이름</th>
 									<th>전화번호</th>
+									<th>패 키 지 </th>
 									<th style="display:none">등록자</th>
 								</tr>
 							</thead>
@@ -527,6 +549,16 @@ $(document).ready(function() {
 										<td id=onlyKor style="min-width:70px;">${list.COM_HAN_NM}</td>
 										<td id=onlyEng style="min-width:70px;">${list.COM_ENG_NM}</td>
 										<td id=onlyNum style="min-width:120px;">${list.COM_TEL_NO}</td>
+										<td style="min-width:200px;">
+											<select id="com_hdng_gbn" name="com_hdng_gbn" class="form-select text-center" disabled="disabled">
+												<option value="" <c:if test="${list.HDNG_GBN eq '' }">selected</c:if>>-선택-</option>
+												<option value="29" <c:if test="${list.HDNG_GBN eq '29' }">selected</c:if>>숙박(일반)</option>
+												<option value="30" <c:if test="${list.HDNG_GBN eq '30' }">selected</c:if>>숙박+식사 OLNY</option>
+												<c:forEach items="${packageList}" var="add_hdng_gbn" varStatus="status">
+													<option value="${add_hdng_gbn.CODE}" <c:if test="${list.HDNG_GBN eq add_hdng_gbn.CODE}">selected</c:if>>${add_hdng_gbn.CODE_NM}</option>
+												</c:forEach>
+											</select>
+										</td>
 										<td style="display:none">${sessionScope.login.user_id}</td>
 									</tr>
 								</c:forEach>

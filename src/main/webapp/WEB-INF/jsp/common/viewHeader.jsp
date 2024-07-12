@@ -45,18 +45,22 @@ $(document).ready(function() {
 	$("#back-button").click(function() {
 		history.back();
 	});
+		
 });
 
 function dimClose() {
-	if($(".dim-layer").length >= 1 && $(".dim-layer").hasClass("show")) {
+	/* if($(".dim-layer").length >= 1 && $(".dim-layer").hasClass("show")) {
 		$(".dim-layer").removeClass("show");
-	}
+	} */
+	$("#div_load_image").hide();
 }
 
 function dimOpen() {
+	/*
 	if($(".dim-layer").length >= 1) {
 		$(".dim-layer").addClass("show");
-	}
+	} */
+	$("#div_load_image").show();
 }
 function setTitle(title) {
 	$("#app > #header > .navbar-header > h1").html(title);
