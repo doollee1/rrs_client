@@ -116,12 +116,14 @@ $(document).ready(function() {
 				, seq     : $("#seq"   ).val()
 				, prc_sts : "${reservationDetail.PRC_STS}"
 			}
+			dimOpen(); /* 로딩바 Open */
 			$.ajax({
 				type : "POST",
 				url : "getPrcSts.do",
 				data : data,
 				dataType : "json",
 				success : function(retData) {
+					dimClose(); /* 로딩바 Close */
 					if(retData.result == "SUCCESS") {
 						if(retData.prc_sts == "${reservationDetail.PRC_STS}") {
 							if(confirm("${msg}")) {

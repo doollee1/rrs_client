@@ -169,7 +169,6 @@ $(document).ready(function() {
 	            tableArr.push(td_obj);
             }
         });
-
         $.ajax({
 			type : "POST",
 			url : "reservationComInsert.do",
@@ -177,6 +176,7 @@ $(document).ready(function() {
 			dataType : "json",
 			contentType: "application/json; charset=UTF-8",
 			success : function(data) {
+				dimClose(); /* 로딩바 Close */
 				if(data.result == "SUCCESS") {
 					comBasyy = "";
 					comBasyySeq = "";
@@ -493,15 +493,14 @@ $(document).ready(function() {
 					, package_		 : $("#package_" ).val()								//일반패키지
 					, prod_cond   	 : prodCond												//미팅샌딩인원조건
 			};
-
-			dimOpen();
+			dimOpen(); /* 로딩바 Open */
 			$.ajax({
 				type : "POST",
 				url : "reservationCal.do",
 				data : data,
 				dataType : "json",
 				success : function(data) {
-					dimClose();
+					dimClose(); /* 로딩바 Close */
 					if(data.result == "SUCCESS") {
 						isCal = true;
 						$("#cal_amt").val(numberComma(data.totalAmt));
@@ -637,9 +636,8 @@ $(document).ready(function() {
 					, user_id        : "${sessionScope.login.user_id}"				// 예약등록자
 	            	
 			};
-
 			formData.append("param", new Blob([JSON.stringify(data)], {type:"application/json"}));
-			dimOpen();
+			dimOpen(); /* 로딩바 Open */
 			$.ajax({
 				type : "POST",
 				url : "reservationInsert.do",
@@ -647,9 +645,7 @@ $(document).ready(function() {
 				dataType : "json",
 				processData: false,
 				contentType: false,
-				async: false,
 				success : function(data) {
-					dimClose();
 					if(data.result == "SUCCESS") {
 						addCompanion();
 					} else {
@@ -913,15 +909,12 @@ $(document).ready(function() {
 						, chk_out_dt     : $("#chk_out_dt").val().replace(/-/gi, "")			//체크아웃
 						, room_type      : $("#room_type" ).val()						// 객실타입
 					};
-
-					dimOpen();
 					$.ajax({
 						type : "POST",
 						url : "noRoomChk.do",
 						data : data,
 						dataType : "json",
 						success : function(data) {
-							dimClose();
 							if(data.result == "SUCCESS") {
 								if(data.roomChkMsg == ""){
 									$("#no_room_chk").val("Check OK")

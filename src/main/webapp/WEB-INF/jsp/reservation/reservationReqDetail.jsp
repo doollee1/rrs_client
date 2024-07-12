@@ -162,11 +162,9 @@ $(document).ready(function() {
 						, twin_cnt		 : twinCnt	// 트윈 갯수
 						, king_cnt		 : kingCnt	// 킹 갯수
 				};
-
 				var formData = new FormData();
 				formData.append("param", new Blob([JSON.stringify(data)], {type:"application/json"}));
-
-				dimOpen();
+				dimOpen(); /* 로딩바 Open */
 				$.ajax({
 					type : "POST",
 					url : "reservationUpdate.do",
@@ -175,7 +173,7 @@ $(document).ready(function() {
 					processData: false,
 					contentType: false,
 					success : function(data) {
-						dimClose();
+						dimClose(); /* 로딩바 Close */
 						if(data.result == "SUCCESS") {
 							roomPerson = 0;
 							twinCnt = 0;
@@ -210,14 +208,14 @@ $(document).ready(function() {
 					if(retData.result == "SUCCESS") {
 						if(retData.prc_sts == "${reservationDetail.PRC_STS}") {
 							if(confirm("예약을 취소하시겠습니까?")) {
-								dimOpen();
+								dimOpen(); /* 로딩바 Open */
 								$.ajax({
 									type : "POST",
 									url : "reservationCancel.do",
 									data : data,
 									dataType : "json",
 									success : function(retData2) {
-										dimClose();
+										dimClose(); /* 로딩바 Close */
 										if(retData2.result == "SUCCESS") {
 											alert("예약이 취소되었습니다.");
 											location.replace("/main.do");
@@ -292,15 +290,12 @@ $(document).ready(function() {
 						, chk_out_dt     : $("#chk_out_dt").val().replace(/-/gi, "")			//체크아웃
 						, room_type      : $("#room_type" ).val()						// 객실타입
 					};
-
-					dimOpen();
 					$.ajax({
 						type : "POST",
 						url : "noRoomChk.do",
 						data : data,
 						dataType : "json",
 						success : function(data) {
-							dimClose();
 							if(data.result == "SUCCESS") {
 								if(data.roomChkMsg == ""){
 									$("#no_room_chk").val("Check OK")
@@ -339,14 +334,12 @@ $(document).ready(function() {
 						  chk_in_dt      : $("#chk_in_dt" ).val().replace(/-/gi, "")	//체크인
 						, chk_out_dt     : $("#chk_out_dt").val().replace(/-/gi, "")	//체크아웃
 					};
-					dimOpen();
 					$.ajax({
 						type : "POST",
 						url : "packageListReset.do",
 						data : data,
 						dataType : "json",
 						success : function(data) {
-							dimClose();
 							if(data.result == "SUCCESS") {
 								$("#package_").append("<option value='' selected> -선택- </option>");
 								for (var i = 0; i < data.packageListReset.length; i++) {

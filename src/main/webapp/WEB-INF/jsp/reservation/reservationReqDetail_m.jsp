@@ -116,14 +116,12 @@ $(document).ready(function() {
 						  chk_in_dt      : $("#chk_in_dt" ).val().replace(/-/gi, "")	//체크인
 						, chk_out_dt     : $("#chk_out_dt").val().replace(/-/gi, "")	//체크아웃
 					};
-					dimOpen();
 					$.ajax({
 						type : "POST",
 						url : "packageListReset.do",
 						data : data,
 						dataType : "json",
 						success : function(data) {
-							dimClose();
 							if(data.result == "SUCCESS") {
 								$("#add_hdng_gbn").append("<option value='' selected> -선택- </option>");
 								$("#set_hdng_gbn").append("<option value='' selected> -선택- </option>");
@@ -315,6 +313,7 @@ $(document).ready(function() {
 			dataType : "json",
 			contentType: "application/json; charset=UTF-8",
 			success : function(data) {
+				dimClose(); /* 로딩바 Close */
 				if(data.result == "SUCCESS") {
 					nokidBasyy = "";
 					nokidBasyySeq = "";
@@ -541,10 +540,14 @@ $(document).ready(function() {
 			
 			if (comListHan == "" || comListHan == "undefined"){
 				alert("[동반자] 탭에서 " + comListNum + "번째 동반자의 한글명을 작성해주세요.")
+				isCom = false;
 				return false;
 			}else if (comListEng == "" || comListEng == "undefined"){
 				alert("[동반자] 탭에서 "+ comListNum + "번째 동반자의 영문명을 작성해주세요.")
+				isCom = false;
 				return false;
+			}else{
+				isCom = true;
 			}
 		});
 		
@@ -630,7 +633,7 @@ $(document).ready(function() {
 				}
 				
 				if(!isCom) {
-						return;
+					return;
 				}
 				
 				if(!isCal) {
@@ -638,6 +641,7 @@ $(document).ready(function() {
 					return;
 				}
 				
+				dimOpen(); /* 로딩바 Open */
 				// 레이트 인아웃 산정을 위함 : 숙박인원 성인기준:(멤버 + 일반 + 성인 + 소아)
 				roomPerson = Math.round((strToNum($("#m_person").val()) + strToNum($("#g_person").val()) + strToNum($("#n_person").val()) + strToNum($("#k_person").val()))/2);
 				roomPerson = roomPerson > 0 ? roomPerson : 1;
@@ -710,7 +714,6 @@ $(document).ready(function() {
 						, remark         : $("#remark"        ).val()
 				};
 				formData.append("param", new Blob([JSON.stringify(data)], {type:"application/json;charset=UTF-8"}));
-				dimOpen();
 				$.ajax({
 					type : "POST",
 					url : "reservationUpdate.do",
@@ -718,9 +721,7 @@ $(document).ready(function() {
 					dataType : "json",
 					processData: false,
 					contentType: false,
-					async: false,
 					success : function(data) {
-						dimClose();
 						if(data.result == "SUCCESS") {
 							if(data.roomChkMsg == ""){
 								$("#no_room_chk").val("Check OK")
@@ -755,24 +756,25 @@ $(document).ready(function() {
 				, seq     : $("#seq"   ).val()
 				, prc_sts : "${reservationDetail.PRC_STS}"
 			}
-
+			dimOpen(); /* 로딩바 Open */
 			$.ajax({
 				type : "POST",
 				url : "getPrcSts.do",
 				data : data,
 				dataType : "json",
 				success : function(retData) {
+					dimClose(); /* 로딩바 Close */
 					if(retData.result == "SUCCESS") {
 						if(retData.prc_sts == "${reservationDetail.PRC_STS}") {
 							if(confirm("예약을 취소하시겠습니까?")) {
-								dimOpen();
+								
 								$.ajax({
 									type : "POST",
 									url : "reservationCancel.do",
 									data : data,
 									dataType : "json",
 									success : function(retData2) {
-										dimClose();
+										dimClose(); /* 로딩바 Close */
 										if(retData2.result == "SUCCESS") {
 											alert("예약이 취소되었습니다.");
 											location.replace("/main.do");
@@ -866,16 +868,15 @@ $(document).ready(function() {
 					, tot_person     : Number($("#tot_person").val())						//총인원
 					, add_hdng_gbn   : $("#add_hdng_gbn" ).val()							//일반패키지
 					, prod_cond   	 : prodCond												//미팅샌딩인원조건
-				};
-
-			dimOpen();
+			};
+			dimOpen(); /* 로딩바 Open */
 			$.ajax({
 				type : "POST",
 				url : "reservationCal.do",
 				data : data,
 				dataType : "json",
 				success : function(data) {
-					dimClose();
+					dimClose(); /* 로딩바 Close */
 					if(data.result == "SUCCESS") {
 						isCal = true;
 						$("#cal_amt").val(numberComma(data.totalAmt));
@@ -1007,15 +1008,12 @@ $(document).ready(function() {
 						, chk_out_dt     : $("#chk_out_dt").val().replace(/-/gi, "")			//체크아웃
 						, room_type      : $("#room_type" ).val()						// 객실타입
 					};
-
-					dimOpen();
 					$.ajax({
 						type : "POST",
 						url : "noRoomChk.do",
 						data : data,
 						dataType : "json",
 						success : function(data) {
-							dimClose();
 							if(data.result == "SUCCESS") {
 								if(data.roomChkMsg == ""){
 									$("#no_room_chk").val("Check OK")

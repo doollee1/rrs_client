@@ -169,6 +169,7 @@ $(document).ready(function() {
 			dataType : "json",
 			contentType: "application/json; charset=UTF-8",
 			success : function(data) {
+				dimClose(); /* 로딩바 Close */
 				if(data.result == "SUCCESS") {
 					comBasyy = "";
 					comBasyySeq = "";
@@ -558,10 +559,7 @@ $(document).ready(function() {
 						, user_id        : "${sessionScope.login.user_id}"				// 예약등록자
 				};
 				formData.append("param", new Blob([JSON.stringify(data)], {type:"application/json"}));
-				dimOpen();
-				for (const [key, value] of formData.entries()) {
-					 console.log(key, value);
-				}
+				dimOpen(); /* 로딩바 Open */
 				$.ajax({
 					type : "POST",
 					url : "reservationUpdate.do",
@@ -569,9 +567,7 @@ $(document).ready(function() {
 					dataType : "json",
 					processData: false,
 					contentType: false,
-					async: false,
 					success : function(data) {
-						dimClose();
 						if(data.result == "SUCCESS") {
 							addCompanion();
 						} else {
@@ -595,17 +591,17 @@ $(document).ready(function() {
 				, seq     : $("#seq"   ).val()
 				, prc_sts : "${reservationDetail.PRC_STS}"
 			}
-
+			dimOpen(); /* 로딩바 Open */
 			$.ajax({
 				type : "POST",
 				url : "getPrcSts.do",
 				data : data,
 				dataType : "json",
 				success : function(retData) {
+					dimClose(); /* 로딩바 Close */
 					if(retData.result == "SUCCESS") {
 						if(retData.prc_sts == "${reservationDetail.PRC_STS}") {
 							if(confirm("예약을 취소하시겠습니까?")) {
-								dimOpen();
 								$.ajax({
 									type : "POST",
 									url : "reservationCancel.do",
@@ -687,15 +683,14 @@ $(document).ready(function() {
 					, package_		 : $("#package_" ).val()								//일반패키지
 					, prod_cond   	 : prodCond												//미팅샌딩인원조건
 			};
-
-			dimOpen();
+			dimOpen(); /* 로딩바 Open */
 			$.ajax({
 				type : "POST",
 				url : "reservationCal.do",
 				data : data,
 				dataType : "json",
 				success : function(data) {
-					dimClose();
+					dimClose(); /* 로딩바 Close */
 					if(data.result == "SUCCESS") {
 						isCal = true;
 						$("#cal_amt").val(numberComma(data.totalAmt));
@@ -983,15 +978,12 @@ $(document).ready(function() {
 						, chk_out_dt     : $("#chk_out_dt").val().replace(/-/gi, "")			//체크아웃
 						, room_type      : $("#room_type" ).val()						// 객실타입
 					};
-
-					dimOpen();
 					$.ajax({
 						type : "POST",
 						url : "noRoomChk.do",
 						data : data,
 						dataType : "json",
 						success : function(data) {
-							dimClose();
 							if(data.result == "SUCCESS") {
 								if(data.roomChkMsg == ""){
 									$("#no_room_chk").val("Check OK")

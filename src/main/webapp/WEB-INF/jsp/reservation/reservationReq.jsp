@@ -119,16 +119,15 @@ $(document).ready(function() {
 					, twin_cnt		 : twinCnt	// 트윈 갯수
 					, king_cnt		 : kingCnt	// 킹 갯수
 			};
-
-			dimOpen();
+			dimOpen(); /* 로딩바 Open */
 			$.ajax({
 				type : "POST",
 				url : "reservationInsert1.do",
 				data : data,
 				dataType : "json",
 				success : function(data) {
-					dimClose();
 					if(data.result == "SUCCESS") {
+						dimClose(); /* 로딩바 Close */
 						if(data.roomChkMsg == ""){
 							roomPerson = 0;
 							twinCnt = 0;
@@ -205,15 +204,12 @@ $(document).ready(function() {
 						, chk_out_dt     : $("#chk_out_dt").val().replace(/-/gi, "")			//체크아웃
 						, room_type      : $("#room_type" ).val()						// 객실타입
 					};
-
-					dimOpen();
 					$.ajax({
 						type : "POST",
 						url : "noRoomChk.do",
 						data : data,
 						dataType : "json",
 						success : function(data) {
-							dimClose();
 							if(data.result == "SUCCESS") {
 								if(data.roomChkMsg == ""){
 									$("#no_room_chk").val("Check OK")
@@ -250,14 +246,12 @@ $(document).ready(function() {
 						  chk_in_dt      : $("#chk_in_dt" ).val().replace(/-/gi, "")	//체크인
 						, chk_out_dt     : $("#chk_out_dt").val().replace(/-/gi, "")	//체크아웃
 					};
-					dimOpen();
 					$.ajax({
 						type : "POST",
 						url : "packageListReset.do",
 						data : data,
 						dataType : "json",
 						success : function(data) {
-							dimClose();
 							if(data.result == "SUCCESS") {
 								$("#package_").append("<option value='' selected> -선택- </option>");
 								for (var i = 0; i < data.packageListReset.length; i++) {
