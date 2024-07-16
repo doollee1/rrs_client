@@ -538,14 +538,18 @@ $(document).ready(function() {
 			let comListHan = td.eq(3).text();
 			let comListEng = td.eq(4).text();
 			
-			if (comListHan == "" || comListHan == "undefined"){
-				alert("[동반자] 탭에서 " + comListNum + "번째 동반자의 한글명을 작성해주세요.")
-				isCom = false;
-				return false;
-			}else if (comListEng == "" || comListEng == "undefined"){
-				alert("[동반자] 탭에서 "+ comListNum + "번째 동반자의 영문명을 작성해주세요.")
-				isCom = false;
-				return false;
+			if(typeof td.eq(2).find('#list_num_gbn option:selected').val() != "undefined" || comListNum != ""){
+				if (comListHan == "" || comListHan == "undefined"){
+					alert("[동반자] 탭에서 " + comListNum + "번째 동반자의 한글명을 작성해주세요.")
+					isCom = false;
+					return false;
+				}else if (comListEng == "" || comListEng == "undefined"){
+					alert("[동반자] 탭에서 "+ comListNum + "번째 동반자의 영문명을 작성해주세요.")
+					isCom = false;
+					return false;
+				}else{
+					isCom = true;
+				}
 			}else{
 				isCom = true;
 			}

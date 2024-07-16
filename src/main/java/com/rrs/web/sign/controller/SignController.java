@@ -62,7 +62,7 @@ public class SignController {
 	private static final Logger logger = LoggerFactory.getLogger(SignController.class);
 	
 	@Resource(name = "signService")
-	SignService signService;
+	SignService signService;   //로그인 서비스
 	
 	@Resource(name = "mailSendService")
 	MailSendService mailSendService;

@@ -9,7 +9,7 @@
 </head>
 <body>
 	<div class="dim-layer"></div>
-	<div id="div_load_image" style="position:absolute; top:50%; left:50%;width:0px;height:0px; z-index:9999; background:#f0f0f0; filter:alpha(opacity=50); opacity:alpha*0.5; margin:auto; padding:0; text-align:center;display:none">
+	<div id="div_load_image" style="position:fixed; top:calc(50% - 50px); left:calc(50% - 50px);width:0px;height:0px; z-index:9999; background:#f0f0f0; filter:alpha(opacity=50); opacity:alpha*0.5; margin:auto; padding:0; text-align:center;display:none">
       <img src="/PalmResort/assets/img/img.gif" style="width:100px; height:100px;">
     </div>
 	<!-- BEGIN #app -->

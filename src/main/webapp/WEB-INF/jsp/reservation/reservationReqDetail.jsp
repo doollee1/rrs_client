@@ -158,6 +158,7 @@ $(document).ready(function() {
 						, k_person       : $("#k_person"  ).val()
 						, i_person       : $("#i_person"  ).val()
 						, package_       : $("#package_"  ).val()
+						, hdng_gbn       : $("#package_"  ).val()
 						, room_type      : $("#room_type" ).val()
 						, twin_cnt		 : twinCnt	// 트윈 갯수
 						, king_cnt		 : kingCnt	// 킹 갯수

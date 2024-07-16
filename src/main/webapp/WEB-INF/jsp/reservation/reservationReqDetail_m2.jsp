@@ -66,6 +66,9 @@ $(document).ready(function() {
 	<c:if test="${reservationDetail.PRC_STS eq '09'}">
 		setTitle("예약취소");
 	</c:if>
+	<c:if test="${reservationDetail.PRC_STS eq '10'}">
+		setTitle("입금완료");
+	</c:if>
 	setEvent();
 	if($("#footer").length == 0) {
 		$(".app-content-padding").addClass("none-footer");

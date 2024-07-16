@@ -10,7 +10,7 @@ public interface CommonService {
 	
 	
 	/**
-	 * °øÅëÄÚµå ¸ñ·ÏÁ¶È¸
+	 * ê³µí†µì½”ë“œ ëª©ë¡ì¡°íšŒ
 	 * 
 	 * @param paramMap
 	 * @return
@@ -20,7 +20,7 @@ public interface CommonService {
 
 	
 	/**
-	 * ÅÚ¸®±×·¥ Àü¼Û
+	 * í…”ë¦¬ê·¸ë¨ ì „ì†¡
 	 * 
 	 * @param msg
 	 * @return
@@ -29,7 +29,7 @@ public interface CommonService {
 
 	
 	/**
-	 * ÀÌ¹ÌÁö ¾÷·Îµå
+	 * ì´ë¯¸ì§€ ì—…ë¡œë“œ
 	 * 
 	 * @param image
 	 * @return
@@ -38,7 +38,7 @@ public interface CommonService {
 	
 	
 	/**
-	 * Å¬¶óÀÌ¾ğÆ®IP È®ÀÎ
+	 * í´ë¼ì´ì–¸íŠ¸IP í™•ì¸
 	 * 
 	 * @param request
 	 * @return
