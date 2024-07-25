@@ -87,7 +87,7 @@ public class SignController {
 		KeyPairGenerator generator;
 		try {
 			generator = KeyPairGenerator.getInstance(SignController.RSA_INSTANCE);
-			generator.initialize(1024);
+			generator.initialize(1024);  //1024
 
 			KeyPair keyPair = generator.genKeyPair();
 			KeyFactory keyFactory = KeyFactory.getInstance(SignController.RSA_INSTANCE);
@@ -115,8 +115,9 @@ public class SignController {
 	 * @throws Exception
 	 */
 	public String decryptRsa(PrivateKey privateKey, String securedValue) throws Exception {
-		Cipher cipher = Cipher.getInstance(SignController.RSA_INSTANCE);
+		Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
 		byte[] encryptedBytes = hexToByteArray(securedValue);
+		
 		cipher.init(Cipher.DECRYPT_MODE, privateKey);
 		byte[] decryptedBytes = cipher.doFinal(encryptedBytes);
 		String decryptedValue = new String(decryptedBytes, "utf-8"); // 문자 인코딩 주의.
@@ -227,6 +228,8 @@ public class SignController {
 		SignVO login = this.signService.signIn(vo);
 		//logger.info("========= login : "+ (ObjectUtils.isEmpty(login)? null : login.toString()));
 		
+		session.removeAttribute(SignController.RSA_WEB_KEY);  //개인키 세션에서 제거
+		
 		String loginYn = "";
 		
 		if (login == null) {
@@ -238,7 +241,8 @@ public class SignController {
 			}
 			
 		} else {
-			session = req.getSession(true);
+			
+			session = req.getSession(true);						
 			
 			if(login.getRet_yn().equals("Y")) { // 계정 이용불가 상태
 				
@@ -349,6 +353,8 @@ public class SignController {
 		
 		int chk = this.signService.signUp(vo);
 		int memchk = this.signService.memberChk(vo);
+		
+		session.removeAttribute(SignController.RSA_WEB_KEY);  //개인키 세션에서 제거
 		
 		return (chk > 0) ? (memchk > 0) ? "M" : "Y" : "N";
 	}
@@ -511,6 +517,8 @@ public class SignController {
 			this.signService.changeInfo(vo);
 			result = "Y";
 		}
+		
+		session.removeAttribute(SignController.RSA_WEB_KEY);  //개인키 세션에서 제거
 		
 		logger.debug("infoChange - result ::::: " + result);
 		

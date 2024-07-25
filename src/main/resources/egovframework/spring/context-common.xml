@@ -76,4 +76,7 @@
 		<property name="maxUploadSize" value="10485760" />   <!-- Max upload size : 10MB -->	        
 		<property name="maxInMemorySize" value="10485760" /> <!-- Max size of file in memory : 10MB -->
 	</bean>
+	
+	<!-- 필터 -->
+	<bean id="PreDispatchFilter" class="com.rrs.comm.filter.PreDispatchFilter"/>
 </beans>

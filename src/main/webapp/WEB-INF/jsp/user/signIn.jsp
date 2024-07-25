@@ -40,8 +40,7 @@ function initRsa(){
 	$.ajax({
 		type: "POST",
 		url : "/initRsaAjax.do",
-		data: 
-			{},
+		data: {},
 		dataType:"json",
 		success:function(data){
 			
@@ -49,8 +48,8 @@ function initRsa(){
 			
 			$("#RSAModulus").val(data.RSAModulus);
 			$("#RSAExponent").val(data.RSAExponent);
-			
-			signIn();  //로그인 진행
+						
+			setTimeout(() =>signIn(), 100);  //0.1초후 로그인 진행			 
 		}
 	});		
 }
@@ -61,11 +60,11 @@ function signIn(){
 	
 	console.log("======== 로그인 진행 ========");
 	
-	var rsa = new RSAKey();
+	var rsa = new RSAKey();	
 	rsa.setPublic($('#RSAModulus').val(),$('#RSAExponent').val());
-	
-	var user_id = $("#user_id").val();
-	var passwd = rsa.encrypt($("#password").val());
+		
+	var user_id = $("#user_id").val();	
+	var passwd = rsa.encrypt($("#password").val());	
 	var useCookie = $("input[name=useCookie]:checked").val();
 	
 	//console.log("=== user_id : "+user_id);
@@ -117,6 +116,16 @@ function signIn(){
 		}
 	});
 }
+
+
+//null 체크
+function isEmpty(value) {
+	if( value == "" || value == null || value == undefined || ( value != null && typeof value == "object" && !Object.keys(value).length ) ){
+		return true
+	}else{
+		return false
+	}
+}
 </script>
 
 <!-- BEGIN login -->
@@ -154,7 +163,7 @@ function signIn(){
                   <input type="checkbox" name="useCookie" style="margin-bottom:.9375rem"> 자동로그인
             </label>
 			<div class="mb-15px">
-				<button type="button" class="btn btn-theme h-45px w-100 btn-lg fs-14px" onclick="initRsa()">로그인</button>				
+				<button type="button" class="btn btn-theme h-45px w-100 btn-lg fs-14px" onclick="initRsa();">로그인</button>		
 			</div>
 			<div class="mb-40px pb-40px text-dark btn-links">
 				<a href="/findId.do">아이디찾기</a>

@@ -99,10 +99,9 @@ public class ReservationController {
 		// 회원구분 01 멤버 / 02 일반 / 03 교민 / 04 에이전시 
 		String memGbn = (String)session.getAttribute("mem_gbn");
 		String roomChkMsg = "";
-		
 		// packageCharge  parameter : chk_in_dt, chk_out_dt, room_type
 		List<Map<String, Object>> noRoomChk = reservationService.noRoomChk(param);
-		if(noRoomChk != null && (noRoomChk.size() > 0)) { 
+		if(noRoomChk != null && (noRoomChk.size() > 0)) {
 			StringBuilder sbRoomChkMsg = new StringBuilder();
 			for(Map<String, Object> map : noRoomChk) {
 				String roomTypeName  = map.get("ROOM_TYPE_NAME").toString().trim();

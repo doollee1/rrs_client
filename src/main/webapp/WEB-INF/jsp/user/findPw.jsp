@@ -83,7 +83,7 @@ function findPw(){
 	<div class="register-container">
 		<!-- BEGIN register-content -->
 		<div class="register-content">
-			<form >
+			
 				<div class="text"><i class="fa-solid fa-check"></i> 등록된 회원정보로 비밀번호를 찾아 드립니다.</div>
 				<div class="mb-3">
 					<label class="mb-2">아이디 </label>
@@ -96,8 +96,7 @@ function findPw(){
 				<div class="mb-3"> 
 					<label class="mb-2">이메일 </label>
 					<input type="email" class="form-control fs-13px" placeholder="이메일" id="email"/>
-				</div> 
-			</form>
+				</div> 			
 			
 		</div>
 		<!-- END register-content -->

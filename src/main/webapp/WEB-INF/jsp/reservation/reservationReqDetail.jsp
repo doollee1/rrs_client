@@ -10,6 +10,7 @@
 		#comPlusBtn {top:122px !important; right:36px !important;}
 		#reserve_cal_box {width:100% !important;}
 		#display_label {display:none;}
+		#packageDiv {margin-bottom:.66875rem!important;}
 	}
 	#comPlusBtn {opacity:30%; background-color:#348FE2; width:22px; height:22px; font-size:12px; line-height:22px; right:45px; top:110px;}
 	#reserve_count_input_box {width:100%;}
@@ -40,7 +41,12 @@ $(document).ready(function() {
 		}
 	}
 
-	<%-- validate --%>
+	/******************************************** 
+	 * @Subject : 예약 [저장] 진행 시
+	 * @Content : 필수값 및 데이터 유효성 체크
+	 * @Since   : 2024.07.11
+	 * @Author  : K.J.T 
+	 ********************************************/
 	function isValidate() {
 		if($("#chk_in_dt").val() == "") {
 			alert("체크인 날짜를 선택하세요.");
@@ -81,7 +87,12 @@ $(document).ready(function() {
 		return true;
 	}
 
-	<%-- 이벤트 함수 --%>
+	/******************************************** 
+	 * @Subject : 이벤트 함수
+	 * @Content : 버튼, ID, CLASS 등 이벤트 정의
+	 * @Since   : 2024.07.11
+	 * @Author  : K.J.T 
+	 ********************************************/
 	function setEvent() {
 		var curDate     = new Date();
 		var startDate = new Date();
@@ -97,10 +108,15 @@ $(document).ready(function() {
 			endDate: endDate
 		})
 
-		<%-- 수정버튼 클릭 --%>
+		/******************************************** 
+		 * @Subject : [수정]버튼 이벤트 #1
+		 * @Content : readonly / disabled 해지
+		 * @Since   : 2024.07.11
+		 * @Author  : K.J.T 
+		 ********************************************/
 		$("#reservationUpdateBtn").on("click", function() {
 			var btnText = $(this).text();
-			if(btnText == "수정") {
+			if(btnText == "수정진행") {
 				var data = {
 					  req_dt : $("#req_dt").val()
 					, seq    : $("#seq"   ).val()
@@ -122,9 +138,9 @@ $(document).ready(function() {
 								$("#chk_out_dt").removeAttr("disabled"); /* 체크아웃 버튼 */
 								$("#g_person, #n_person, #k_person, #i_person").removeClass("readonly");
 								$("#package_, #room_type").removeClass("readonly");
-								$("#reservationUpdateBtn").text("수정 등록");
+								$("#reservationUpdateBtn").text("수정등록");
 							} else {
-								alert("상태값이 변경되어 수정할 수 없습니다.");
+								alert("상태값이 변경되어 수정할 수 없습니다. 관리자에게 문의해주세요.");
 							}
 						}
 				 	}
@@ -179,20 +195,25 @@ $(document).ready(function() {
 							roomPerson = 0;
 							twinCnt = 0;
 							kingCnt = 0;
-							alert("수정이 완료되었습니다.");
+							alert("수정이 완료되었습니다.\n예약 현황에서 수정해주신\n예약 건에 대한 확인이 가능하며,\n관리자가 예약일  확인 이 후\n다음 단계로 진행 가능합니다.");
 							location.replace("/main.do");
 						} else {
 							roomPerson = 0;
 							twinCnt = 0;
 							kingCnt = 0;
-							alert("상태값이 변경되어 수정할 수 없습니다.");
+							alert("예약 등록이 실패하였습니다. 관리자에게 문의해주세요.");
 						}
 					}
 				});
 			}
 		});
 
-		<%-- 예약취소 버튼 --%>
+		/******************************************** 
+		 * @Subject : [예약취소]버튼 이벤트 함수
+		 * @Content : [예약취소]버튼 클릭 시 이벤트 정의
+		 * @Since   : 2024.07.11
+		 * @Author  : K.J.T 
+		 ********************************************/
 		$("#reservationCancelBtn").on("click", function() {
 			var data = {
 				  req_dt  : $("#req_dt").val()
@@ -223,7 +244,7 @@ $(document).ready(function() {
 										} else if(retData2.msg != ""){
 											alert(retData2.msg);
 										} else {
-											alert("상태값이 변경되어 수정할 수 없습니다.");
+											alert("예약 취소가 실패하였습니다. 관리자에게 문의해주세요.");
 										}
 									}
 								});
@@ -234,7 +255,12 @@ $(document).ready(function() {
 			})
 		});
 
-		<%-- input 이벤트 --%>
+		/******************************************** 
+		 * @Subject : input 이벤트
+		 * @Content : [.toNumber] Class에 대한 이벤트
+		 * @Since   : 2024.07.11
+		 * @Author  : K.J.T 
+		 ********************************************/
 		$(".toNumber").on("focus focusout", function(e) {
 			if(e.type == "focus") {
 				if(this.value == "0") {
@@ -271,7 +297,12 @@ $(document).ready(function() {
 			}
 		});
 		
-		<%-- room_type 이벤트 --%>
+		/******************************************** 
+		 * @Subject : input 이벤트
+		 * @Content : [객실타입]항목 변경에 대한 이벤트
+		 * @Since   : 2024.07.11
+		 * @Author  : K.J.T 
+		 ********************************************/
 		$("#room_type").on("change", function() {
 			if($("#chk_in_dt").val() == "") {
 				alert("체크인 날짜를 선택하세요.");
@@ -317,6 +348,12 @@ $(document).ready(function() {
 			}
 		});
 		
+		/******************************************** 
+		 * @Subject : 체크인 날짜 등록 이벤트
+		 * @Content : [체크인]항목 변경에 대한 이벤트
+		 * @Since   : 2024.07.11
+		 * @Author  : K.J.T 
+		 ********************************************/
 		$("#chk_in_dt").on("change", function() {
 			$("#room_type").val("");
 			if(!$("#chk_in_dt").is(":disabled") && $("#g_person").val() > 0){
@@ -326,6 +363,12 @@ $(document).ready(function() {
 			}
 		});
 		
+		/******************************************** 
+		 * @Subject : 체크아웃 날짜 등록 이벤트
+		 * @Content : [체크아웃]항목 변경에 대한 이벤트
+		 * @Since   : 2024.07.11
+		 * @Author  : K.J.T 
+		 ********************************************/
 		$("#chk_out_dt").on("change", function() {
 			$("#room_type").val("");
 			
@@ -546,7 +589,7 @@ $(document).ready(function() {
 	<!-- BEGIN #footer -->
 	<div id="footer" class="app-footer m-0">
 		<a href="javascript:;" id="reservationCancelBtn" class="btn btn-gray btn-lg">예약취소</a>
-		<a href="javascript:;" id="reservationUpdateBtn" class="btn btn-success btn-lg">수정</a>
+		<a href="javascript:;" id="reservationUpdateBtn" class="btn btn-success btn-lg">수정진행</a>
 	</div>
 	<!-- END #footer -->
 	

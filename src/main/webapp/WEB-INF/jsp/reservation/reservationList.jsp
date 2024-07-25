@@ -10,6 +10,12 @@ $(document).ready(function() {
 	setEvent();
 });
 
+/******************************************** 
+ * @Subject : 이벤트 함수
+ * @Content : 버튼, ID, CLASS 등 이벤트 정의
+ * @Since   : 2024.07.11
+ * @Author  : K.J.T 
+ ********************************************/
 function setEvent() {
 	$(".reserve-list > li").on("click", function() {
 		var form = document.createElement("form");

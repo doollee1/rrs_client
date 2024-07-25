@@ -25,7 +25,12 @@ $(document).ready(function() {
 	setTitle("예약요청");
 	setEvent();
 
-	<%-- validate --%>
+	/******************************************** 
+	 * @Subject : 예약 [저장] 진행 시
+	 * @Content : 필수값 및 데이터 유효성 체크
+	 * @Since   : 2024.07.11
+	 * @Author  : K.J.T 
+	 ********************************************/
 	function isValidate() {
 		if($("#chk_in_dt").val() == "") {
 			alert("체크인 날짜를 선택하세요.");
@@ -66,7 +71,12 @@ $(document).ready(function() {
 		return true;
 	}
 
-	<%-- 이벤트 함수 --%>
+	/******************************************** 
+	 * @Subject : 이벤트 함수
+	 * @Content : 버튼, ID, CLASS 등 이벤트 정의
+	 * @Since   : 2024.07.11
+	 * @Author  : K.J.T 
+	 ********************************************/
 	function setEvent() {
 		<%-- datepicker setting --%>
 		var curDate     = new Date();
@@ -147,7 +157,12 @@ $(document).ready(function() {
 			});
 		});
 
-		<%-- input 이벤트 --%>
+		/******************************************** 
+		 * @Subject : input 이벤트
+		 * @Content : [.toNumber] Class에 대한 이벤트
+		 * @Since   : 2024.07.11
+		 * @Author  : K.J.T 
+		 ********************************************/
 		$(".toNumber").on("focus focusout", function(e) {
 			if(e.type == "focus") {
 				if(this.value == "0") {
@@ -184,7 +199,12 @@ $(document).ready(function() {
 			}
 		});
 		
-		<%-- room_type --%>
+		/******************************************** 
+		 * @Subject : input 이벤트
+		 * @Content : [객실타입]항목 변경에 대한 이벤트
+		 * @Since   : 2024.07.11
+		 * @Author  : K.J.T 
+		 ********************************************/
 		$("#room_type").on("change", function() {
 			if($("#chk_in_dt").val() == "") {
 				alert("체크인 날짜를 선택하세요.");
@@ -230,13 +250,25 @@ $(document).ready(function() {
 			}
 		});
 		
+		/******************************************** 
+		 * @Subject : 체크인 날짜 등록 이벤트
+		 * @Content : [체크인]항목 변경에 대한 이벤트
+		 * @Since   : 2024.07.11
+		 * @Author  : K.J.T 
+		 ********************************************/
 		$("#chk_in_dt").on("change", function() {
 			$("#room_type").val("");
-			$("#chk_out_dt").val("");
+			$("#chk_out_dt").datepicker("setDate", $('#chk_in_dt').datepicker('getDate'));
 			$("#package_").find("option").remove();
 			$("#package_").append("<option value='' selected> -선택- </option>");
 		});
 		
+		/******************************************** 
+		 * @Subject : 체크아웃 날짜 등록 이벤트
+		 * @Content : [체크아웃]항목 변경에 대한 이벤트
+		 * @Since   : 2024.07.11
+		 * @Author  : K.J.T 
+		 ********************************************/
 		$("#chk_out_dt").on("change", function() {
 			$("#room_type").val("");
 			

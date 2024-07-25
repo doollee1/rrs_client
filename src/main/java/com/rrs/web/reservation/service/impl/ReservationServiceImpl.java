@@ -450,7 +450,9 @@ public class ReservationServiceImpl implements ReservationService {
 
 		// 비용테이블 업데이트
 		updateGbn = reservationMapper.updateTbReqFee(paramMap);
-		if(updateGbn == 0) return updateGbn;
+		if(updateGbn == 0) { 
+			updateGbn = reservationMapper.insertTbReqFee(paramMap);
+		}
 
 		// 이미지 업로드
 		MultipartFile file = (MultipartFile)paramMap.get("file");

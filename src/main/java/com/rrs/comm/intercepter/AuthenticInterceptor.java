@@ -2,11 +2,13 @@ package com.rrs.comm.intercepter;
 
 import java.io.PrintWriter;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.ws.rs.core.HttpHeaders;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +35,32 @@ public class AuthenticInterceptor extends HandlerInterceptorAdapter {
 		HttpSession session = request.getSession();
 		SignVO login = (SignVO)session.getAttribute("login");
 		String requestURI = request.getRequestURI(); // 요청 URI
+		logger.info("===== requestURI : "+requestURI);
+		
+		
+		
+		//웹취약점 점검처리
+		List<String> webSpiderList = Arrays.asList("/main.do", "/findId.do", "/findPw.do", "/noticeList.do", "/policy.do",  "/productInfo.do"
+						,"/qnaList.do", "/reservationList.do", "/reservationReq.do", "/resortInfo.do", "/setting.do", "/signIn.do", "/signOut.do", "/signUp.do");
+		
+		if(webSpiderList.indexOf(requestURI) >=0) {
+			
+			//Content-Security-Policy 헤더 추가 (경고 : Content Security Policy(CSP) Header Not Set	
+			response.setHeader("Content-Security-Policy", "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self'; font-src 'self'; object-src 'none'" );
+			//response.setHeader("Content-Security-Policy", "form-action 'self'");
+									
+			//X-Frame-Options 추가(경고 : Missing Anti-clickjacking Header)
+			response.setHeader("X-Frame-Options", "SAMEORIGIN");
+			
+			//Cookie 속성(Secure; SameSite=lax) 설정 (경고 : Cookie without SameSite Attribute)
+			addSameSite(response,  "lax");
+			
+			//X-Content-Type-Options 헤더 추가(경고 : X-Content-Type-Options Header Missing)
+			response.setHeader("X-Content-Type-Options", "nosniff");
+		}
+		
+		
+		
 		List<String> excludeList = Arrays.asList("/main.do"  // 메인 페이지
 												, "/noticeList.do" // 공지사항
 												, "/noticeView.do" // 공지사항 상세
@@ -54,15 +82,37 @@ public class AuthenticInterceptor extends HandlerInterceptorAdapter {
 					response.sendError(999);
 					result = false;
 				} else {
-					response.setContentType("text/html; charset=UTF-8");
-		            PrintWriter out = response.getWriter();
-		            out.println("<script>alert('로그인을 해 주세요.'); location.href='/main.do';</script>");
+					response.setContentType("text/html; charset=UTF-8");							            
+					PrintWriter out = response.getWriter();
+					out.println("<script>alert('로그인을 해 주세요.'); location.href='/main.do';</script>");		            	           
 		            out.flush();
 		            result = false;
 				}
 			}
 		}
+		
 		return result;
 	}
 	
-}
+	
+	/**
+	 * 웹취약점 점검처리(Cookie without SameSite Attribute)
+	 * 
+	 * @param response
+	 * @param sameSite
+	 */
+	private void addSameSite(HttpServletResponse response, String sameSite) {
+    	
+        Collection<String> headers = response.getHeaders(HttpHeaders.SET_COOKIE);
+        boolean firstHeader = true;
+        for (String header : headers) { // there can be multiple Set-Cookie attributes
+            if (firstHeader) {
+                response.setHeader(HttpHeaders.SET_COOKIE, String.format("%s; Secure; %s", header, "SameSite=" + sameSite));
+                firstHeader = false;
+                continue;
+            }
+            response.addHeader(HttpHeaders.SET_COOKIE, String.format("%s; Secure; %s", header, "SameSite=" + sameSite));
+        }
+	}
+	
+}	

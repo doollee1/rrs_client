@@ -20,6 +20,7 @@
 		#comPlusBtn {top:122px !important; right:36px !important;}
 		#reserve_cal_box {width:100% !important;}
 		#display_label {display:none;}
+		#packageDiv {margin-bottom:.66875rem!important;}
 	}
 	
 	#comPlusBtn {opacity:30%; background-color:#348FE2; width:22px; height:22px; font-size:12px; line-height:22px; right:45px; top:110px;}
@@ -222,6 +223,14 @@ $(document).ready(function() {
 				
 				<div class="row mb-2">
 					<label class="form-label col-form-label col-md-3" style="font-size: 1rem;font-weight:bold;"><span style="box-shadow: inset 0 -2px 0 #dcdcdc;">Flight In</span></label>
+					<div class="input-daterange col-md-9">
+						<div class="input-group date">
+							<input type="text" id="flight_in_dt" name="flight_in_dt" class="form-control text-center " placeholder="비행 날짜를 선택하세요" readonly>
+							<span class="input-group-text input-group-addon"><i class="fa fa-calendar"></i></span>
+						</div>
+					</div>
+					<label class="form-label col-form-label  col-md-3"></label>
+					
 					<div class="col-md-9 inline-flex">
 						<select id="flight_in" name="flight_in" class="form-select text-muted text-center readonly">
 							<option value="" style="font-size: 0.9rem;font-weight:bold;">-선택-</option>
@@ -250,6 +259,14 @@ $(document).ready(function() {
 				
 				<div class="row mb-2">
 					<label class="form-label col-form-label col-md-3" style="font-size: 1rem;font-weight:bold;"><span style="box-shadow: inset 0 -2px 0 #dcdcdc;">Flight Out</span></label>
+					<div class="input-daterange col-md-9">
+						<div class="input-group date">
+							<input type="text" id="flight_out_dt" name="flight_out_dt" class="form-control text-center " placeholder="비행 날짜를 선택하세요" readonly>
+							<span class="input-group-text input-group-addon"><i class="fa fa-calendar"></i></span>
+						</div>
+					</div>
+					<label class="form-label col-form-label  col-md-3"></label>
+					
 					<div class="col-md-9 inline-flex">
 						<select id="flight_out" name="flight_out" class="form-select text-muted text-center readonly">
 							<option value="" style="font-size: 0.9rem;font-weight:bold;">-선택-</option>
@@ -416,6 +433,17 @@ $(document).ready(function() {
 						</div>
 					</div>
 				</div>
+				
+				<div id="packageDiv" class="row mb-2">
+					<label class="form-label col-form-label col-md-3" style="font-size: 1rem;font-weight:bold;"><span style="box-shadow: inset 0 -2px 0 #dcdcdc;">패키지</span></label>
+					<div class="col-md-9">
+						<select id="add_hdng_gbn" name="add_hdng_gbn" class="form-select text-muted text-center readonly">
+							<c:forEach items="${packageList}" var="add_hdng_gbn" varStatus="status">
+								<option value="${add_hdng_gbn.CODE}" style="font-size: 0.9rem;font-weight:bold;">${add_hdng_gbn.CODE_NM}</option>
+							</c:forEach>
+						</select>
+					</div>
+				</div>
 					
 				<div class="row mb-2">
 					<label class="form-label col-form-label col-md-3" id="display_label" style="padding:0px;">　</label>
@@ -479,37 +507,6 @@ $(document).ready(function() {
 						</div>명
 					</div>
 				</div>
-				
-				<div id="packageDiv" class="row mb-2">
-					<label class="form-label col-form-label col-md-3" style="font-size: 1rem;font-weight:bold;"><span style="box-shadow: inset 0 -2px 0 #dcdcdc;">패키지</span></label>
-					<div class="col-md-9">
-						<select id="add_hdng_gbn" name="add_hdng_gbn" class="form-select text-muted text-center readonly">
-							<c:forEach items="${packageList}" var="add_hdng_gbn" varStatus="status">
-								<option value="${add_hdng_gbn.CODE}" style="font-size: 0.9rem;font-weight:bold;">${add_hdng_gbn.CODE_NM}</option>
-							</c:forEach>
-						</select>
-					</div>
-				</div>
-				<div class="row mb-2">
-					<label class="form-label col-form-label col-md-3" style="font-size: 1rem;font-weight:bold;"><span style="box-shadow: inset 0 -2px 0 #dcdcdc;">추가 요청사항</span></label>
-					<div class="col-md-9">
-						<textarea id="remark" name="remark" class="form-control text-muted readonly" rows="3"></textarea>
-					</div>
-				</div>
-				
-				
-				<div class="mb-2">
-					<div class="inline-flex calc">
-						<label class="form-label col-form-label" style="font-size: 1rem;font-weight:bold;"><span style="box-shadow: inset 0 -2px 0 #dcdcdc;">계약금</span></label>
-						<input id="dep_amt" name="dep_amt" type="text" style="font-size: 0.9rem;font-weight:bold;" class="toNumber form-control text-end" readonly>원
-					</div>
-				</div>
-				<div class="mb-2">
-					<div class="inline-flex calc">
-						<label class="form-label col-form-label" style="font-size: 1rem;font-weight:bold;"><span style="box-shadow: inset 0 -2px 0 #dcdcdc;">잔금</span></label>
-						<input id="bal_amt" name="bal_amt" type="text" style="font-size: 0.9rem;font-weight:bold;" class="form-control text-end" readonly>원
-					</div>
-				</div>
 			</div>
 			<!-- END tab-pane -->
 			
@@ -567,26 +564,42 @@ $(document).ready(function() {
 					</div> 
 						<!-- /.container2 -->
 				</div>
-					<!-- /total-people-wrap -->
+				<!-- /total-people-wrap -->
+				<div>
+					<div class="row mb-2">
+						<label class="form-label col-form-label col-md-3" style="font-size: 1rem;font-weight:bold;"><span style="box-shadow: inset 0 -2px 0 #dcdcdc;">추가 요청사항</span></label>
+						<div class="col-md-9">
+							<textarea id="remark" name="remark" class="form-control text-muted readonly" rows="3"></textarea>
+						</div>
+					</div>
+						
+					<div class="mb-2">
+						<div class="inline-flex calc">
+							<label class="form-label col-form-label" style="font-size: 1rem;font-weight:bold;"><span style="box-shadow: inset 0 -2px 0 #dcdcdc;">계약금</span></label>
+							<input id="dep_amt" name="dep_amt" type="text" style="font-size: 0.9rem;font-weight:bold;" class="toNumber form-control text-end" readonly>원
+						</div>
+					</div>
+					<div class="mb-2">
+						<div class="inline-flex calc">
+							<label class="form-label col-form-label" style="font-size: 1rem;font-weight:bold;"><span style="box-shadow: inset 0 -2px 0 #dcdcdc;">잔금</span></label>
+							<input id="bal_amt" name="bal_amt" type="text" style="font-size: 0.9rem;font-weight:bold;" class="form-control text-end" readonly>원
+						</div>
+					</div>
+				</div>	
+				<div class="mb-15px">
+					<c:if test="${reservationDetail.PRC_STS eq '05'}">
+						<button id="reservationCancelBtn" type="button" class="btn btn-gray h-45px w-100 btn-lg fs-14px">예약취소</button>	
+					</c:if>
+					
+					<c:if test="${(reservationDetail.PRC_STS eq '06') and (reservationDetail.REFUND_YN eq 'Y')}">
+						<button id="reservationCancelBtn" type="button" class="btn btn-gray h-45px w-100 btn-lg fs-14px">환불요청</button>	
+					</c:if>	
+				</div>
 			</div>
 			<!-- END tab-pane -->			
 		</div>
 		<!-- END tab-content -->
 	</div>
 	<!-- END content-container -->
-
-	<!-- BEGIN #footer -->
-	<c:if test="${reservationDetail.PRC_STS eq '05'}">
-		<div id="footer" class="app-footer m-0">
-			<a href="javascript:;" id="reservationCancelBtn" class="btn btn-gray btn-lg">예약취소</a>
-		</div>
-	</c:if>
-	
-	<c:if test="${(reservationDetail.PRC_STS eq '06') and (reservationDetail.REFUND_YN eq 'Y')}">
-		<div id="footer" class="app-footer m-0">
-			<a href="javascript:;" id="reservationCancelBtn" class="btn btn-danger btn-lg">환불요청</a>
-		</div>
-	</c:if>
-	<!-- END #footer -->
 	
 </div>

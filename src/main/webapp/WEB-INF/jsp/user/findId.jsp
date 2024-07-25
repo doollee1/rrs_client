@@ -84,7 +84,7 @@ function findId(){
 	<div class="register-container"> 
 		<!-- BEGIN register-content -->
 		<div class="register-content">
-			<form>
+			
 				<div class="text"><i class="fa-solid fa-check"></i> 등록된 회원정보로 아이디를 찾아 드립니다.</div>
 				<div class="mb-3">
 					<label class="mb-2">이름 </label>
@@ -99,7 +99,7 @@ function findId(){
 					<input type="email" class="form-control fs-13px" placeholder="이메일" id="email"/>
 				</div>
 				<div>아이디를 회원가입시 입력한 이메일로 보내 드립니다.</div>
-			</form>
+			
 		</div>
 		<!-- END register-content -->
 

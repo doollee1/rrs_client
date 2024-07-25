@@ -158,9 +158,13 @@ $(document).ready(function() {
 					chk_in_dt   	: $("#chk_in_dt" ).val().replace(/-/gi, ""),					// 체크인일자
 					chk_out_dt  	: $("#chk_out_dt").val().replace(/-/gi, ""),					// 체크아웃일자
 					flight_in   	: $("#flight_in" ).val(),										// 도착항공기편
-					flight_in_hh	: $("#flight_in_hh" ).val(),									// 도착항공기시각
+					flight_in_dt	: $("#flight_in_dt" ).val().replace(/-/gi, ""),					// 도착항공기일자
+					flight_in_hh	: $("#flight_in_hh" ).val(),									// 도착항공기시각(시)
+					flight_in_mm	: $("#flight_in_mm" ).val(),									// 도착항공기시각(분)
 					flight_out  	: $("#flight_out").val(),										// 출발항공기편
-					flight_out_hh	: $("#flight_out_hh" ).val(),									// 도착항공기편
+					flight_out_dt	: $("#flight_out_dt" ).val().replace(/-/gi, ""),				// 출발항공기일자
+					flight_out_hh	: $("#flight_out_hh" ).val(),									// 출발항공기시각(시)
+					flight_out_mm	: $("#flight_out_mm" ).val(),									// 출발항공기시각(분)					
 					late_check_in   : $("#late_check_in").val(),									// 레이트체크인
 					late_check_out  : $("#late_check_out").val(),									// 레이트체크아웃
 					room_type  		: $("#room_type" ).val() 										// 출발항공기시각
@@ -217,7 +221,6 @@ $(document).ready(function() {
 	 * @Since   : 2024.07.11
 	 * @Author  : K.J.T 
 	 ********************************************/
-	<%-- 항공권 이미지 change 이벤트 --%>
 	$("#fligthImage").on("change", handleImgInput);
 	
 	function handleImgInput() {
@@ -424,7 +427,7 @@ $(document).ready(function() {
 	 * @Author  : K.J.T 
 	 ********************************************/
 	function setEvent() {
-		var curDate     = new Date();
+		var curDate   = new Date();
 		var startDate = new Date();
 		var endDate   = new Date();
 		startDate.setDate(curDate.getDate() + 1);
@@ -461,7 +464,7 @@ $(document).ready(function() {
 			roomChk = 1 ;
 			roomPerson = roomChk > roomPerson ? roomChk : roomPerson ;
 
-			// 비라운드 + 소아 : 식사+숙박
+			// 성인 + 소아 : 식사+숙박
 			nokidPerson = strToNum($("#n_person").val()) + strToNum($("#k_person").val());
 			
 			//미팅샌딩인원조건
@@ -491,7 +494,7 @@ $(document).ready(function() {
 					, add_r_p_per    : $("#add_r_p_per").val()								//프리미엄추가갯수
 					, add_r_p_day    : $("#add_r_p_day").val()								//프리미엄추가일수
 					, room_person    : roomPerson											//숙박인원
-					, nokid_person   : nokidPerson											//비라운드,소아인원
+					, nokid_person   : nokidPerson											//성인,소아인원
 					, g_person 		 : Number($("#g_person").val())							//일반인원
 					, tot_person     : Number($("#tot_person").val())						//총인원
 					, package_		 : $("#package_" ).val()								//일반패키지
@@ -519,12 +522,13 @@ $(document).ready(function() {
 								미팅샌딩비 : \${numberComma(data.sendingAmt)},
 								SURCHAGE : \${numberComma(data.surchageAmt)},
 								룸 추가 : \${numberComma(data.roomupAmt)},
-								비라운드소아(숙박+식사) : \${numberComma(data.nokidAmt)},
+								성인소아(숙박+식사) : \${numberComma(data.nokidAmt)},
 								EarlyCheckIn(방기준2인1실) : \${numberComma(data.lateCheckInAmt)},
 								lateCheckOut(방기준2인1실) : \${numberComma(data.lateCheckOutAmt)}`
 							);
 						*/
 					} else {
+						dimClose();
 						isCal = false;
 						$("#cal_amt").val(0);
 					}
@@ -570,7 +574,7 @@ $(document).ready(function() {
 			roomChk = 1 ;
 			roomPerson = roomChk > roomPerson ? roomChk : roomPerson ;
 			
-			// 비라운드 + 소아 : 식사+숙박
+			// 성인 + 소아 : 식사+숙박
 			nokidPerson = strToNum($("#n_person").val()) + strToNum($("#k_person").val());
 			
 			//미팅샌딩인원조건
@@ -600,10 +604,12 @@ $(document).ready(function() {
 					  chk_in_dt      : $("#chk_in_dt" ).val().replace(/-/gi, "")	// 체크인
 					, chk_out_dt     : $("#chk_out_dt").val().replace(/-/gi, "")	// 체크아웃
 					, room_type      : $("#room_type" ).val()						// 객실타입
-					, flight_in      : $("#flight_in" ).val()						// 비행출발일자
+					, flight_in      : $("#flight_in" ).val()						// 출발비행기편
+					, flight_in_dt   : $("#flight_in_dt" ).val().replace(/-/gi, "")	// 비행출발일자
 					, flight_in_hh   : $("#flight_in_hh" ).val()					// 비행출발시간(시)
 					, flight_in_mm   : $("#flight_in_mm" ).val()					// 비행출발시간(분)
-					, flight_out     : $("#flight_out").val()						// 비행도착일자
+					, flight_out     : $("#flight_out").val()						// 도착비행기편
+					, flight_out_dt  : $("#flight_out_dt").val().replace(/-/gi, "")	// 비행도착일자
 					, flight_out_hh  : $("#flight_out_hh").val()					// 비행도착시간(시)
 					, flight_out_mm  : $("#flight_out_mm").val()					// 비행도착시간(분)
 					, m_person       : 0											// 멤버는없음
@@ -628,7 +634,7 @@ $(document).ready(function() {
 					, add_r_s_day    : $("#add_r_s_day").val()						// 싱글룸추가일수
 					, add_r_p_per    : $("#add_r_p_per").val()						// 프리미엄추가갯수
 					, add_r_p_day    : $("#add_r_p_day").val()						// 프리미엄추가일수
-					, nokid_person   : nokidPerson									// 비라운드,소아 인원
+					, nokid_person   : nokidPerson									// 성인,소아 인원
 					, room_person    : roomPerson									// 숙박인원
 					, package_		 : $("#package_" ).val()						// 일반패키지
 					, remark         : $("#remark"     ).val()						// 요청사항
@@ -653,6 +659,7 @@ $(document).ready(function() {
 					if(data.result == "SUCCESS") {
 						addCompanion();
 					} else {
+						dimClose();
 						alert("상품이 없습니다. 관리자에게 문의 하세요.");
 					}
 			 	}
@@ -938,6 +945,17 @@ $(document).ready(function() {
 					});
 			}
 		});
+		
+		/******************************************** 
+		 * @Subject : 출발 비행일자 이벤트 
+		 * @Content : [출발 비행일자] 변경에 대한 이벤트
+		 * @Since   : 2024.07.11
+		 * @Author  : K.J.T 
+		 ********************************************/
+		$("#flight_in_dt").on("change", function() {
+			$("#flight_out_dt").datepicker("setDate", $('#flight_in_dt').datepicker('getDate'));
+		});
+		
 		/******************************************** 
 		 * @Subject : 체크인 날짜 등록 이벤트
 		 * @Content : [체크인]항목 변경에 대한 이벤트
@@ -945,6 +963,8 @@ $(document).ready(function() {
 		 * @Author  : K.J.T 
 		 ********************************************/
 		$("#chk_in_dt").on("change", function() {
+			$("#chk_out_dt").datepicker("setDate", $('#chk_in_dt').datepicker('getDate'));
+			$("#flight_in_dt").datepicker("setDate", $('#chk_in_dt').datepicker('getDate'));
 			$("#room_type").val("")
 		});
 		
@@ -955,6 +975,7 @@ $(document).ready(function() {
 		 * @Author  : K.J.T 
 		 ********************************************/
 		$("#chk_out_dt").on("change", function() {
+			$("#flight_out_dt").datepicker("setDate", $('#chk_out_dt').datepicker('getDate'));
 			$("#room_type").val("")
 		});
 		
@@ -1135,6 +1156,14 @@ $(document).ready(function() {
 				
 				<div class="row mb-2">
 					<label class="form-label col-form-label col-md-3" style="font-size: 1rem;font-weight:bold;"><span style="box-shadow: inset 0 -2px 0 #dcdcdc;">Flight In</span></label>
+					<div class="input-daterange col-md-9">
+						<div class="input-group date">
+							<input type="text" id="flight_in_dt" name="flight_in_dt" class="form-control text-center " placeholder="비행 날짜를 선택하세요">
+							<span class="input-group-text input-group-addon"><i class="fa fa-calendar"></i></span>
+						</div>
+					</div>
+					<label class="form-label col-form-label  col-md-3"></label>
+					
 					<div class="col-md-9 inline-flex">
 						<select id="flight_in" name="flight_in" class="form-select text-center">
 							<option value="" style="font-size: 0.9rem;font-weight:bold;">-선택-</option>
@@ -1163,6 +1192,14 @@ $(document).ready(function() {
 				
 				<div class="row mb-2">
 					<label class="form-label col-form-label col-md-3" style="font-size: 1rem;font-weight:bold;"><span style="box-shadow: inset 0 -2px 0 #dcdcdc;">Flight Out</span></label>
+					<div class="input-daterange col-md-9">
+						<div class="input-group date">
+							<input type="text" id="flight_out_dt" name="flight_out_dt" class="form-control text-center " placeholder="비행 날짜를 선택하세요">
+							<span class="input-group-text input-group-addon"><i class="fa fa-calendar"></i></span>
+						</div>
+					</div>
+					<label class="form-label col-form-label col-md-3"></label>
+					
 					<div class="col-md-9 inline-flex">
 						<select id="flight_out" name="flight_out" class="form-select text-center">
 							<option value="" style="font-size: 0.9rem;font-weight:bold;">-선택-</option>
@@ -1383,22 +1420,6 @@ $(document).ready(function() {
 						수정 시 [카카오톡:yyoahkim]로 문의주시길 바랍니다.
 					</span>	
 				</div>
-				
-				<div class="row mb-2" >
-					<label class="form-label col-form-label col-md-3" style="font-size: 1rem;font-weight:bold;"><span style="box-shadow: inset 0 -2px 0 #dcdcdc;">추가 요청사항</span></label>
-					<div class="col-md-9">
-						<textarea id="remark" name="remark" class="form-control" rows="3"></textarea>
-					</div>
-				</div>
-				<div class="mb-2">
-					<div class="inline-flex calc">
-						<button id="calBtn" name="calBtn" type="button" class="btn btn-pink" style="min-width: 9rem; height: 2.5rem;">가계산</button>
-						<div class="inline-flex" style="flex-grow:1; margin-left: -60px;"><input id="cal_amt" name="cal_amt" type="text" class="form-control text-end toNumber" value="0" readonly>원</div>
-					</div>
-					<small class="text-theme">
-						계산 금액은 정확한 금액이 아닙니다. 예약전송해 주시면 추후 정확한 금액을 안내 드립니다.
-					</small>
-				</div>
 			</div>
 			<!-- END tab-pane -->
 			
@@ -1503,15 +1524,32 @@ $(document).ready(function() {
 					</div> 
 					<!-- /.container -->
 				</div>
+				<div>
+					<div class="row mb-2">
+						<label class="form-label col-form-label col-md-3" style="font-size: 1rem;font-weight:bold;"><span style="box-shadow: inset 0 -2px 0 #dcdcdc;">추가 요청사항</span></label>
+						<div class="col-md-9">
+							<textarea id="remark" name="remark" class="form-control" rows="3"></textarea>
+						</div>
+					</div>
+						
+					<div class="mb-2">
+						<div class="inline-flex calc" id="reserve_cal_box"style="display:flex; justify-content:right; width:75%; margin-left:auto; gap:10px;">
+							<button id="calBtn" name="calBtn" type="button" class="btn btn-pink" style="min-width: 9rem; height: 2.5rem;">가계산</button>
+							<div class="inline-flex" style="flex-grow:1; margin-left: -60px;"><input id="cal_amt" name="cal_amt" type="text" class="form-control text-end toNumber" value="0" readonly>원</div>
+						</div>
+						<small class="text-theme" id="reserve_cal_box" style="display:flex; width:75%; margin-left:auto;">
+							계산 금액은 정확한 금액이 아닙니다. 예약전송해 주시면 추후 정확한 금액을 안내 드립니다.
+						</small>
+						<label class="form-label col-form-label  col-md-2"></label>
+					</div>
+				</div>	
+				<div class="mb-15px">
+					<button id="reservationBtn" type="button" class="btn btn-theme h-45px w-100 btn-lg fs-14px">등록</button>				
+				</div>
 			</div>
 			<!-- END tab-content -->
 		</div>
 		<!-- END content-container -->
 	</div>
-	<!-- BEGIN #footer -->
-	<div id="footer" class="app-footer m-0">
-		<a href="javascript:;" id="reservationBtn" class="btn btn-success btn-lg">등록</a>
-	</div>
-	<!-- END #footer -->
 	
 </div>

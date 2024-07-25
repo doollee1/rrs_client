@@ -287,9 +287,11 @@
          , LATE_CHECK_OUT  /* Late체크아웃 */
          , ROOM_TYPE       /* 객실타입 */
          , FLIGHT_IN       /* 도착항공기편 */
+         , FLIGHT_IN_DT    /* 도착항공기일자 */
          , FLIGHT_IN_HH    /* 도착항공기시각 */
          , FLIGHT_IN_MM    /* 도착항공기시각 */
          , FLIGHT_OUT      /* 출발항공기편 */
+         , FLIGHT_OUT_DT   /* 출발항공기일자 */
          , FLIGHT_OUT_HH   /* 출발항공기시각 */
          , FLIGHT_OUT_MM   /* 출발항공기시각 */
          , M_PERSON        /* 멤버인원 */
@@ -341,10 +343,12 @@
          , #{late_check_in }			/* 레이트체크인        */
          , #{late_check_out}			/* 레이트체크아웃      */
          , #{room_type	   }			/* 객실타입             */
-         , #{flight_in	   }			/* 비행출발일자        */
+         , #{flight_in	   }			/* 비행출발항공기편        */
+         , #{flight_in_dt  }			/* 비행출발일자        */
          , #{flight_in_hh  }			/* 비행출발시간        */
          , #{flight_in_mm  }			/* 비행출발시간        */
-         , #{flight_out	   }			/* 비행도착일자        */
+         , #{flight_out	   }			/* 비행도착항공기편        */
+         , #{flight_out_dt }			/* 비행도착일자        */
          , #{flight_out_hh }			/* 비행도착시간        */
          , #{flight_out_mm }			/* 비행도착시간        */
          , #{m_person	   }			/* 멤버                 */
@@ -389,9 +393,11 @@
              , CHK_OUT_DT		= #{chk_out_dt    }
              , ROOM_TYPE		= #{room_type     }
              , FLIGHT_IN		= #{flight_in     }
+             , FLIGHT_IN_DT		= #{flight_in_dt  }
              , FLIGHT_IN_HH		= #{flight_in_hh  }
              , FLIGHT_IN_MM		= #{flight_in_mm  }
              , FLIGHT_OUT		= #{flight_out    }
+             , FLIGHT_OUT_DT	= #{flight_out_dt }
 			 , FLIGHT_OUT_HH	= #{flight_out_hh }
 			 , FLIGHT_OUT_MM	= #{flight_out_mm }
              , M_PERSON			= #{m_person      }
@@ -556,15 +562,17 @@
              , A.REQ_TEL_NO								/* 예약자전화번호 */
              , A.MEM_GBN								/* 회원구분 */
              , A.PRC_STS								/* 예약상태 */
-             , DATE_FORMAT(A.CHK_IN_DT , '%Y-%m-%d') AS CHK_IN_DT		/* 체크인일자 */
-             , DATE_FORMAT(A.CHK_OUT_DT, '%Y-%m-%d') AS CHK_OUT_DT		/* 체크아웃일자 */
+             , DATE_FORMAT(A.CHK_IN_DT , '%Y-%m-%d')	 AS CHK_IN_DT		/* 체크인일자 */
+             , DATE_FORMAT(A.CHK_OUT_DT, '%Y-%m-%d')	 AS CHK_OUT_DT		/* 체크아웃일자 */
              , A.LATE_CHECK_IN							/* Late체크인 */
              , A.LATE_CHECK_OUT							/* Late체크아웃 */
              , A.ROOM_TYPE								/* 객실타입 */
              , A.FLIGHT_IN								/* 도착항공기편 */
+             , DATE_FORMAT(A.FLIGHT_IN_DT , '%Y-%m-%d')  AS FLIGHT_IN_DT	/* 도착항공기일자 */
              , A.FLIGHT_IN_HH							/* 도착항공기시각 */
              , A.FLIGHT_IN_MM							/* 도착항공기시각 */
              , A.FLIGHT_OUT								/* 출발항공기편 */
+             , DATE_FORMAT(A.FLIGHT_OUT_DT , '%Y-%m-%d') AS FLIGHT_OUT_DT	/* 출발항공기일자 */
              , A.FLIGHT_OUT_HH							/* 출발항공기시각 */
              , A.FLIGHT_OUT_MM							/* 출발항공기시각 */
              , IFNULL(A.M_PERSON , 0) AS M_PERSON		/* 멤버인원 */
@@ -634,9 +642,11 @@
 			,CHK_IN_DT
 			,CHK_OUT_DT
 			,FLIGHT_IN
+			,FLIGHT_IN_DT
 			,FLIGHT_IN_HH
 			,FLIGHT_IN_MM
 			,FLIGHT_OUT
+			,FLIGHT_OUT_DT
 			,FLIGHT_OUT_HH
 			,FLIGHT_OUT_MM
 			,BAS_YY
@@ -666,9 +676,11 @@
 			,#{item.chk_in_dt}
 			,#{item.chk_out_dt}
 			,#{item.flight_in}
+			,#{item.flight_in_dt}
 			,#{item.flight_in_hh}
 			,#{item.flight_in_mm}
 			,#{item.flight_out}
+			,#{item.flight_out_dt}
 			,#{item.flight_out_hh}
 			,#{item.flight_out_mm}
 			,#{item.bas_yy}
