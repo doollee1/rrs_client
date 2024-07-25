@@ -28,13 +28,13 @@ public class PreDispatchFilter extends GenericFilterBean {
 	@Override
 	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
 		// TODO Auto-generated method stub
-		logger.info("====== PreDispatchFilter ======");		
+		//logger.info("====== PreDispatchFilter ======");		
 		
 		HttpServletRequest request = (HttpServletRequest) req;
 		HttpServletResponse response = (HttpServletResponse) res;
 		
 		String requestUri = request.getRequestURI().toLowerCase().trim();		
-		logger.info("====== doFilter.requestUri : "+requestUri );
+		//logger.info("====== doFilter.requestUri : "+requestUri );
 		
 		if(requestUri.endsWith(".txt") || requestUri.endsWith(".xml")) {	
 			//Cookie 속성(Secure; SameSite=lax) 설정 (경고 : Cookie without SameSite Attribute)
