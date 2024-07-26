@@ -45,10 +45,9 @@ public class AuthenticInterceptor extends HandlerInterceptorAdapter {
 		
 		if(webSpiderList.indexOf(requestURI) >=0) {
 			
-			//Content-Security-Policy 헤더 추가 (경고 : Content Security Policy(CSP) Header Not Set	
-			//response.setHeader("Content-Security-Policy", "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self'; font-src 'self'; object-src 'none'" );
-			//response.setHeader("Content-Security-Policy", "form-action 'self'");
-									
+			//Content-Security-Policy 헤더 추가 (경고 : Content Security Policy(CSP) Header Not Set				
+			//response.setHeader("Content-Security-Policy", "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self'; font-src 'self'; object-src 'none';form-action 'self';frame-ancestors 'none'" );									
+						
 			//X-Frame-Options 추가(경고 : Missing Anti-clickjacking Header)
 			response.setHeader("X-Frame-Options", "SAMEORIGIN");
 			
