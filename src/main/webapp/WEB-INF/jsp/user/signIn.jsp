@@ -46,10 +46,30 @@ function initRsa(){
 			
 			//console.log("data : "+JSON.stringify(data));
 			
-			$("#RSAModulus").val(data.RSAModulus);
-			$("#RSAExponent").val(data.RSAExponent);
-						
-			setTimeout(() =>signIn(), 100);  //0.1초후 로그인 진행			 
+			if(!isEmpty(data)) {
+					
+				var rsaModulus = "";
+				var rsaExponent = "";
+				
+				$("#RSAModulus").val(data.RSAModulus);
+				$("#RSAExponent").val(data.RSAExponent);
+				
+				while(true){
+					
+					rsaModulus  = $("#RSAModulus").val();
+					rsaExponent = $("#RSAExponent").val();
+					
+					console.log("rsaModulus : "+rsaModulus);
+					console.log("rsaExpoent : "+rsaExponent);
+					
+					if(!isEmpty(rsaModulus) && !isEmpty(rsaExponent)){
+						break;
+					}
+				}
+							
+				signIn();  //로그인 진행			
+			}
+			
 		}
 	});		
 }
@@ -122,7 +142,9 @@ function signIn(){
 function isEmpty(value) {
 	if( value == "" || value == null || value == undefined || ( value != null && typeof value == "object" && !Object.keys(value).length ) ){
 		return true
-	}else{
+	} else if (value.length < 1)
+		return true;
+	else {
 		return false
 	}
 }
