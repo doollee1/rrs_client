@@ -42,13 +42,13 @@ public class PreDispatchFilter extends GenericFilterBean {
 		}
 		
 		
+		
 		if(requestUri.endsWith(".css") || requestUri.endsWith(".jpg") 
 				|| requestUri.endsWith(".png")	|| requestUri.endsWith(".gif") || requestUri.endsWith(".js") ) {
 			
 			//X-Content-Type-Options 헤더 추가(경고 : X-Content-Type-Options Header Missing)
 			response.setHeader("X-Content-Type-Options", "nosniff"); 
-		}
-				
+		}				
 		
 		chain.doFilter(req, res);
 	}

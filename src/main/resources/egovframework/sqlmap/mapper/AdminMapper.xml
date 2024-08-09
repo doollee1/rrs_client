@@ -6,11 +6,66 @@
 	<select id="adminReservationList" parameterType="hashMap" resultType="hashMap">
         SELECT REQ_DT		/* 예약일자 */
              , SEQ			/* 일련번호 */
-             , USER_ID      /* 사용자ID */       
+             , USER_ID      /* 사용자ID */
+             , REQ_HAN_NM	/* 한글명 */
+             , REQ_ENG_NM	/* 영문명 */
           FROM tb_req_booking_m
-         WHERE CHK_IN_DT BETWEEN  #{start_dt} AND #{end_dt} 
+         WHERE CHK_IN_DT BETWEEN  #{start_dt} AND #{end_dt}
+           AND PRC_STS NOT in ('01','03')
          ORDER BY REQ_DT DESC, SEQ ASC
 	</select>
+	
+	<!--  관리자 상태변경 목록 -->
+	<select id="adminProdReservation" parameterType="hashMap" resultType="hashMap">
+        SELECT REQ_DT		/* 예약일자 */
+             , SEQ			/* 일련번호 */
+             , USER_ID      /* 사용자ID */
+             , REQ_HAN_NM	/* 한글명 */
+             , REQ_ENG_NM	/* 영문명 */
+             , (SELECT CODE_NM FROM BC_COMM_L A 
+                 WHERE A.HEAD_CD = 500020 
+                   AND CODE = PRC_STS) as PRC_NM
+             , (SELECT CODE_NM 
+                  FROM BC_COMM_L A 
+                 WHERE A.HEAD_CD = 500030 
+                   AND CODE = MEM_GBN) as MEM_NM
+          FROM tb_req_booking_m
+         WHERE CHK_IN_DT BETWEEN  #{start_dt} AND #{end_dt}
+         ORDER BY REQ_DT DESC, SEQ ASC
+	</select>
+	
+	<!--  관리자 예약상태변경 상세보기 -->
+	<select id="adminProdDetail" parameterType="hashMap" resultType="hashMap">
+		SELECT SEQ 
+			 , DATE_FORMAT(REQ_DT,     '%Y-%m-%d')    AS REQ_DT
+			 , DATE_FORMAT(CHK_IN_DT,  '%Y-%m-%d')    AS CHK_IN_DT
+			 , DATE_FORMAT(CHK_OUT_DT, '%Y-%m-%d')    AS CHK_OUT_DT
+			 , REQ_HAN_NM
+			 , REQ_ENG_NM
+			 , REQ_TEL_NO
+			 , MEM_GBN
+			 , M_PERSON
+			 , G_PERSON
+			 , N_PERSON
+			 , K_PERSON
+			 , I_PERSON
+			 , (M_PERSON + G_PERSON + N_PERSON + K_PERSON + I_PERSON)    AS TOT_PERSON
+			 , PRC_STS
+		  FROM tb_req_booking_m
+		 WHERE 1=1
+		   AND SEQ    = #{seq}
+		   AND REQ_DT = #{req_dt}
+	</select>
+	
+	
+	<!-- 관리자 예약 상태 변경 저장  -->
+	<update id="prcStsUpdate" parameterType="hashMap">
+		UPDATE TB_REQ_BOOKING_M
+		   SET PRC_STS = #{prc_sts}
+		 WHERE 1=1
+		   AND SEQ     = #{seq}
+		   AND REQ_DT  = #{req_dt}
+	</update>
 	
 	
 	<!-- 다중 파일업로드 예약 목록 상세 -->

@@ -7,9 +7,7 @@
 
 <script>
 $(document).ready(function() {
-	
 	var formData = new FormData();   //이미지, json 파라미터
-	
 	var paramList = [];     //관리자 다중이미지 파라미터 배열
 	
 	setTitle("파일업로드");
@@ -19,17 +17,16 @@ $(document).ready(function() {
 	
 	//최초 세팅
 	function fn_Init(){
-			
 		//메뉴 감추기
 		$(".menu-item").each(function(index, item){
-
 		    //로그아웃 제외		
 			if ($(this).find(".fa-solid").length < 1){				
-				
-				//navigation 메뉴 감추기
 				$(this).hide();
-			} 
-					
+			}
+		    
+			if ($(this).find(".flight").length > 0){				
+				$(this).show();
+			}
 		});		
 	}
 	
@@ -153,7 +150,7 @@ $(document).ready(function() {
 	
 
 	<%-- 이벤트 함수 --%>
-	function setEvent() {		
+	function setEvent() {
 		
 		<%-- 이미지 이벤트 --%>
 		$("input[name=fligthImage]").each(function(index, item){
@@ -164,26 +161,15 @@ $(document).ready(function() {
 		
 		<%-- 등록버튼 이벤트 --%>
 		$("#reservationBtn").on("click", function() {
-						
-			console.log("before paramList : "+JSON.stringify(paramList));
-			
-			
 			//파일업로드 이후, 한글이름, 영문이름, 전화번호 변경시					
 			$.each(paramList, function(idx, value){
-				
 				var paramDseq = value.dseq;
-				//console.log("=== paramDseq : "+paramDseq);
-				
 				
 				$("input:file[id='fligthImage']").each(function(index, item){
-										
 					//파일이미지가 있을 경우
 					if(!isEmpty($(item).val())){
 						
-						
 						var dseq =  $(this).siblings("#dseq").val();						
-						//console.log("=== dseq : "+dseq);
-						
 						//상세일련번호가 같은 경우
 						if(paramDseq == dseq) {
 						
@@ -191,10 +177,9 @@ $(document).ready(function() {
 							var comEngNm = $(this).closest("#adminImg").find("#engNameDiv #com_eng_name").val();
 							var comTelNo = $(this).closest("#adminImg").find("#telNoDiv #com_tel_no").val();
 							
-							
 							//동반자 한글명 수정
-							if(comHanNm != value.com_han_nm) {						
-								paramList[idx].com_han_nm = comHanNm;												
+							if(comHanNm != value.com_han_nm) {
+								paramList[idx].com_han_nm = comHanNm;
 							}
 							
 							//동반자 영문병 수정
@@ -207,37 +192,24 @@ $(document).ready(function() {
 								paramList[idx].com_tel_no = comTelNo;
 							}							
 						}
-												
-					}								
-					
+					}
 				});
-				
 			});
-			
-			
-				
-						
-			console.log("after paramList : "+JSON.stringify(paramList));
 			
 			//등록이미지가 없을 경우
 			if(paramList.length < 1) {
-				
 				if(confirm("이미지 등록을 안하셨습니다. 등록하시겠습니까?")) {
-					
 					console.log("이미지 미등록, 현재화면에서 대기");
 					return false;
 				} else {
-					
 					console.log("이미지 미등록, 예약목록화면으로 이동");
 					location.replace("/adminReservationList.do");   //관리자 예약목록으로 이동			
 					return false;
 				}
 				
 			}
-						
 
 			formData.append("list", new Blob([JSON.stringify(paramList)], {type:"application/json;charset=UTF-8"}));
-
 			dimOpen();
 			$.ajax({
 				type : "POST",
@@ -263,7 +235,6 @@ $(document).ready(function() {
 	
 });
 
-
 //null 체크
 function isEmpty(value) {
 	if( value == "" || value == null || value == undefined || ( value != null && typeof value == "object" && !Object.keys(value).length ) ){
@@ -272,7 +243,6 @@ function isEmpty(value) {
 		return false
 	}
 }
-
 
 $(document).on("keyup", "input[onlyNum]", function() {$(this).val( $(this).val().replace(/[^0-9]/gi,"") );});
 $(document).on("keyup", "input[onlyKor]", function() {$(this).val( $(this).val().replace(/[a-z0-9]|[ \[\]{}()<>?|`~!@#$%^&*-_+=,.;:\"'\\]/g,"") );});
@@ -283,13 +253,19 @@ $(document).on("keyup", "input[onlyEng]", function() {$(this).val( $(this).val()
 <div id="content" class="app-content d-flex flex-column p-0">
 	<!-- BEGIN content-container -->
 	<div class="app-content-padding flex-grow-1 overflow-hidden" data-scrollbar="true" data-height="100%">
-		
+		<!-- BEGIN panel -->
+		<ul class="nav nav-tabs">
+			<li class="nav-item">
+				<a href="#default-tab-1" data-bs-toggle="tab" class="nav-link active">
+					<span class="d-sm-none">항공권등록</span>
+					<span class="d-sm-block d-none">항공권등록</span>
+				</a>
+			</li>
+		</ul>
 		<!-- BEGIN tab-content -->
 		<div class="tab-content panel rounded-0 p-3 m-0">
-		
 			<input type="hidden" id="req_dt"       name="req_dt"   value= "${param.req_dt}"   />
 			<input type="hidden" id="seq"          name="seq"      value= "${param.seq}"   />
-			
 			<!-- BEGIN tab-pane -->
 			<div class="tab-pane fade active show" id="default-tab-1">
 				
@@ -310,26 +286,26 @@ $(document).on("keyup", "input[onlyEng]", function() {$(this).val( $(this).val()
 							<div id="hanNameDiv" class="row mb-2">
 								<label class="form-label col-form-label col-md-3">한글이름</label>
 								<div class="col-sm-9">																		
-									<input type="text" class="form-control text-muted text-center" id="com_han_name" value="${list.COM_HAN_NM}" onlyKor />									
+									<input type="text" class="form-control text-muted text-center" id="com_han_name" value="${list.COM_HAN_NM}" style="border: 1px solid var(--bs-component-color);" onlyKor />									
 								</div>
 							</div>
 							<div id="engNameDiv" class="row mb-2">
 								<label class="form-label col-form-label col-md-3">영문이름</label>
 								<div class="col-sm-9">																		
-									<input type="text" class="form-control text-muted text-center" id="com_eng_name" value="${list.COM_ENG_NM}" onlyEng />									
+									<input type="text" class="form-control text-muted text-center" id="com_eng_name" value="${list.COM_ENG_NM}" style="border: 1px solid var(--bs-component-color);" onlyEng/>									
 								</div>
 							</div>
 							<div id="telNoDiv" class="row mb-2">
 								<label class="form-label col-form-label col-md-3">전화번호</label>
 								<div class="col-sm-9">																		
-									<input type="text" class="form-control text-muted text-center" id="com_tel_no" value="${list.COM_TEL_NO}" onlyNum />										
+									<input type="text" class="form-control text-muted text-center" id="com_tel_no" value="${list.COM_TEL_NO}" style="border: 1px solid var(--bs-component-color);" onlyNum/>										
 								</div>
 							</div>
 							<div class="row mb-2">
 								<label class="form-label col-form-label col-md-3">항공권 첨부</label>
 								<div class="col-sm-9">
-									<input id="fligthImage" name="fligthImage" type="file" accept="image/*" class="form-control" />
-									<input type="hidden" id="dseq"          name="dseq"      value= "${list.DSEQ}"   />
+									<input id="fligthImage" name="fligthImage" type="file" accept="image/*" class="form-control" style="border: 2px solid var(--bs-component-color); border-color: #ff5b57;"/>
+									<input type="hidden" id="dseq" name="dseq" value= "${list.DSEQ}" />
 								</div>
 							</div>
 						</div>
@@ -337,13 +313,11 @@ $(document).on("keyup", "input[onlyEng]", function() {$(this).val( $(this).val()
 				</c:if>				
 			</div>
 			<!-- END tab-pane -->			
-		
 		</div>
 	<!-- END content-container -->
 	</div>
 	<!-- BEGIN #footer -->
 	<div id="footer" class="app-footer m-0">
-	
 		<!-- 예약내역이 있을경우만 등록버튼 보여줌 -->
 		<c:if test="${not empty adminImageUploadList}">  
 			<a href="javascript:;" id="reservationBtn" class="btn btn-success btn-lg">등록</a>

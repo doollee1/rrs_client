@@ -31,7 +31,7 @@
 		error : function(xhr, status, err) {
 			dimClose();
 			if (xhr.status == 999) {
-				alert("세션이 종료되어 로그인 화면으로 이동됩니다.");
+				alert("세션이 종료되어 로그인 화면으로 이동합니다.");
 				location.href="/signIn.do";
 			} else {
 				console.log(xhr);

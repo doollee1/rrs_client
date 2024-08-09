@@ -23,7 +23,24 @@ public interface AdminService {
 	 */
 	List<Map<String, Object>> adminReservationList(Map<String, Object> param) throws Exception;
 	
+	/**
+	 * 관리자 예약상태변경 상세보기
+	 * 
+	 * @param param
+	 * @return
+	 * @throws Exception
+	 */
+	List<Map<String, Object>> adminProdDetail(Map<String, Object> param) throws Exception;
 	
+	/**
+	 * 관리자 예약상태변경 저장
+	 * 
+	 * @param param
+	 * @return
+	 * @throws Exception
+	 */
+	Map<String, Object> prcStsUpdate(Map<String, Object> list) throws Exception;
+
 	/**
 	 * 관리자 이미지업로드 목록 조회
 	 * 
@@ -32,7 +49,6 @@ public interface AdminService {
 	 * @throws Exception
 	 */
 	List<Map<String, Object>> adminImageUploadList(Map<String, Object> paramMap) throws Exception;
-	
 	
 	/**
 	 * 관리자 다중 이미지 등록
@@ -43,5 +59,13 @@ public interface AdminService {
 	 */
 	Map<String, Object> adminImageReservation(List<Map<String, Object>> param) throws Exception;
 	
+	/**
+	 * 관리자 상태변경목록 조회
+	 * 
+	 * @param param
+	 * @return
+	 * @throws Exception
+	 */
+	List<Map<String, Object>> adminProdReservation(Map<String, Object> param) throws Exception;
 	
 }

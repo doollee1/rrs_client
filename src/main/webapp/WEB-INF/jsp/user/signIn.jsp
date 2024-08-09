@@ -8,10 +8,8 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
-<script src="resrc/rsa/rsa.js"	></script>
-<script src="resrc/rsa/jsbn.js"	></script>
-<script src="resrc/rsa/prng4.js"></script>
-<script src="resrc/rsa/rng.js"	></script>
+<!-- RSA js -->
+<script type="text/javascript" src="/resrc/jsencrypt/jsencrypt.min.js"></script>
 
 <script>
 
@@ -80,15 +78,19 @@ function signIn(){
 	
 	console.log("======== 로그인 진행 ========");
 	
-	var rsa = new RSAKey();	
-	rsa.setPublic($('#RSAModulus').val(),$('#RSAExponent').val());
+	//var rsa = new RSAKey();	
+	//rsa.setPublic($('#RSAModulus').val(),$('#RSAExponent').val());
+	//var passwd = rsa.encrypt($("#password").val());
+	
+	var crypt = new JSEncrypt();  //객체생성
+    crypt.setPrivateKey($('#publicKey').val());
 		
-	var user_id = $("#user_id").val();	
-	var passwd = rsa.encrypt($("#password").val());	
+	var user_id = $("#user_id").val();			
+	var passwd = crypt.encrypt($("#password").val());	
 	var useCookie = $("input[name=useCookie]:checked").val();
 	
 	//console.log("=== user_id : "+user_id);
-	//console.log("=== passwd : "+passwd);
+	console.log("=== passwd : "+passwd);
 	console.log("=== useCookie : "+useCookie);
 	
 	
@@ -171,12 +173,22 @@ function isEmpty(value) {
 		<!-- END login-header -->
 		<!-- BEGIN login-content -->
 		<div class="login-content">
+		
+		
+<textarea id="publicKey" rows="6"  style=display:none>-----BEGIN PUBLIC KEY-----
+MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCoQK/VFdywldBTHERXGwWEATUp
+DbyBg8J0fCkNmhEUKHxlYjDEuWq3860Kax7nCIxPzg9sS+vkrqa6llhsCBXYfkC2
+pxx/m5ViU9Il6v1Rj13vmVHL6Zv3dL5hjhPn3XoSJ8dFHPRqnW0Vtl1MivJ3Wpmg
+nZsezLLsD5JyQ3P+KQIDAQAB
+-----END PUBLIC KEY-----</textarea>
+		
+		
 			<div class="form-floating mb-15px">
 				<input type="text" class="form-control h-45px fs-13px" placeholder="아이디" id="user_id"/>
 				<label for="user_id" class="d-flex align-items-center fs-13px text-gray-600">아이디</label>
 			</div>
 			<div class="form-floating mb-30px">
-				<input type="password" class="form-control h-45px fs-13px" placeholder="비밀번호" id="password" onKeyPress="if(event.keyCode == 13) javascript:initRsa();"/>
+				<input type="password" class="form-control h-45px fs-13px" placeholder="비밀번호" id="password" onKeyPress="if(event.keyCode == 13) javascript:signIn();"/>
 				<label for="password" class="d-flex align-items-center fs-13px text-gray-600">비밀번호</label>
 			</div>
 			<input type="hidden" id="RSAModulus" name="RSAModulus" />
@@ -185,7 +197,7 @@ function isEmpty(value) {
                   <input type="checkbox" name="useCookie" style="margin-bottom:.9375rem"> 자동로그인
             </label>
 			<div class="mb-15px">
-				<button type="button" class="btn btn-theme h-45px w-100 btn-lg fs-14px" onclick="initRsa();">로그인</button>		
+				<button type="button" class="btn btn-theme h-45px w-100 btn-lg fs-14px" onclick="signIn();">로그인</button>		
 			</div>
 			<div class="mb-40px pb-40px text-dark btn-links">
 				<a href="/findId.do">아이디찾기</a>

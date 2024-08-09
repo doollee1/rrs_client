@@ -68,7 +68,9 @@ function findId(){
 		success:function(data){
 			if(data == "NONE"){
 				alert("존재하지 않는 정보입니다.");
-			} else {
+			} else if(data == "N") {
+				alert("메일발송이 실패하였습니다.");				
+			} else if(data == "Y"){
 				alert("등록된 회원님의 이메일주소(" + email + ")로 아이디가 발송되었습니다.");
 				location.href = "/signIn.do";
 			}

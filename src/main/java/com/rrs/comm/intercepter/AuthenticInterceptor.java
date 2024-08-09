@@ -82,7 +82,7 @@ public class AuthenticInterceptor extends HandlerInterceptorAdapter {
 				} else {
 					response.setContentType("text/html; charset=UTF-8");							            
 					PrintWriter out = response.getWriter();
-					out.println("<script>alert('로그인을 해 주세요.'); location.href='/main.do';</script>");		            	           
+					out.println("<script>alert('세션이 종료되었습니다. 로그인을 해주세요.'); location.href='/main.do';</script>");		            	           
 		            out.flush();
 		            result = false;
 				}

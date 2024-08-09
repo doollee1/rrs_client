@@ -70,6 +70,25 @@
 							<div class="menu-text">개인설정</div>
 						</a>
 					</div>
+					
+					<div class="menu-item flight" style="display : none">
+						<a href="/adminReservationList.do" class="menu-link">
+							<div class="menu-icon">
+								<i class="fas fa-calendar-days flight"></i>
+							</div>
+							<div class="menu-text">항공권등록</div> 
+						</a>
+					</div>
+					
+					<div class="menu-item flight" style="display : none">
+						<a href="/adminProdReservation.do" class="menu-link">
+							<div class="menu-icon">
+								<i class="fas fa-pencil-alt flight"></i> 
+							</div>
+							<div class="menu-text">예약상태변경</div> 
+						</a>
+					</div>
+					
 					<div class="menu-item logout">
 						<a href="/signOut.do" class="menu-link">
 							<div class="menu-icon">

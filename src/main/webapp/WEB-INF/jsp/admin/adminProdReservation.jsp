@@ -4,6 +4,19 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+
+<style>
+	.prodReservationListBox {display: flex;width: 100%;justify-content: space-around;gap:10px;text-align:left;}
+	.prodReservationListBox > span {width:inherit;word-break:break-word;}
+	.prodReservationListBox .reservationUser {margin-left:0%;}
+	.prodReservationListBox .reservationUser2 {margin-right:50%;}
+	@media (max-width: 767.98px) {
+		.prodReservationListBox {flex-direction: column;align-items: flex-start;}
+		.prodReservationListBox > span{display:flex;}
+		.prodReservationListBox .reservationUser {margin-left:0%;}
+	}
+</style>
+
 <script>
 $(document).ready(function() {	
 	setTitle("관리자");
@@ -76,7 +89,7 @@ function setEvent() {
 	$(".reserve-list > li").on("click", function() {
 		var form = document.createElement("form");
 		var data = $(this).data();
-		<%//예약 현황이 존재하지 않을 경우 에러 대응 20240103 이민구%>
+
 		if(!isEmpty(data)){
 			for(key in data) {
 				var inputData = document.createElement("input");
@@ -85,8 +98,9 @@ function setEvent() {
 				inputData.setAttribute("value", data[key]);
 				form.appendChild(inputData);
 			}
+			
 			form.setAttribute("method", "GET");
-			form.setAttribute("action", "adminImageUploadList.do");
+			form.setAttribute("action", "adminProdDetail.do");
 			document.body.appendChild(form);
 			form.submit();
 		}
@@ -103,9 +117,6 @@ function isEmpty(value) {
 
 //관리자 예약목록 조회
 function fn_adminReservationList(){
-	
-	console.log("=== 관리자 예약목록 조회 ===")
-	
 	if($("#start_dt").val() == "") {
 		alert("시작일자를 선택하세요.");
 		return false;
@@ -119,7 +130,7 @@ function fn_adminReservationList(){
 	var startDt = $("#start_dt").val().replace(/-/gi, "");  // '-'제거
 	var endDt   = $("#end_dt").val().replace(/-/gi, "");    // '-'제거 
 	
-	location.href = "/adminReservationList.do?start_dt="+startDt+"&end_dt="+endDt;
+	location.href = "/adminProdReservation.do?start_dt="+startDt+"&end_dt="+endDt;
 }
 
 //다음달 마지막날 구하기
@@ -136,7 +147,6 @@ function getlastDayNextMonth(){
 	if(mm < 10) {
 		mm='0'+mm
 	}
-	
 	return yyyy + '-'+ mm + '-'+ dd;
 }
 
@@ -149,14 +159,14 @@ function getlastDayNextMonth(){
 		<ul class="nav nav-tabs">
 			<li class="nav-item">
 				<a href="#default-tab-1" data-bs-toggle="tab" class="nav-link active">
-					<span class="d-sm-none">항공권등록</span>
-					<span class="d-sm-block d-none">항공권등록</span>
+					<span class="d-sm-none">예약상태변경</span>
+					<span class="d-sm-block d-none">예약상태변경</span>
 				</a>
 			</li>
 		</ul>
 		
 		<div class="tab-content panel rounded-0 p-3 m-0">
-			<div class="tab-pane fade active show" id="default-tab-1">			
+			<div class="tab-pane fade active show" id="default-tab-1">
 				<div class="input-daterange">
 					<div class="form-group row mb-2">
 						<label class="form-label col-form-label col-lg-4">시작일자(체크인)</label>
@@ -185,29 +195,38 @@ function getlastDayNextMonth(){
 				<div class="panel panel-inverse">
 					<div class="panel-body">
 						<ul class="reserve-list">									
-							<c:if test="${empty reservationList}">
+							<c:if test="${empty prodReservationList}">
 								<li class="none">
 									<a href="#"><i class="fa fa-times"></i>예약내역이 없습니다.</a>
 								</li>
 							</c:if>
-							<c:if test="${not empty reservationList}">
-								<c:forEach items="${reservationList}" var = "list">
+							
+							<c:if test="${not empty prodReservationList}">
+								
+								<c:forEach items="${prodReservationList}" var = "list">
 									<fmt:parseDate var="reqDate" pattern="yyyyMMdd" value="${list.REQ_DT}"/>
 									<li class="active" data-req_dt="${list.REQ_DT}" data-seq="${list.SEQ}">
-										<a href="javascript:;">
-											<span class="date">예약일 :<strong><fmt:formatDate value="${reqDate}" pattern="yyyy-MM-dd"/></strong></span>
-											<span >예약자 명 : <strong>${list.REQ_HAN_NM }</strong></span>
+										<a href="javascript:;" style="text-align:center;">
+											<span class="prodReservationListBox">
+												<span class="date"><span style="min-width: 60px;">예약일 :</span>
+													<span style="font-weight:600"><fmt:formatDate value="${reqDate}" pattern="yyyy-MM-dd"/></span>
+												</span>
+												<span class="reservationUser"><span style="min-width: 60px;">예약자 : </span><span style="font-weight:600">${list.REQ_HAN_NM }</span></span>
+												<span class="reservationUser2"><span style="min-width: 60px;">예약상태 : </span><span style="font-weight:600">${list.PRC_NM }</span></span>
+											</span>
 											<span><i class="fa fa-angle-right fa-lg"></i></span>
 										</a>
 									</li>
 								</c:forEach>
 							</c:if>
+							
 						</ul>
 					</div>
 				</div>
 				<!-- END panel -->
 			</div>
 		</div>
+		<!-- END tab-content -->
 	</div>
 	<!-- END content-container -->
 </div>

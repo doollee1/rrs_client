@@ -21,6 +21,13 @@ public interface AdminMapper {
 	List<Map<String, Object>> adminReservationList(Map<String, Object> paramMap) throws Exception;
 	
 	
+	//관리자 예약상태변경 상세보기
+	List<Map<String, Object>> adminProdDetail(Map<String, Object> paramMap) throws Exception;
+
+	//관리자 예약상태변경 저장
+	int prcStsUpdate(Map<String, Object> paramMap) throws Exception;
+	
+	
 	//관리자 이미지업로드 목록 조회
 	List<Map<String, Object>> adminImageUploadList(Map<String, Object> paramMap) throws Exception;
 	
@@ -28,4 +35,7 @@ public interface AdminMapper {
 	//예약상세 업데이트
 	int updateBookingD(Map<String, Object> paramMap) throws Exception;
 	
+	
+	//관리자 예약목록 조회
+	List<Map<String, Object>> adminProdReservation(Map<String, Object> paramMap) throws Exception;
 }

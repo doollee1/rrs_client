@@ -67,7 +67,9 @@ function findPw(){
 		success:function(data){
 			if(data == "NONE"){
 				alert("존재하지 않는 사용자입니다.");
-			} else {
+			} else if(data == "N") {
+				alert("메일발송이 실패하였습니다.");				
+			} else if(data == "Y"){
 				alert("초기화 된 비밀번호가 "+ user_id + " 회원님의 이메일 : "+ email + " 로 전송되었습니다. \n 초기화된 비밀번호로 다시 접속해주세요.");
 				location.href = "/signIn.do";
 			}

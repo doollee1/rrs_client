@@ -3,12 +3,16 @@ package com.rrs.web.comm.service;
 import java.util.*;
 
 import org.apache.commons.mail.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service("mailSendService")
 public class MailSendService {
 	
+	private static final Logger logger = LoggerFactory.getLogger(MailSendService.class);
+			
 	@Autowired
 	private Properties properties;
 
@@ -63,7 +67,10 @@ public class MailSendService {
 			email.addTo((String) param.get("to"));
 			email.send();
 		} catch (EmailException  ex) {
-			System.err.println("System Exception ::::: " + ex.getMessage());
+			
+			logger.info("EmailException ::::: " + ex.getMessage());
+			ex.printStackTrace();
+			
 			return false;
 		}
 		return true;

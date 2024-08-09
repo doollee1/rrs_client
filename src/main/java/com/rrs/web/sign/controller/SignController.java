@@ -1,14 +1,20 @@
 package com.rrs.web.sign.controller;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.RSAPublicKeySpec;
+import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 import javax.crypto.Cipher;
@@ -21,6 +27,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -124,6 +131,49 @@ public class SignController {
 		return decryptedValue;
 	}
 	
+	
+	 /**
+     * RSA 복호화
+     * 
+     * @param encryptedText
+     * @param stringPrivateKey
+     * @return
+     */
+    public String decryptRsa(String encryptedText) {
+		String decryptedText = "";
+    	
+		try {
+			
+			//RSA 개인키의 문자열
+			org.springframework.core.io.Resource privateKeyResource = new ClassPathResource("/cert/private.key");
+			String privateKeyContent = new BufferedReader(new InputStreamReader(privateKeyResource.getInputStream())).lines().collect(Collectors.joining("\n"));
+			privateKeyContent = privateKeyContent
+					.replace("-----BEGIN PRIVATE KEY-----", "")
+					.replace("-----END PRIVATE KEY-----", "")
+					.replaceAll("\\s+", "");
+			
+			//RSA 개인키를 Private 객체로 변환			
+			byte[] privateKeyBytes = Base64.getDecoder().decode(privateKeyContent);
+			PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(privateKeyBytes);
+			KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+			PrivateKey privateKey = keyFactory.generatePrivate(keySpec);
+
+			//암호문을 바이트 배열로 변환하고 복호화
+			byte[] encryptedBytes =  Base64.getDecoder().decode(encryptedText);
+			Cipher cipher = Cipher.getInstance("RSA");
+			cipher.init(Cipher.DECRYPT_MODE, privateKey);
+			byte[] decryptedBytes = cipher.doFinal(encryptedBytes);
+			
+			//복호화된 데이터 문자열로 변환					
+			decryptedText = new String(decryptedBytes, StandardCharsets.UTF_8);
+			
+		} catch (Exception e) {
+			e.printStackTrace();			
+		}
+
+		return decryptedText;
+	}
+    
 	/**
 	 * 16진 문자열을 byte 배열로 변환한다.
 	 * @param hex
@@ -194,35 +244,29 @@ public class SignController {
 	}
 	
 	
-	// 로그인 처리
+	/**
+	 * 로그인 처리
+	 * 
+	 * @param vo
+	 * @param req
+	 * @param res
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping(value = {"/signIn.do"}, method = {RequestMethod.POST})
 	@ResponseBody
 	public String signIn(@ModelAttribute("SignVO") SignVO vo, HttpServletRequest req, HttpServletResponse res) throws Exception {
 		
 		logger.info("========= 로그인 처리 Controller ==========");
-		logger.info("========= SignVO : "+vo.toString());
+		//logger.info("========= SignVO : "+vo.toString());
 		
 		HttpSession session = req.getSession();
-		
-		logger.info("========= privateKey : "+session.getAttribute(SignController.RSA_WEB_KEY));		
-		if(ObjectUtils.isEmpty(session.getAttribute(SignController.RSA_WEB_KEY))) {
-			
-			//세션이 종료후 다시 로그인할 경우
-			return "E";
-		}
-		
-		PrivateKey privateKey = (PrivateKey) session.getAttribute(SignController.RSA_WEB_KEY);
-		
-		//비밀번호 복호와 오류발생시(
-		try {
-			vo.setPasswd(decryptRsa(privateKey, vo.getPasswd()));
-		} catch(Exception e) {
-			
-			e.printStackTrace();
-			//세션이 종료후 다시 로그인할 경우
-			return "E";
-		}
-		
+				
+	    // 복호화	        	        	
+        String decryptedPasswd = decryptRsa(vo.getPasswd());
+        logger.info("======== decryptedPasswd : "+decryptedPasswd);	
+        vo.setPasswd(decryptedPasswd);
+        
 		vo.setPasswd(EgovFileScrty.encryptPassword(vo.getPasswd(), vo.getUser_id()));
 		
 		SignVO login = this.signService.signIn(vo);
@@ -401,8 +445,8 @@ public class SignController {
 			param.put("content", content);
 			//param.put("title", new String(title.getBytes("utf-8"), "euc-kr"));
 			//param.put("content", new String(content.getBytes("utf-8"), "euc-kr"));
-			mailSendService.sendMail(param);
-			result = "Y";
+			boolean sendYn = mailSendService.sendMail(param);
+			result =  sendYn? "Y" : "N";
 		}
 		return result;
 	 }
@@ -445,7 +489,7 @@ public class SignController {
 			param.put("to", req.getParameter("email"));
 			param.put("title", title);
 			param.put("content", content);
-			mailSendService.sendMail(param);
+			boolean sendYn = mailSendService.sendMail(param);
 			
 			logger.debug("*****************************");
 			logger.debug("이메일 발송 완료 - 비밀번호 찾기");
@@ -453,7 +497,7 @@ public class SignController {
 			logger.debug("email : " + param.get("to"));
 			logger.debug("*****************************");
 			
-			result = "Y";
+			result = sendYn? "Y" : "N";
 		}
 		
 		
